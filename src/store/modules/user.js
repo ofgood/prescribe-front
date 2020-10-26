@@ -10,6 +10,7 @@ const user = {
     welcome: '',
     avatar: '',
     roles: [],
+    role: [],
     info: {}
   },
 
@@ -26,6 +27,9 @@ const user = {
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
+    },
+    SET_ROLE: (state, roles) => {
+      state.role = roles
     },
     SET_INFO: (state, info) => {
       state.info = info

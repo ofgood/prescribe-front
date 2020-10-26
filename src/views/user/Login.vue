@@ -13,7 +13,7 @@
         @change="handleTabClick"
       >
         <a-tab-pane key="tab1" tab="管理员登录">
-          <a-alert v-if="isLoginError" type="error" showIcon style="margin-bottom: 24px;" message="账号或密码错误（admin/ant.design )" />
+          <a-alert v-if="isLoginError" type="error" showIcon style="margin-bottom: 24px;" message="账号或密码错误" />
           <a-form-item>
             <a-input
               size="large"
@@ -68,8 +68,14 @@
               <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }"/>
             </a-input-password>
           </a-form-item>
-          <a-form-itme>
-            <a-select default-value="HYS" placeholder="请选择药店">
+          <a-form-item>
+            <a-select
+              size="large"
+              placeholder="请选择药店"
+              v-decorator="[
+                'clinic',
+                {rules: [{ required: true, message: '请选择药店' }], validateTrigger: 'blur'}
+              ]">
               <a-select-option value="HYS">
                 好药师
               </a-select-option>
@@ -80,7 +86,7 @@
                 雷允上
               </a-select-option>
             </a-select>
-          </a-form-itme>
+          </a-form-item>
         </a-tab-pane>
       </a-tabs>
 

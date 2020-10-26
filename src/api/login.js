@@ -1,16 +1,16 @@
 import request from '@/utils/request'
 
 const userApi = {
-  Login: '/auth/login',
-  Logout: '/auth/logout',
-  ForgePassword: '/auth/forge-password',
-  Register: '/auth/register',
-  twoStepCode: '/auth/2step-code',
-  SendSms: '/account/sms',
-  SendSmsErr: '/account/sms_err',
+  Login: '/userInfo/login',
+  Logout: '/userInfo/logout',
+  ForgePassword: '/userInfo/forge-password',
+  Register: '/userInfo/register',
+  twoStepCode: '/userInfo/2step-code',
+  SendSms: '/userInfo/sms',
+  SendSmsErr: '/userInfo/sms_err',
   // get my info
-  UserInfo: '/user/info',
-  UserMenu: '/user/nav'
+  UserInfo: '/userInfo/getUserInfo',
+  UserMenu: '/userInfo/nav'
 }
 
 /**
