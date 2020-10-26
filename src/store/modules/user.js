@@ -2,7 +2,7 @@ import storage from 'store'
 import { login, getInfo, logout } from '@/api/login'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 import { welcome } from '@/utils/util'
-
+import { roleConfig } from '@/config/roleConfig'
 const user = {
   state: {
     token: '',
@@ -57,17 +57,11 @@ const user = {
         getInfo().then(response => {
           const result = response.result
 
-          if (result.role && result.role.permissions.length > 0) {
+          if (result.role) {
             const role = result.role
-            role.permissions = result.role.permissions
-            role.permissions.map(per => {
-              if (per.actionEntitySet != null && per.actionEntitySet.length > 0) {
-                const action = per.actionEntitySet.map(action => { return action.action })
-                per.actionList = action
-              }
-            })
-            role.permissionList = role.permissions.map(permission => { return permission.permissionId })
+            role.permissionList = roleConfig[role]
             commit('SET_ROLES', result.role)
+            commit('SET_ROLE', result.role)
             commit('SET_INFO', result)
           } else {
             reject(new Error('getInfo: roles must be a non-null array !'))
