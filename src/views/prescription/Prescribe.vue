@@ -1,10 +1,12 @@
 <template>
-$END$
+  <div>
+    开处方
+  </div>
 </template>
 
 <script>
 export default {
-name: "Prescribe"
+name: 'Prescribe'
 }
 </script>
 

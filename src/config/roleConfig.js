@@ -13,25 +13,37 @@ export const roleConfig = {
         'dashboard',
         'form',
         'analysis',
-        'patient'
+        'patient',
+        'prescription',
+        'medicine'
     ],
     COMPANY_MANAGER: [
       'dashboard',
       'analysis',
-      'patient'
+      'patient',
+      'prescription',
+      'medicine'
     ],
     AREA_MANAGER: [
-      'dashboard'
+      'dashboard',
+      'prescription',
+      'medicine'
     ],
     CLINIC_MANAGER: [
-      'dashboard'
+      'dashboard',
+      'prescription',
+      'medicine'
     ],
     DOCTOR: [
       'dashboard',
-      'patient'
+      'patient',
+      'prescription',
+      'medicine'
     ],
     DOCTOR_STAR: [
       'dashboard',
-      'patient'
+      'patient',
+      'prescription',
+      'medicine'
     ]
 }

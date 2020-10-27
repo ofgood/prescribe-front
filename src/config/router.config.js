@@ -47,14 +47,43 @@ export const asyncRouterMap = [
         children: [
           {
             path: '/patient/patient-list',
-            name: 'TableListWrapper',
+            name: 'patient-list',
             hideChildrenInMenu: true, // 强制显示 MenuItem 而不是 SubMenu
             component: () => import('@/views/patient/PatientList'),
             meta: { title: '患者列表', keepAlive: true, permission: [ 'patient' ] }
           }
         ]
       },
-
+      {
+        path: '/prescription',
+        name: 'prescription',
+        component: RouteView,
+        redirect: '/prescription/patient-list',
+        meta: { title: '处方管理', icon: 'table', permission: [ 'prescription' ] },
+        children: [
+          {
+            path: '/prescription/prescribe',
+            name: 'prescribe',
+            component: () => import('@/views/prescription/Prescribe'),
+            meta: { title: '开处方', keepAlive: true, permission: [ 'prescription' ] }
+          }
+        ]
+      },
+      {
+        path: '/medicine',
+        name: 'medicine',
+        component: RouteView,
+        redirect: '/medicine/medicine-list',
+        meta: { title: '药品管理', icon: 'table', permission: [ 'medicine' ] },
+        children: [
+          {
+            path: '/medicine/medicine-list',
+            name: 'medicine',
+            component: () => import('@/views/medicine/MedicineList'),
+            meta: { title: '药品列表', keepAlive: true, permission: [ 'medicine' ] }
+          }
+        ]
+      },
       // forms
       // {
       //   path: '/form',
