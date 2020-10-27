@@ -11,10 +11,14 @@
 export const roleConfig = {
     SUPER_USER: [
         'dashboard',
-        'form'
+        'form',
+        'analysis',
+        'patient'
     ],
     COMPANY_MANAGER: [
-      'dashboard'
+      'dashboard',
+      'analysis',
+      'patient'
     ],
     AREA_MANAGER: [
       'dashboard'
@@ -23,9 +27,11 @@ export const roleConfig = {
       'dashboard'
     ],
     DOCTOR: [
-      'dashboard'
+      'dashboard',
+      'patient'
     ],
     DOCTOR_STAR: [
-      'dashboard'
+      'dashboard',
+      'patient'
     ]
 }
