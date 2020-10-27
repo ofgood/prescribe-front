@@ -13,28 +13,46 @@ export const asyncRouterMap = [
     path: '/',
     name: 'index',
     component: BasicLayout,
-    meta: { title: 'menu.home' },
+    meta: { title: '主页' },
     redirect: '/dashboard/workplace',
     children: [
       // dashboard
       {
-        path: '/dashboard',
+        path: '/dashboard/workplace',
         name: 'dashboard',
-        redirect: '/dashboard/workplace',
+        component: () => import('@/views/dashboard/Workplace'),
+        meta: { title: '总览', keepAlive: true, icon: 'home', permission: [ 'dashboard' ] }
+      },
+      {
+        path: '/list1',
+        name: 'list1',
         component: RouteView,
-        meta: { title: '主页', keepAlive: true, icon: 'home', permission: [ 'dashboard' ] },
+        redirect: '/list1/table-list1',
+        meta: { title: '列表页', icon: 'table', permission: [ 'table' ] },
         children: [
           {
-            path: '/dashboard/analysis/:pageNo([1-9]\\d*)?',
-            name: 'Analysis',
-            component: () => import('@/views/dashboard/Analysis'),
-            meta: { title: 'menu.dashboard.analysis', keepAlive: false, permission: [ 'dashboard' ] }
-          },
+            path: '/list1/table-list1/:pageNo([1-9]\\d*)?',
+            name: 'sdfsdf',
+            // hideChildrenInMenu: true, // 强制显示 MenuItem 而不是 SubMenu
+            component: () => import('@/views/list/TableList'),
+            meta: { title: '查询表格', keepAlive: true, permission: [ 'table' ] }
+          }
+        ]
+      },
+
+      {
+        path: '/clinic',
+        name: 'clinic',
+        component: RouteView,
+        redirect: '/clinic/clinic-list',
+        meta: { title: '诊所管理', icon: 'bank', permission: [ 'clinic' ] },
+        children: [
           {
-            path: '/dashboard/workplace',
-            name: 'Workplace',
-            component: () => import('@/views/dashboard/Workplace'),
-            meta: { title: 'menu.dashboard.workplace', keepAlive: true, permission: [ 'dashboard' ] }
+            path: '/clinic/clinic-list',
+            name: 'clinic-list',
+            hideChildrenInMenu: true, // 强制显示 MenuItem 而不是 SubMenu
+            component: () => import('@/views/clinic/ClinicList'),
+            meta: { title: '诊所列表', keepAlive: true, permission: [ 'clinic' ] }
           }
         ]
       },
@@ -43,10 +61,10 @@ export const asyncRouterMap = [
         name: 'patient',
         component: RouteView,
         redirect: '/patient/patient-list',
-        meta: { title: '患者管理', icon: 'table', permission: [ 'patient' ] },
+        meta: { title: '患者管理', icon: 'solution', permission: [ 'patient' ] },
         children: [
           {
-            path: '/patient/patient-list',
+            path: '/patient/patient-list/:pageNo([1-9]\\d*)?',
             name: 'patient-list',
             hideChildrenInMenu: true, // 强制显示 MenuItem 而不是 SubMenu
             component: () => import('@/views/patient/PatientList'),
@@ -59,7 +77,7 @@ export const asyncRouterMap = [
         name: 'prescription',
         component: RouteView,
         redirect: '/prescription/patient-list',
-        meta: { title: '处方管理', icon: 'table', permission: [ 'prescription' ] },
+        meta: { title: '处方管理', icon: 'profile', permission: [ 'prescription' ] },
         children: [
           {
             path: '/prescription/prescribe',
@@ -84,113 +102,46 @@ export const asyncRouterMap = [
           }
         ]
       },
-      // forms
-      // {
-      //   path: '/form',
-      //   redirect: '/form/base-form',
-      //   component: RouteView,
-      //   meta: { title: '表单页', icon: 'form', permission: [ 'form' ] },
-      //   children: [
-      //     {
-      //       path: '/form/base-form',
-      //       name: 'BaseForm',
-      //       component: () => import('@/views/form/basicForm'),
-      //       meta: { title: '基础表单', keepAlive: true, permission: [ 'form' ] }
-      //     },
-      //     {
-      //       path: '/form/step-form',
-      //       name: 'StepForm',
-      //       component: () => import('@/views/form/stepForm/StepForm'),
-      //       meta: { title: '分步表单', keepAlive: true, permission: [ 'form' ] }
-      //     },
-      //     {
-      //       path: '/form/advanced-form',
-      //       name: 'AdvanceForm',
-      //       component: () => import('@/views/form/advancedForm/AdvancedForm'),
-      //       meta: { title: '高级表单', keepAlive: true, permission: [ 'form' ] }
-      //     }
-      //   ]
-      // },
+      {
+        path: '/medicinalConflict',
+        name: 'medicinalConflict',
+        component: RouteView,
+        redirect: '/medicinalConflictInfo/medicinalConflict-list',
+        meta: { title: '药品冲突管理', icon: 'gold', permission: [ 'medicinalConflict' ] },
+        children: [
+          {
+            path: '/medicinalConflictInfo/medicinalConflict-list',
+            name: 'medicinalConflictList',
+            component: () => import('@/views/medicine/MedicineList'),
+            meta: { title: '药品冲突列表', keepAlive: true, permission: [ 'medicinalConflict' ] }
+          }
+        ]
+      },
 
       // list
-      // {
-      //   path: '/list',
-      //   name: 'list',
-      //   component: RouteView,
-      //   redirect: '/list/table-list',
-      //   meta: { title: '列表页', icon: 'table', permission: [ 'table' ] },
-      //   children: [
-      //     {
-      //       path: '/list/table-list/:pageNo([1-9]\\d*)?',
-      //       name: 'TableListWrapper',
-      //       hideChildrenInMenu: true, // 强制显示 MenuItem 而不是 SubMenu
-      //       component: () => import('@/views/list/TableList'),
-      //       meta: { title: '查询表格', keepAlive: true, permission: [ 'table' ] }
-      //     },
-      //     {
-      //       path: '/list/basic-list',
-      //       name: 'BasicList',
-      //       component: () => import('@/views/list/BasicList'),
-      //       meta: { title: '标准列表', keepAlive: true, permission: [ 'table' ] }
-      //     },
-      //     {
-      //       path: '/list/card',
-      //       name: 'CardList',
-      //       component: () => import('@/views/list/CardList'),
-      //       meta: { title: '卡片列表', keepAlive: true, permission: [ 'table' ] }
-      //     },
-      //     {
-      //       path: '/list/search',
-      //       name: 'SearchList',
-      //       component: () => import('@/views/list/search/SearchLayout'),
-      //       redirect: '/list/search/article',
-      //       meta: { title: '搜索列表', keepAlive: true, permission: [ 'table' ] },
-      //       children: [
-      //         {
-      //           path: '/list/search/article',
-      //           name: 'SearchArticles',
-      //           component: () => import('../views/list/search/Article'),
-      //           meta: { title: '搜索列表（文章）', permission: [ 'table' ] }
-      //         },
-      //         {
-      //           path: '/list/search/project',
-      //           name: 'SearchProjects',
-      //           component: () => import('../views/list/search/Projects'),
-      //           meta: { title: '搜索列表（项目）', permission: [ 'table' ] }
-      //         },
-      //         {
-      //           path: '/list/search/application',
-      //           name: 'SearchApplications',
-      //           component: () => import('../views/list/search/Applications'),
-      //           meta: { title: '搜索列表（应用）', permission: [ 'table' ] }
-      //         }
-      //       ]
-      //     }
-      //   ]
-      // },
 
       // profile
-      // {
-      //   path: '/profile',
-      //   name: 'profile',
-      //   component: RouteView,
-      //   redirect: '/profile/basic',
-      //   meta: { title: '详情页', icon: 'profile', permission: [ 'profile' ] },
-      //   children: [
-      //     {
-      //       path: '/profile/basic',
-      //       name: 'ProfileBasic',
-      //       component: () => import('@/views/profile/basic'),
-      //       meta: { title: '基础详情页', permission: [ 'profile' ] }
-      //     },
-      //     {
-      //       path: '/profile/advanced',
-      //       name: 'ProfileAdvanced',
-      //       component: () => import('@/views/profile/advanced/Advanced'),
-      //       meta: { title: '高级详情页', permission: [ 'profile' ] }
-      //     }
-      //   ]
-      // },
+      {
+        path: '/profile',
+        name: 'profile',
+        component: RouteView,
+        redirect: '/profile/basic',
+        meta: { title: '详情页', icon: 'profile', permission: [ 'profile' ] },
+        children: [
+          {
+            path: '/profile/basic',
+            name: 'ProfileBasic',
+            component: () => import('@/views/profile/basic'),
+            meta: { title: '基础详情页', permission: [ 'profile' ] }
+          },
+          {
+            path: '/profile/advanced',
+            name: 'ProfileAdvanced',
+            component: () => import('@/views/profile/advanced/Advanced'),
+            meta: { title: '高级详情页', permission: [ 'profile' ] }
+          }
+        ]
+      },
 
       // result
       // {

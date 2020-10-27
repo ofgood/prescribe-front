@@ -7,43 +7,20 @@
     DOCTOR("DOCTOR","医生"),
     DOCTOR_STAR("DOCTOR_STAR","名医");
  */
-
-export const roleConfig = {
-    SUPER_USER: [
-        'dashboard',
-        'form',
-        'analysis',
-        'patient',
-        'prescription',
-        'medicine'
-    ],
-    COMPANY_MANAGER: [
+const allRoute = [
       'dashboard',
       'analysis',
       'patient',
       'prescription',
-      'medicine'
-    ],
-    AREA_MANAGER: [
-      'dashboard',
-      'prescription',
-      'medicine'
-    ],
-    CLINIC_MANAGER: [
-      'dashboard',
-      'prescription',
-      'medicine'
-    ],
-    DOCTOR: [
-      'dashboard',
-      'patient',
-      'prescription',
-      'medicine'
-    ],
-    DOCTOR_STAR: [
-      'dashboard',
-      'patient',
-      'prescription',
-      'medicine'
-    ]
+      'medicine',
+      'medicinalConflict',
+      'table'
+]
+export const roleConfig = {
+    SUPER_USER: allRoute,
+    COMPANY_MANAGER: allRoute,
+    AREA_MANAGER: allRoute,
+    CLINIC_MANAGER: allRoute,
+    DOCTOR: allRoute,
+    DOCTOR_STAR: allRoute
 }

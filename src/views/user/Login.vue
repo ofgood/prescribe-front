@@ -21,7 +21,7 @@
               placeholder="请输入帐号"
               v-decorator="[
                 'username',
-                {rules: [{ required: true, message: '请输入帐号' }], validateTrigger: 'change'}
+                {rules: [{ required: true, message: '请输入帐号' }], validateTrigger: 'blur'}
               ]"
             >
               <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }"/>
@@ -91,11 +91,11 @@
       </a-tabs>
 
       <a-form-item>
-        <router-link
-          :to="{ name: 'recover', params: { user: 'aaa'} }"
+        <span
           class="forge-password"
           style="float: right;"
-        >忘记密码</router-link>
+          @click="forgotPassword"
+        >忘记密码</span>
       </a-form-item>
 
       <a-form-item style="margin-top:24px">
@@ -109,7 +109,14 @@
         >确定</a-button>
       </a-form-item>
     </a-form>
-
+    <reset-password
+      ref="resetModal"
+      :visible="visible"
+      :loading="confirmLoading"
+      :model="mdl"
+      @cancel="handleCancel"
+      @ok="handleOk"
+    />
   </div>
 </template>
 
@@ -117,8 +124,12 @@
 import md5 from 'md5'
 import { mapActions } from 'vuex'
 import { timeFix } from '@/utils/util'
-
+import ResetPassword from './modules/ResetPassword'
 export default {
+  name: 'Login',
+  components: {
+     ResetPassword
+  },
   data () {
     return {
       customActiveKey: 'tab1',
@@ -133,7 +144,10 @@ export default {
         // login type: 0 email, 1 username, 2 telephone
         loginType: 0,
         smsSendBtn: false
-      }
+      },
+      visible: false,
+      confirmLoading: false,
+      mdl: null
     }
   },
   methods: {
@@ -204,6 +218,15 @@ export default {
         description: ((err.response || {}).data || {}).message || '请求出现错误，请稍后再试',
         duration: 4
       })
+    },
+    forgotPassword () {
+      this.visible = true
+    },
+    handleCancel () {
+      this.visible = false
+    },
+    handleOk (value) {
+      console.log(value)
     }
   }
 }
@@ -217,6 +240,9 @@ export default {
 
   .forge-password {
     font-size: 14px;
+    color: #1890ff;
+    cursor: pointer;
+    line-height: 20px;
   }
 
   button.login-button {

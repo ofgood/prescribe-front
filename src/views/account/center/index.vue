@@ -12,10 +12,10 @@
           </div>
           <div class="account-center-detail">
             <p>
-              <i class="title"></i>交互专家
+              <i class="title"></i>专家
             </p>
             <p>
-              <i class="group"></i>蚂蚁金服－某某某事业群－某某平台部－某某技术部－UED
+              <i class="group"></i>仁济医院－－某某科室－主任
             </p>
             <p>
               <i class="address"></i>

@@ -4,13 +4,7 @@ const userApi = {
   Login: '/userInfo/login',
   Logout: '/userInfo/logout',
   ForgePassword: '/userInfo/forge-password',
-  Register: '/userInfo/register',
-  twoStepCode: '/userInfo/2step-code',
-  SendSms: '/userInfo/sms',
-  SendSmsErr: '/userInfo/sms_err',
-  // get my info
-  UserInfo: '/userInfo/getUserInfo',
-  UserMenu: '/userInfo/nav'
+  UserInfo: '/userInfo/getUserInfo'
 }
 
 /**
@@ -32,14 +26,6 @@ export function login (parameter) {
   })
 }
 
-export function getSmsCaptcha (parameter) {
-  return request({
-    url: userApi.SendSms,
-    method: 'post',
-    data: parameter
-  })
-}
-
 export function getInfo () {
   return request({
     url: userApi.UserInfo,
@@ -50,13 +36,6 @@ export function getInfo () {
   })
 }
 
-export function getCurrentUserNav () {
-  return request({
-    url: userApi.UserMenu,
-    method: 'get'
-  })
-}
-
 export function logout () {
   return request({
     url: userApi.Logout,
@@ -64,17 +43,5 @@ export function logout () {
     headers: {
       'Content-Type': 'application/json;charset=UTF-8'
     }
-  })
-}
-
-/**
- * get user 2step code open?
- * @param parameter {*}
- */
-export function get2step (parameter) {
-  return request({
-    url: userApi.twoStepCode,
-    method: 'post',
-    data: parameter
   })
 }
