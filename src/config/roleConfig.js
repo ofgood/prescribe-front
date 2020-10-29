@@ -15,6 +15,7 @@ const allRoute = [
       'medicine',
       'medicinalConflict',
       'doctor',
+      'clinic',
       'table'
 ]
 export const roleConfig = {

@@ -15,6 +15,10 @@ export default {
     }
   },
   props: Object.assign({}, T.props, {
+    tableLayout: {
+      type: String,
+      default: 'fixed'
+    },
     rowKey: {
       type: [String, Function],
       default: 'key'

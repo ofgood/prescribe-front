@@ -24,23 +24,6 @@ export const asyncRouterMap = [
         meta: { title: '总览', keepAlive: true, icon: 'home', permission: [ 'dashboard' ] }
       },
       {
-        path: '/list1',
-        name: 'list1',
-        component: RouteView,
-        redirect: '/list1/table-list1',
-        meta: { title: '列表页', icon: 'table', permission: [ 'table' ] },
-        children: [
-          {
-            path: '/list1/table-list1/:pageNo([1-9]\\d*)?',
-            name: 'sdfsdf',
-            // hideChildrenInMenu: true, // 强制显示 MenuItem 而不是 SubMenu
-            component: () => import('@/views/list/TableList'),
-            meta: { title: '查询表格', keepAlive: true, permission: [ 'table' ] }
-          }
-        ]
-      },
-
-      {
         path: '/clinic',
         name: 'clinic',
         component: RouteView,

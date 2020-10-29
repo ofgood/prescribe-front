@@ -107,10 +107,14 @@ const columns = [
     dataIndex: 'shippingAddress'
   },
   {
+    title: '过敏史',
+    dataIndex: 'hyperSusceptibility'
+  },
+  {
     title: '住址',
     dataIndex: 'address'
   },
-  {
+   {
     title: '身份证号',
     dataIndex: 'idCard'
   },
@@ -121,10 +125,6 @@ const columns = [
   {
     title: '邮编',
     dataIndex: 'patientPyCode'
-  },
-  {
-    title: '过敏史',
-    dataIndex: 'hyperSusceptibility'
   },
   {
     title: '创建时间',

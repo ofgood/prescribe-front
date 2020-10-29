@@ -7,7 +7,7 @@
         </div>
         <div class="content">
           <div class="content-title">
-            {{ timeFix }}，{{ user.userName }}<span class="welcome-text">，{{ welcome }}</span>
+            {{ timeFix }}，{{ user.userName }}<span class="welcome-text"></span>
           </div>
           <div>著名专家 | 新华医院 - 某某科室 - 主任医师</div>
         </div>
@@ -35,7 +35,7 @@
             :loading="loading"
             style="margin-bottom: 24px;"
             :bordered="false"
-            title="进行中的项目"
+            title="进行中"
             :body-style="{ padding: 0 }">
             <a slot="extra">全部项目</a>
             <div>
@@ -83,17 +83,6 @@
           :md="24"
           :sm="24"
           :xs="24">
-          <a-card title="快速开始 / 便捷导航" style="margin-bottom: 24px" :bordered="false" :body-style="{padding: 0}">
-            <div class="item-group">
-              <a>操作一</a>
-              <a>操作二</a>
-              <a>操作三</a>
-              <a>操作四</a>
-              <a>操作五</a>
-              <a>操作六</a>
-              <a-button size="small" type="primary" ghost icon="plus">添加</a-button>
-            </div>
-          </a-card>
           <a-card
             title="XX 指数"
             style="margin-bottom: 24px"
@@ -192,8 +181,7 @@ export default {
   },
   computed: {
     ...mapState({
-      nickname: (state) => state.user.nickname,
-      welcome: (state) => state.user.welcome
+      nickname: (state) => state.user.nickname
     }),
     currentUser () {
       return {

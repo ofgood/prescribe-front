@@ -1,6 +1,6 @@
 <template>
   <a-modal
-    title="新建患者"
+    title="新建诊所"
     :width="640"
     :visible="visible"
     :confirmLoading="loading"
@@ -13,36 +13,20 @@
         <a-form-item v-if="model && model.id > 0" label="主键ID">
           <a-input v-decorator="['id', { initialValue: 0 }]" disabled />
         </a-form-item>
-        <a-form-item label="姓名">
-          <a-input v-decorator="['patientName', {rules: [{required: true, message: '请输入患者姓名'}]}]" placeholder="请输入"/>
+        <a-form-item label="诊所名称">
+          <a-input v-decorator="['clinicName', {rules: [{required: true, message: '请输入诊所名称'}]}]" placeholder="请输入诊所名称"/>
         </a-form-item>
-        <a-form-item label="性别">
-          <a-select placeholder="请选择性别" v-decorator="['sex', {rules: [{required: true, message: '请选择性别'}]}]">
-            <a-select-option v-for="item in gender" :key="item.value">
-              {{ item.label }}
-            </a-select-option>
-          </a-select>
+        <a-form-item label="诊所地址">
+          <a-input v-decorator="['address', {rules: [{required: true, message: '请输入诊所地址'}]}]" placeholder="请输入诊所地址"/>
         </a-form-item>
-        <a-form-item label="出生日期">
-          <a-date-picker style="width:100%" placeholder="请选择出生日期" valueFormat="YYYY-MM-DD" v-decorator="['birthday', {rules: [{required: true, message: '请选择出生日期'}]}]" />
+        <a-form-item label="诊所电话">
+          <a-input v-decorator="['clinicTel', {rules: [{required: true, message: '请输入诊所电话'}]}]" placeholder="请输入诊所电话"/>
         </a-form-item>
-        <a-form-item label="联系电话">
-          <a-input placeholder="请输入联系电话" v-decorator="['tel', {rules: [{required: true, message: '请输入联系电话'}]}]" />
+        <a-form-item label="负责人">
+          <a-input v-decorator="['responsible', {rules: [{required: true, message: '请输入负责人姓名'}]}]" placeholder="请输入负责人姓名"/>
         </a-form-item>
-        <a-form-item label="配送地址">
-          <a-input placeholder="请输入配送地址" v-decorator="['shippingAddress', {rules: [{required: true, message: '请输入配送地址'}]}]" />
-        </a-form-item>
-        <a-form-item label="过敏史">
-          <a-input placeholder="请输入过敏史:没有填无" v-decorator="['hyperSusceptibility', {rules: [{required: false, message: '请输入过敏史:没有填无'}]}]" />
-        </a-form-item>
-        <a-form-item label="邮编">
-          <a-input placeholder="请输入邮编" v-decorator="['zip', {rules: [{required: false, message: '请输入邮编'}]}]" />
-        </a-form-item>
-        <a-form-item label="身份证号">
-          <a-input placeholder="请输入" v-decorator="['idCard', {rules: [{required: false, message: ''}]}]" />
-        </a-form-item>
-        <a-form-item label="居住地址">
-          <a-input placeholder="请输入居住地址" v-decorator="['address', {rules: [{required: false, message: '请输入居住地址'}]}]" />
+        <a-form-item label="负责人电话">
+          <a-input v-decorator="['responsibleTel', {rules: [{required: true, message: '请输入负责人电话'}]}]" placeholder="请输入负责人电话"/>
         </a-form-item>
       </a-form>
     </a-spin>

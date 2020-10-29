@@ -14,7 +14,9 @@ const getters = {
   gender: state => state.dicData.gender,
   genderAll: state => state.dicData.genderAll,
   whether: state => state.dicData.whether,
-  whetherAll: state => state.dicData.whetherAll
+  whetherAll: state => state.dicData.whetherAll,
+  doctorType: state => state.dicData.doctorType,
+  clinics: state => state.recipe.clinics
 }
 
 export default getters

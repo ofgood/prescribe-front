@@ -47,6 +47,16 @@ const dicData = {
         value: 'F',
         label: '女'
       }
+    ],
+    doctorType: [
+      {
+        value: 'DOCTOR',
+        label: '医生'
+      },
+      {
+        value: 'DOCTOR_STAR',
+        label: '名医'
+      }
     ]
   }
 
