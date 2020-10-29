@@ -57,6 +57,37 @@ export const asyncRouterMap = [
         ]
       },
       {
+        path: '/doctor',
+        name: 'doctor',
+        component: RouteView,
+        redirect: '/doctor/doctor-list',
+        meta: { title: '医生管理', icon: 'solution', permission: [ 'doctor' ] },
+        children: [
+          {
+            path: '/doctor/doctor-list/:pageNo([1-9]\\d*)?',
+            name: 'doctor-list',
+            hideChildrenInMenu: true, // 强制显示 MenuItem 而不是 SubMenu
+            component: () => import('@/views/doctor/DoctorList'),
+            meta: { title: '医生列表', keepAlive: true, permission: [ 'doctor' ] }
+          }
+        ]
+      },
+      {
+        path: '/recipe',
+        name: 'recipe',
+        component: RouteView,
+        redirect: '/recipe/open-recipe',
+        meta: { title: '处方管理', icon: 'profile', permission: [ 'recipe' ] },
+        children: [
+          {
+            path: '/recipe/open-recipe',
+            name: 'openRecipe',
+            component: () => import('@/views/recipe/OpenRecipe'),
+            meta: { title: '开处方', keepAlive: true, permission: [ 'recipe' ] }
+          }
+        ]
+      },
+      {
         path: '/patient',
         name: 'patient',
         component: RouteView,
@@ -69,21 +100,6 @@ export const asyncRouterMap = [
             hideChildrenInMenu: true, // 强制显示 MenuItem 而不是 SubMenu
             component: () => import('@/views/patient/PatientList'),
             meta: { title: '患者列表', keepAlive: true, permission: [ 'patient' ] }
-          }
-        ]
-      },
-      {
-        path: '/prescription',
-        name: 'prescription',
-        component: RouteView,
-        redirect: '/prescription/patient-list',
-        meta: { title: '处方管理', icon: 'profile', permission: [ 'prescription' ] },
-        children: [
-          {
-            path: '/prescription/prescribe',
-            name: 'prescribe',
-            component: () => import('@/views/prescription/Prescribe'),
-            meta: { title: '开处方', keepAlive: true, permission: [ 'prescription' ] }
           }
         ]
       },

@@ -7,9 +7,9 @@
         </div>
         <div class="content">
           <div class="content-title">
-            {{ timeFix }}，{{ user.username }}<span class="welcome-text">，{{ welcome }}</span>
+            {{ timeFix }}，{{ user.userName }}<span class="welcome-text">，{{ welcome }}</span>
           </div>
-          <div>著名专家 | 新华医院 - 某某科室 - 主任医师夷</div>
+          <div>著名专家 | 新华医院 - 某某科室 - 主任医师</div>
         </div>
       </div>
     </template>
@@ -202,6 +202,7 @@ export default {
       }
     },
     userInfo () {
+      console.log(this.$store.getters.userInfo)
       return this.$store.getters.userInfo
     }
   },

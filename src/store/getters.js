@@ -10,7 +10,11 @@ const getters = {
   roles: state => state.user.roles,
   userInfo: state => state.user.info,
   addRouters: state => state.permission.addRouters,
-  multiTab: state => state.app.multiTab
+  multiTab: state => state.app.multiTab,
+  gender: state => state.dicData.gender,
+  genderAll: state => state.dicData.genderAll,
+  whether: state => state.dicData.whether,
+  whetherAll: state => state.dicData.whetherAll
 }
 
 export default getters

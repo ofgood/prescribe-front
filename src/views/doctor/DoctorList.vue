@@ -6,16 +6,7 @@
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
               <a-form-item label="姓名">
-                <a-input v-model="queryParam.patientName" placeholder="请输入患者姓名"/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item label="姓别">
-                <a-select v-model="queryParam.sex" placeholder="请选择性别" default-value="0">
-                  <a-select-option v-for="item in genderAll" :value="item.value" :key="item.value">
-                    {{ item.label }}
-                  </a-select-option>
-                </a-select>
+                <a-input v-model="queryParam.patientName" placeholder="请输入医生姓名"/>
               </a-form-item>
             </a-col>
 
@@ -24,7 +15,15 @@
                 <a-input v-model="queryParam.tel" placeholder="请输入联系电话"/>
               </a-form-item>
             </a-col>
-
+            <!-- <a-col :md="8" :sm="24">
+              <a-form-item label="所在诊所">
+                <a-select v-model="queryParam.sex" placeholder="请选择性别" default-value="0">
+                  <a-select-option v-for="item in genderAll" :value="item.value" :key="item.value">
+                    {{ item.label }}
+                  </a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col> -->
             <a-col :md="24" :sm="24">
               <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' } || {} ">
                 <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
@@ -81,7 +80,7 @@
 <script>
 import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
-import { patientList, saveOrUpdate } from '@/api/patientInfo​'
+import { doctorList, doctorSaveOrUpdate } from '@/api/doctor'
 import { mapGetters } from 'vuex'
 import CreateForm from './modules/CreateForm'
 
@@ -161,7 +160,7 @@ const statusMap = {
   }
 }
 export default {
-  name: 'TableList',
+  name: 'DoctorList',
   components: {
     STable,
     Ellipsis,
@@ -184,7 +183,7 @@ export default {
       loadData: parameter => {
         const requestParameters = Object.assign({}, parameter, this.queryParam)
         console.log('loadData request parameters:', requestParameters)
-        return patientList(requestParameters)
+        return doctorList(requestParameters)
           .then(res => {
             return res.data
           })
@@ -240,7 +239,7 @@ export default {
             })
           } else {
             // 新增
-            saveOrUpdate({ ...values }).then(res => {
+            doctorSaveOrUpdate({ ...values }).then(res => {
               if (res.success) {
                 this.visible = false
                 this.confirmLoading = false

@@ -109,14 +109,6 @@
         >确定</a-button>
       </a-form-item>
     </a-form>
-    <reset-password
-      ref="resetModal"
-      :visible="visible"
-      :loading="confirmLoading"
-      :model="mdl"
-      @cancel="handleCancel"
-      @ok="handleOk"
-    />
   </div>
 </template>
 
@@ -124,30 +116,18 @@
 import md5 from 'md5'
 import { mapActions } from 'vuex'
 import { timeFix } from '@/utils/util'
-import ResetPassword from './modules/ResetPassword'
 export default {
   name: 'Login',
-  components: {
-     ResetPassword
-  },
   data () {
     return {
       customActiveKey: 'tab1',
       loginBtn: false,
-      // login type: 0 email, 1 username, 2 telephone
-      loginType: 0,
       isLoginError: false,
       form: this.$form.createForm(this),
       state: {
         time: 60,
-        loginBtn: false,
-        // login type: 0 email, 1 username, 2 telephone
-        loginType: 0,
-        smsSendBtn: false
-      },
-      visible: false,
-      confirmLoading: false,
-      mdl: null
+        loginBtn: false
+      }
     }
   },
   methods: {
@@ -220,13 +200,7 @@ export default {
       })
     },
     forgotPassword () {
-      this.visible = true
-    },
-    handleCancel () {
-      this.visible = false
-    },
-    handleOk (value) {
-      console.log(value)
+        this.$message.info('请联系管理员')
     }
   }
 }

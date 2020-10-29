@@ -10,13 +10,41 @@ const dicData = {
         label: '否'
       }
     ],
-    gender: [
+    whetherAll: [
+      {
+        value: '',
+        label: '全部'
+      },
       {
         value: '1',
+        label: '是'
+      },
+      {
+        value: '0',
+        label: '否'
+      }
+    ],
+    gender: [
+      {
+        value: 'M',
         label: '男'
       },
       {
-        value: '2',
+        value: 'F',
+        label: '女'
+      }
+    ],
+    genderAll: [
+      {
+        value: '',
+        label: '全部'
+      },
+      {
+        value: 'M',
+        label: '男'
+      },
+      {
+        value: 'F',
         label: '女'
       }
     ]
