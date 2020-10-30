@@ -9,14 +9,15 @@
  */
 const allRoute = [
       'dashboard',
-      'analysis',
       'patient',
       'prescription',
       'medicine',
       'medicinalConflict',
       'doctor',
       'clinic',
-      'table'
+      'recipe',
+      'recipeTemplate',
+      'customer'
 ]
 export const roleConfig = {
     SUPER_USER: allRoute,

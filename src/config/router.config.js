@@ -33,9 +33,25 @@ export const asyncRouterMap = [
           {
             path: '/clinic/clinic-list',
             name: 'clinic-list',
-            hideChildrenInMenu: true, // 强制显示 MenuItem 而不是 SubMenu
+            hideChildrenInMenu: true,
             component: () => import('@/views/clinic/ClinicList'),
             meta: { title: '诊所列表', keepAlive: true, permission: [ 'clinic' ] }
+          }
+        ]
+      },
+      {
+        path: '/customer',
+        name: 'customer',
+        component: RouteView,
+        redirect: '/customer/customer-list',
+        meta: { title: '客户管理', icon: 'team', permission: [ 'customer' ] },
+        children: [
+          {
+            path: '/customer/customer-list/:pageNo([1-9]\\d*)?',
+            name: 'customer-list',
+            hideChildrenInMenu: true,
+            component: () => import('@/views/customer/CustomerList'),
+            meta: { title: '客户列表', keepAlive: true, permission: [ 'customer' ] }
           }
         ]
       },
@@ -44,29 +60,14 @@ export const asyncRouterMap = [
         name: 'doctor',
         component: RouteView,
         redirect: '/doctor/doctor-list',
-        meta: { title: '医生管理', icon: 'solution', permission: [ 'doctor' ] },
+        meta: { title: '医生管理', icon: 'fork', permission: [ 'doctor' ] },
         children: [
           {
             path: '/doctor/doctor-list/:pageNo([1-9]\\d*)?',
             name: 'doctor-list',
-            hideChildrenInMenu: true, // 强制显示 MenuItem 而不是 SubMenu
+            hideChildrenInMenu: true,
             component: () => import('@/views/doctor/DoctorList'),
             meta: { title: '医生列表', keepAlive: true, permission: [ 'doctor' ] }
-          }
-        ]
-      },
-      {
-        path: '/recipe',
-        name: 'recipe',
-        component: RouteView,
-        redirect: '/recipe/open-recipe',
-        meta: { title: '处方管理', icon: 'profile', permission: [ 'recipe' ] },
-        children: [
-          {
-            path: '/recipe/open-recipe',
-            name: 'openRecipe',
-            component: () => import('@/views/recipe/OpenRecipe'),
-            meta: { title: '开处方', keepAlive: true, permission: [ 'recipe' ] }
           }
         ]
       },
@@ -80,9 +81,40 @@ export const asyncRouterMap = [
           {
             path: '/patient/patient-list/:pageNo([1-9]\\d*)?',
             name: 'patient-list',
-            hideChildrenInMenu: true, // 强制显示 MenuItem 而不是 SubMenu
+            hideChildrenInMenu: true,
             component: () => import('@/views/patient/PatientList'),
             meta: { title: '患者列表', keepAlive: true, permission: [ 'patient' ] }
+          }
+        ]
+      },
+      {
+        path: '/recipe',
+        name: 'recipe',
+        component: RouteView,
+        redirect: '/recipe/open-recipe',
+        meta: { title: '处方管理', icon: 'file-done', permission: [ 'recipe' ] },
+        children: [
+          {
+            path: '/recipe/open-recipe',
+            name: 'openRecipe',
+            component: () => import('@/views/recipe/OpenRecipe'),
+            meta: { title: '开处方', keepAlive: true, permission: [ 'recipe' ] }
+          }
+        ]
+      },
+      {
+        path: '/recipeTemplate',
+        name: 'recipeTemplate',
+        component: RouteView,
+        redirect: '/recipeTemplate/recipe-template-list',
+        meta: { title: '处方模板管理', icon: 'profile', permission: [ 'recipeTemplate' ] },
+        children: [
+          {
+            path: '/recipeTemplate/recipe-template-list/:pageNo([1-9]\\d*)?',
+            name: 'recipe-template-list',
+            hideChildrenInMenu: true,
+            component: () => import('@/views/recipeTemplate/RecipeTemplateList'),
+            meta: { title: '处方模板列表', keepAlive: true, permission: [ 'recipeTemplate' ] }
           }
         ]
       },
@@ -91,7 +123,7 @@ export const asyncRouterMap = [
         name: 'medicine',
         component: RouteView,
         redirect: '/medicine/medicine-list',
-        meta: { title: '药品管理', icon: 'table', permission: [ 'medicine' ] },
+        meta: { title: '药品管理', icon: 'medicine-box', permission: [ 'medicine' ] },
         children: [
           {
             path: '/medicine/medicine-list',
@@ -105,19 +137,17 @@ export const asyncRouterMap = [
         path: '/medicinalConflict',
         name: 'medicinalConflict',
         component: RouteView,
-        redirect: '/medicinalConflictInfo/medicinalConflict-list',
-        meta: { title: '药品冲突管理', icon: 'gold', permission: [ 'medicinalConflict' ] },
+        redirect: '/medicinalConflict/medicinalConflict-list',
+        meta: { title: '药品冲突管理', icon: 'exception', permission: [ 'medicinalConflict' ] },
         children: [
           {
-            path: '/medicinalConflictInfo/medicinalConflict-list',
+            path: '/medicinalConflict/medicinalConflict-list',
             name: 'medicinalConflictList',
-            component: () => import('@/views/medicine/MedicineList'),
+            component: () => import('@/views/medicinalConflict/MedicinalConflictList'),
             meta: { title: '药品冲突列表', keepAlive: true, permission: [ 'medicinalConflict' ] }
           }
         ]
       },
-
-      // list
 
       // profile
       {
@@ -143,27 +173,27 @@ export const asyncRouterMap = [
       },
 
       // result
-      // {
-      //   path: '/result',
-      //   name: 'result',
-      //   component: RouteView,
-      //   redirect: '/result/success',
-      //   meta: { title: '结果页', icon: 'check-circle-o', permission: [ 'result' ] },
-      //   children: [
-      //     {
-      //       path: '/result/success',
-      //       name: 'ResultSuccess',
-      //       component: () => import(/* webpackChunkName: "result" */ '@/views/result/Success'),
-      //       meta: { title: '成功', keepAlive: false, hiddenHeaderContent: true, permission: [ 'result' ] }
-      //     },
-      //     {
-      //       path: '/result/fail',
-      //       name: 'ResultFail',
-      //       component: () => import(/* webpackChunkName: "result" */ '@/views/result/Error'),
-      //       meta: { title: '失败', keepAlive: false, hiddenHeaderContent: true, permission: [ 'result' ] }
-      //     }
-      //   ]
-      // },
+      {
+        path: '/result',
+        name: 'result',
+        component: RouteView,
+        redirect: '/result/success',
+        meta: { title: '结果页', icon: 'check-circle-o', permission: [ 'result' ] },
+        children: [
+          {
+            path: '/result/success',
+            name: 'ResultSuccess',
+            component: () => import(/* webpackChunkName: "result" */ '@/views/result/Success'),
+            meta: { title: '成功', keepAlive: false, hiddenHeaderContent: true, permission: [ 'result' ] }
+          },
+          {
+            path: '/result/fail',
+            name: 'ResultFail',
+            component: () => import(/* webpackChunkName: "result" */ '@/views/result/Error'),
+            meta: { title: '失败', keepAlive: false, hiddenHeaderContent: true, permission: [ 'result' ] }
+          }
+        ]
+      },
 
       // Exception
       {
@@ -250,69 +280,6 @@ export const asyncRouterMap = [
           }
         ]
       }
-
-      // other
-      /*
-      {
-        path: '/other',
-        name: 'otherPage',
-        component: PageView,
-        meta: { title: '其他组件', icon: 'slack', permission: [ 'dashboard' ] },
-        redirect: '/other/icon-selector',
-        children: [
-          {
-            path: '/other/icon-selector',
-            name: 'TestIconSelect',
-            component: () => import('@/views/other/IconSelectorView'),
-            meta: { title: 'IconSelector', icon: 'tool', keepAlive: true, permission: [ 'dashboard' ] }
-          },
-          {
-            path: '/other/list',
-            component: RouteView,
-            meta: { title: '业务布局', icon: 'layout', permission: [ 'support' ] },
-            redirect: '/other/list/tree-list',
-            children: [
-              {
-                path: '/other/list/tree-list',
-                name: 'TreeList',
-                component: () => import('@/views/other/TreeList'),
-                meta: { title: '树目录表格', keepAlive: true }
-              },
-              {
-                path: '/other/list/edit-table',
-                name: 'EditList',
-                component: () => import('@/views/other/TableInnerEditList'),
-                meta: { title: '内联编辑表格', keepAlive: true }
-              },
-              {
-                path: '/other/list/user-list',
-                name: 'UserList',
-                component: () => import('@/views/other/UserList'),
-                meta: { title: '用户列表', keepAlive: true }
-              },
-              {
-                path: '/other/list/role-list',
-                name: 'RoleList',
-                component: () => import('@/views/other/RoleList'),
-                meta: { title: '角色列表', keepAlive: true }
-              },
-              {
-                path: '/other/list/system-role',
-                name: 'SystemRole',
-                component: () => import('@/views/role/RoleList'),
-                meta: { title: '角色列表2', keepAlive: true }
-              },
-              {
-                path: '/other/list/permission-list',
-                name: 'PermissionList',
-                component: () => import('@/views/other/PermissionList'),
-                meta: { title: '权限列表', keepAlive: true }
-              }
-            ]
-          }
-        ]
-      }
-      */
     ]
   },
   {
