@@ -239,6 +239,7 @@ export default {
             })
           } else {
             // 新增
+            values.clinicIds = values.clinicIds.join(',')
             doctorSaveOrUpdate({ ...values }).then(res => {
               if (res.success) {
                 this.visible = false

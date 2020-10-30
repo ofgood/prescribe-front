@@ -23,7 +23,7 @@ export default {
   menu: {
     locale: true
   },
-  title: 'admin-front',
+  title: '处方录入系统',
   pwa: false,
   iconfontUrl: '',
   production: process.env.NODE_ENV === 'production' && process.env.VUE_APP_PREVIEW !== 'true'
