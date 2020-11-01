@@ -80,7 +80,7 @@
 <script>
 import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
-import { doctorList, doctorSaveOrUpdate } from '@/api/doctor'
+import { medicinalConflictList, medicinalConflictSaveOrUpdate } from '@/api/medicinalConflict'
 import { mapGetters } from 'vuex'
 import CreateForm from './modules/CreateForm'
 
@@ -183,7 +183,7 @@ export default {
       loadData: parameter => {
         const requestParameters = Object.assign({}, parameter, this.queryParam)
         console.log('loadData request parameters:', requestParameters)
-        return doctorList(requestParameters)
+        return medicinalConflictList(requestParameters)
           .then(res => {
             return res.data
           })
@@ -239,7 +239,7 @@ export default {
             })
           } else {
             // 新增
-            doctorSaveOrUpdate({ ...values }).then(res => {
+            medicinalConflictSaveOrUpdate({ ...values }).then(res => {
               if (res.success) {
                 this.visible = false
                 this.confirmLoading = false

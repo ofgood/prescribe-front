@@ -80,7 +80,7 @@
 <script>
 import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
-import { doctorList, doctorSaveOrUpdate } from '@/api/doctor'
+import { recipeTemplateList, recipeTemplateSaveOrUpdate } from '@/api/recipeTemplate'
 import { mapGetters } from 'vuex'
 import CreateForm from './modules/CreateForm'
 
@@ -177,13 +177,12 @@ export default {
       advanced: false,
       // 查询参数
       queryParam: {
-        sex: ''
       },
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         const requestParameters = Object.assign({}, parameter, this.queryParam)
         console.log('loadData request parameters:', requestParameters)
-        return doctorList(requestParameters)
+        return recipeTemplateList(requestParameters)
           .then(res => {
             return res.data
           })
@@ -239,7 +238,7 @@ export default {
             })
           } else {
             // 新增
-            doctorSaveOrUpdate({ ...values }).then(res => {
+            recipeTemplateSaveOrUpdate({ ...values }).then(res => {
               if (res.success) {
                 this.visible = false
                 this.confirmLoading = false

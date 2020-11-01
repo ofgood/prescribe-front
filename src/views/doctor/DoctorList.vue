@@ -86,24 +86,16 @@ import CreateForm from './modules/CreateForm'
 
 const columns = [
   {
+    title: '工号',
+    dataIndex: 'jobNum'
+  },
+  {
     title: '姓名',
-    dataIndex: 'patientName'
-  },
-  {
-    title: '性别',
-    dataIndex: 'sexStr'
-  },
-  {
-    title: '年龄',
-    dataIndex: 'age'
+    dataIndex: 'doctorName'
   },
   {
     title: '联系电话',
-    dataIndex: 'tel'
-  },
-  {
-    title: '配送地址',
-    dataIndex: 'shippingAddress'
+    dataIndex: 'doctorTel'
   },
   {
     title: '住址',
@@ -117,13 +109,9 @@ const columns = [
     title: '出生年月',
     dataIndex: 'birthday'
   },
-  {
-    title: '邮编',
-    dataIndex: 'patientPyCode'
-  },
-  {
-    title: '过敏史',
-    dataIndex: 'hyperSusceptibility'
+   {
+    title: '是否在职',
+    dataIndex: 'status'
   },
   {
     title: '创建时间',
@@ -177,7 +165,6 @@ export default {
       advanced: false,
       // 查询参数
       queryParam: {
-        sex: ''
       },
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {

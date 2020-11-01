@@ -5,16 +5,16 @@
         <a-form layout="inline">
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
-              <a-form-item label="姓名">
-                <a-input v-model="queryParam.patientName" placeholder="请输入医生姓名"/>
+              <a-form-item label="药品名称">
+                <a-input v-model="queryParam.medicinalName" placeholder="请输入医生姓名"/>
               </a-form-item>
             </a-col>
 
-            <a-col :md="8" :sm="24">
+            <!-- <a-col :md="8" :sm="24">
               <a-form-item label="联系电话">
                 <a-input v-model="queryParam.tel" placeholder="请输入联系电话"/>
               </a-form-item>
-            </a-col>
+            </a-col> -->
             <!-- <a-col :md="8" :sm="24">
               <a-form-item label="所在诊所">
                 <a-select v-model="queryParam.sex" placeholder="请选择性别" default-value="0">
@@ -80,58 +80,38 @@
 <script>
 import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
-import { doctorList, doctorSaveOrUpdate } from '@/api/doctor'
+import { medicinalList, medicinalInfoSaveOrUpdate } from '@/api/medicinal'
 import { mapGetters } from 'vuex'
 import CreateForm from './modules/CreateForm'
 
 const columns = [
   {
-    title: '姓名',
-    dataIndex: 'patientName'
+    title: '药品名称',
+    dataIndex: 'medicinalName'
   },
   {
-    title: '性别',
-    dataIndex: 'sexStr'
+    title: '拼音码',
+    dataIndex: 'medicinalPyCode'
   },
   {
-    title: '年龄',
-    dataIndex: 'age'
+    title: '标准',
+    dataIndex: 'medicinalStand'
   },
   {
-    title: '联系电话',
-    dataIndex: 'tel'
+    title: '来源',
+    dataIndex: 'origin'
   },
   {
-    title: '配送地址',
-    dataIndex: 'shippingAddress'
+    title: '价格',
+    dataIndex: 'price'
   },
   {
-    title: '住址',
-    dataIndex: 'address'
+    title: '冲突',
+    dataIndex: 'conflictVoList'
   },
   {
-    title: '身份证号',
-    dataIndex: 'idCard'
-  },
-   {
-    title: '出生年月',
-    dataIndex: 'birthday'
-  },
-  {
-    title: '邮编',
-    dataIndex: 'patientPyCode'
-  },
-  {
-    title: '过敏史',
-    dataIndex: 'hyperSusceptibility'
-  },
-  {
-    title: '创建时间',
-    dataIndex: 'createTime'
-  },
-   {
-    title: '修改时间',
-    dataIndex: 'updateTime'
+    title: '单位',
+    dataIndex: 'unit'
   }
   // {
   //   title: '操作',
@@ -177,13 +157,13 @@ export default {
       advanced: false,
       // 查询参数
       queryParam: {
-        sex: ''
+        medicinalName: ''
       },
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         const requestParameters = Object.assign({}, parameter, this.queryParam)
         console.log('loadData request parameters:', requestParameters)
-        return doctorList(requestParameters)
+        return medicinalList(requestParameters)
           .then(res => {
             return res.data
           })
@@ -239,7 +219,7 @@ export default {
             })
           } else {
             // 新增
-            doctorSaveOrUpdate({ ...values }).then(res => {
+            medicinalInfoSaveOrUpdate({ ...values }).then(res => {
               if (res.success) {
                 this.visible = false
                 this.confirmLoading = false

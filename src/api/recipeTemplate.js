@@ -3,7 +3,7 @@ import request from '@/utils/request'
 const api = {
   recipeTemplateDelete: '/recipeTemplate/delete', // 删除处方模板
   recipeTemplateFindById: '/recipeTemplate/findById', // 根据编号查询处方模板
-  recipeTemplateList: '/recipeTemplate​/findList', // 查询处方模板列表
+  recipeTemplateList: '/recipeTemplate/findList', // 查询处方模板列表
   recipeTemplateSelect: '/recipeTemplate/findSelect', // 下拉框查询处方模板(供医生开方使用)
   recipeTemplateSaveOrUpdate: '/recipeTemplate/saveOrUpdate'// 新增|编辑
 }

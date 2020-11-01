@@ -43,17 +43,31 @@
         </a-tab-pane>
         <a-tab-pane key="tab2" tab="医生登录">
           <a-form-item>
-            <a-input
-              size="large"
-              type="text"
-              placeholder="请输入帐号"
-              v-decorator="[
-                'username',
-                {rules: [{ required: true, message: '请输入帐号' }], validateTrigger: 'change'}
-              ]"
+            <a-input-group
+              style="display: inline-block; vertical-align: middle"
+              :compact="true"
             >
-              <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }"/>
-            </a-input>
+              <a-select
+                size="large"
+                v-model="doctorType"
+                style="width: 100px">
+                <a-select-option value="DOCTOR">医生</a-select-option>
+                <a-select-option value="DOCTOR_STAR">名医</a-select-option>
+              </a-select>
+              <a-input
+                size="large"
+                type="text"
+                placeholder="请输入帐号"
+                @blur="changeUserName"
+                :style="{width: 'calc(100% - 100px)'}"
+                v-decorator="[
+                  'username',
+                  {rules: [{ required: true, message: '请输入帐号' }], validateTrigger: 'change'}
+                ]"
+              >
+                <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }"/>
+              </a-input>
+            </a-input-group>
           </a-form-item>
 
           <a-form-item>
@@ -124,6 +138,7 @@ export default {
       loginBtn: false,
       isLoginError: false,
       form: this.$form.createForm(this),
+      doctorType: 'DOCTOR',
       state: {
         time: 60,
         loginBtn: false
@@ -143,6 +158,7 @@ export default {
         form: { validateFields },
         state,
         customActiveKey,
+        doctorType,
         Login
       } = this
 
@@ -155,6 +171,9 @@ export default {
           console.log('login form', values)
           const loginParams = { ...values }
           loginParams.password = md5(values.password)
+          if (customActiveKey === 'tab2') {
+            loginParams.userType = doctorType
+          }
           Login(loginParams)
             .then((res) => this.loginSuccess(res))
             .catch(err => this.requestFailed(err))
@@ -201,6 +220,9 @@ export default {
     },
     forgotPassword () {
         this.$message.info('请联系管理员')
+    },
+    changeUserName () {
+
     }
   }
 }

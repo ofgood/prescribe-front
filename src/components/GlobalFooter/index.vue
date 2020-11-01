@@ -1,12 +1,12 @@
 <template>
   <global-footer class="footer custom-render">
     <template v-slot:links>
+      <!-- <span>admin</span> |
       <span>admin</span> |
-      <span>admin</span> |
-      <span>admin</span> |
+      <span>admin</span> | -->
     </template>
     <template v-slot:copyright>
-      <span>vueComponent</span>
+      <!-- <span>vueComponent</span> -->
     </template>
   </global-footer>
 </template>

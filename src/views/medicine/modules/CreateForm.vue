@@ -13,11 +13,11 @@
         <a-form-item v-if="model && model.id > 0" label="主键ID">
           <a-input v-decorator="['id', { initialValue: 0 }]" disabled />
         </a-form-item>
-        <a-form-item label="姓名">
-          <a-input v-decorator="['doctorName', {rules: [{required: true, message: '请输入患者姓名'}]}]" placeholder="请输入"/>
+        <a-form-item label="名称">
+          <a-input v-decorator="['medicinalName', {rules: [{required: true, message: '请输入患者姓名'}]}]" placeholder="请输入"/>
         </a-form-item>
         <a-form-item label="联系电话">
-          <a-input placeholder="请输入联系电话" v-decorator="['doctorTel', {rules: [{required: true, message: '请输入联系电话'}]}]" />
+          <a-input placeholder="请输入联系电话" v-decorator="['medicinalStand', {rules: [{required: true, message: '请输入联系电话'}]}]" />
         </a-form-item>
         <a-form-item label="医生类别">
           <a-select placeholder="请选择医生类别" v-decorator="['doctorType', {rules: [{required: true, message: '请选择医生类别'}]}]">

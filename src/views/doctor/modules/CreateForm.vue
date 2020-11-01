@@ -14,7 +14,7 @@
           <a-input v-decorator="['id', { initialValue: 0 }]" disabled />
         </a-form-item>
         <a-form-item label="姓名">
-          <a-input v-decorator="['doctorName', {rules: [{required: true, message: '请输入患者姓名'}]}]" placeholder="请输入"/>
+          <a-input v-decorator="['doctorName', {rules: [{required: true, message: '请输入医生姓名'}]}]" placeholder="请输入医生姓名"/>
         </a-form-item>
         <a-form-item label="联系电话">
           <a-input placeholder="请输入联系电话" v-decorator="['doctorTel', {rules: [{required: true, message: '请输入联系电话'}]}]" />
@@ -32,6 +32,9 @@
               {{ item.clinicName }}
             </a-select-option>
           </a-select>
+        </a-form-item>
+        <a-form-item label="工号">
+          <a-input v-decorator="['jobNum', {rules: [{required: true, message: '请输入医生工号'}]}]" placeholder="请输入医生工号"/>
         </a-form-item>
         <a-form-item label="联系地址">
           <a-input placeholder="请输入联系地址" v-decorator="['address', {rules: [{required: true, message: '请输入联系地址'}]}]" />

@@ -1,6 +1,6 @@
 <template>
   <a-modal
-    title="新建药品"
+    title="新建处方模板"
     :width="640"
     :visible="visible"
     :confirmLoading="loading"
@@ -13,8 +13,8 @@
         <a-form-item v-if="model && model.id > 0" label="主键ID">
           <a-input v-decorator="['id', { initialValue: 0 }]" disabled />
         </a-form-item>
-        <a-form-item label="姓名">
-          <a-input v-decorator="['doctorName', {rules: [{required: true, message: '请输入患者姓名'}]}]" placeholder="请输入"/>
+        <a-form-item label="模板名称">
+          <a-input v-decorator="['recipeTemplateName', {rules: [{required: true, message: '请输入模板名称'}]}]" placeholder="请输入"/>
         </a-form-item>
         <a-form-item label="联系电话">
           <a-input placeholder="请输入联系电话" v-decorator="['doctorTel', {rules: [{required: true, message: '请输入联系电话'}]}]" />

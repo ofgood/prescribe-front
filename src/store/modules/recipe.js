@@ -1,4 +1,4 @@
-import { clinicList } from '@/api/clinic'
+import { clinicSelect } from '@/api/clinic'
 const user = {
   state: {
     clinics: []
@@ -14,11 +14,11 @@ const user = {
     // 获取诊所列表
     GetClinicList ({ commit }) {
       return new Promise((resolve, reject) => {
-        clinicList().then(response => {
+        clinicSelect().then(response => {
           console.log('response', response)
           const result = response.data
           if (response.success) {
-            commit('SET_CLINICS', result.data || [])
+            commit('SET_CLINICS', result || [])
           } else {
             reject(new Error(response.message))
           }
