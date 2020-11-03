@@ -57,6 +57,42 @@ const dicData = {
         value: 'DOCTOR_STAR',
         label: '名医'
       }
+    ],
+    medicinalStands: [
+      {
+        value: '统',
+        label: '统'
+      }
+    ],
+    conflictType: [
+      {
+        label: '十八反十九畏',
+        value: 'EAN'
+      },
+      {
+        label: '毒性',
+        value: 'TOXIC'
+      }
+    ],
+    recipeTemplateType: [
+      {
+        label: '经典模板',
+        value: 'CLASSIC'
+      },
+      {
+        label: '医生自建模板',
+        value: 'PRIVATE'
+      }
+    ],
+    recipeType: [
+      {
+        label: '经典模板',
+        value: 'CLASSIC'
+      },
+      {
+        label: '医生自建模板',
+        value: 'PRIVATE'
+      }
     ]
   }
 

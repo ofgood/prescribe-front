@@ -10,20 +10,20 @@
 const allRoute = [
       'dashboard',
       'patient',
-      'prescription',
       'medicine',
       'medicinalConflict',
       'doctor',
       'clinic',
       'recipe',
       'recipeTemplate',
-      'customer'
+      'customer',
+      'createRecipeTemplate'
 ]
 export const roleConfig = {
     SUPER_USER: allRoute,
     COMPANY_MANAGER: allRoute,
     AREA_MANAGER: allRoute,
     CLINIC_MANAGER: allRoute,
-    DOCTOR: allRoute,
-    DOCTOR_STAR: allRoute
+    DOCTOR: ['recipe', 'recipeTemplate', 'dashboard'],
+    DOCTOR_STAR: ['recipe', 'recipeTemplate', 'dashboard']
 }

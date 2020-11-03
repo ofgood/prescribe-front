@@ -51,7 +51,7 @@ export function medicinalSelect (parameter) {
 
 export function medicinalInfoSaveOrUpdate (parameter) {
     return request({
-      url: api.medicinalSelect,
+      url: api.medicinalInfoSaveOrUpdate,
       method: 'post',
       data: parameter
     })

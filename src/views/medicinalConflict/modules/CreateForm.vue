@@ -1,6 +1,6 @@
 <template>
   <a-modal
-    title="新建药品"
+    title="新建药品冲突"
     :width="640"
     :visible="visible"
     :confirmLoading="loading"
@@ -13,34 +13,41 @@
         <a-form-item v-if="model && model.id > 0" label="主键ID">
           <a-input v-decorator="['id', { initialValue: 0 }]" disabled />
         </a-form-item>
-        <a-form-item label="姓名">
-          <a-input v-decorator="['doctorName', {rules: [{required: true, message: '请输入患者姓名'}]}]" placeholder="请输入"/>
+        <a-form-item label="药品名称">
+          <a-select
+            v-decorator="['medicinalName', {rules: [{required: true, message: '请输药品名称'}]}]"
+            show-search
+            :value="value"
+            placeholder="请输药品名称"
+            style="width: 200px"
+            :show-arrow="false"
+            :filter-option="false"
+            :not-found-content="null"
+            @search="handleSearch('')"
+            @change="handleChange"
+          >
+            <a-select-option v-for="d in data" :key="d.value">
+              {{ d.text }}
+            </a-select-option>
+          </a-select>
+          <a-input v-decorator="['medicinalName', {rules: [{required: true, message: '请输药品名称'}]}]" placeholder="请输入药品名称"/>
         </a-form-item>
-        <a-form-item label="联系电话">
-          <a-input placeholder="请输入联系电话" v-decorator="['doctorTel', {rules: [{required: true, message: '请输入联系电话'}]}]" />
+        <a-form-item label="冲突药品名称">
+          <a-input placeholder="请输入冲突药品名称" v-decorator="['conflictMedicinalName', {rules: [{required: true, message: '请输入冲突药品名称'}]}]" />
         </a-form-item>
-        <a-form-item label="医生类别">
-          <a-select placeholder="请选择医生类别" v-decorator="['doctorType', {rules: [{required: true, message: '请选择医生类别'}]}]">
-            <a-select-option v-for="item in doctorType" :key="item.value">
+        <a-form-item label="冲突类型">
+          <a-select placeholder="请选择冲突类型" v-decorator="['conflictType', {rules: [{required: true, message: '请选择冲突类型'}]}]">
+            <a-select-option v-for="item in conflictType" :key="item.value">
               {{ item.label }}
             </a-select-option>
           </a-select>
         </a-form-item>
-        <a-form-item label="诊所">
-          <a-select mode="multiple" placeholder="请选择诊所" :filterOption="filterOption" v-decorator="['clinicIds', {rules: [{required: true, message: '请选择诊所'}]}]">
-            <a-select-option v-for="item in clinics" :key="item.id">
-              {{ item.clinicName }}
-            </a-select-option>
-          </a-select>
-        </a-form-item>
-        <a-form-item label="联系地址">
-          <a-input placeholder="请输入联系地址" v-decorator="['address', {rules: [{required: true, message: '请输入联系地址'}]}]" />
-        </a-form-item>
-        <a-form-item label="出生日期">
-          <a-date-picker style="width:100%" placeholder="请选择出生日期" valueFormat="YYYY-MM-DD" v-decorator="['birthday', {rules: [{message: '请选择出生日期'}]}]" />
-        </a-form-item>
-        <a-form-item label="身份证号">
-          <a-input placeholder="请输入" v-decorator="['idCard', {rules: [{required: false, message: ''}]}]" />
+        <a-form-item label="备注">
+          <a-textarea
+            v-decorator="['remark', {rules: [{required: false, message: ''}]}]"
+            placeholder="请输入备注"
+            :auto-size="{ minRows: 3, maxRows: 5 }"
+          />
         </a-form-item>
       </a-form>
     </a-spin>
@@ -85,7 +92,7 @@ export default {
     }
   },
   computed: {
-     ...mapGetters(['doctorType', 'clinics'])
+     ...mapGetters(['conflictType'])
   },
   created () {
     // 防止表单未注册

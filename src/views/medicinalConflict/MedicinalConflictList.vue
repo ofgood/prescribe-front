@@ -5,14 +5,8 @@
         <a-form layout="inline">
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
-              <a-form-item label="姓名">
-                <a-input v-model="queryParam.patientName" placeholder="请输入医生姓名"/>
-              </a-form-item>
-            </a-col>
-
-            <a-col :md="8" :sm="24">
-              <a-form-item label="联系电话">
-                <a-input v-model="queryParam.tel" placeholder="请输入联系电话"/>
+              <a-form-item label="药品名称">
+                <a-input v-model="queryParam.medicinalName" placeholder="请输入药品名称"/>
               </a-form-item>
             </a-col>
             <!-- <a-col :md="8" :sm="24">
@@ -86,81 +80,28 @@ import CreateForm from './modules/CreateForm'
 
 const columns = [
   {
-    title: '姓名',
-    dataIndex: 'patientName'
+    title: '药品名称',
+    dataIndex: 'medicinalName'
   },
   {
-    title: '性别',
-    dataIndex: 'sexStr'
+    title: '冲突药品名称',
+    dataIndex: 'conflictMedicinalName'
   },
   {
-    title: '年龄',
-    dataIndex: 'age'
+    title: '冲突类型',
+    dataIndex: 'conflictTypeName'
   },
   {
-    title: '联系电话',
-    dataIndex: 'tel'
+    title: '备注',
+    dataIndex: 'remark'
   },
   {
-    title: '配送地址',
-    dataIndex: 'shippingAddress'
-  },
-  {
-    title: '住址',
-    dataIndex: 'address'
-  },
-  {
-    title: '身份证号',
-    dataIndex: 'idCard'
-  },
-   {
-    title: '出生年月',
-    dataIndex: 'birthday'
-  },
-  {
-    title: '邮编',
-    dataIndex: 'patientPyCode'
-  },
-  {
-    title: '过敏史',
-    dataIndex: 'hyperSusceptibility'
-  },
-  {
-    title: '创建时间',
-    dataIndex: 'createTime'
-  },
-   {
-    title: '修改时间',
-    dataIndex: 'updateTime'
+    title: '状态',
+    dataIndex: 'status'
   }
-  // {
-  //   title: '操作',
-  //   dataIndex: 'action',
-  //   width: '150px',
-  //   scopedSlots: { customRender: 'action' }
-  // }
 ]
-
-const statusMap = {
-  0: {
-    status: 'default',
-    text: '关闭'
-  },
-  1: {
-    status: 'processing',
-    text: '运行中'
-  },
-  2: {
-    status: 'success',
-    text: '已上线'
-  },
-  3: {
-    status: 'error',
-    text: '异常'
-  }
-}
 export default {
-  name: 'DoctorList',
+  name: 'MedicinalConflictList',
   components: {
     STable,
     Ellipsis,
@@ -177,7 +118,7 @@ export default {
       advanced: false,
       // 查询参数
       queryParam: {
-        sex: ''
+        medicinalName: ''
       },
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
@@ -190,14 +131,6 @@ export default {
       },
       selectedRowKeys: [],
       selectedRows: []
-    }
-  },
-  filters: {
-    statusFilter (type) {
-      return statusMap[type].text
-    },
-    statusTypeFilter (type) {
-      return statusMap[type].status
     }
   },
   created () {

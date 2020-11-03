@@ -16,7 +16,11 @@ const getters = {
   whether: state => state.dicData.whether,
   whetherAll: state => state.dicData.whetherAll,
   doctorType: state => state.dicData.doctorType,
-  clinics: state => state.recipe.clinics
+  clinics: state => state.recipe.clinics,
+  medicinalStands: state => state.dicData.medicinalStands,
+  conflictType: state => state.dicData.conflictType,
+  recipeTemplateType: state => state.dicData.recipeTemplateType,
+  recipeType: state => state.dicData.recipeType
 }
 
 export default getters

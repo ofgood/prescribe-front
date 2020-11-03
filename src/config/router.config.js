@@ -112,9 +112,16 @@ export const asyncRouterMap = [
           {
             path: '/recipeTemplate/recipe-template-list/:pageNo([1-9]\\d*)?',
             name: 'recipe-template-list',
-            hideChildrenInMenu: true,
             component: () => import('@/views/recipeTemplate/RecipeTemplateList'),
+            hideChildrenInMenu: true,
             meta: { title: '处方模板列表', keepAlive: true, permission: [ 'recipeTemplate' ] }
+          },
+          {
+            path: '/recipeTemplate/create-recipe-template',
+            name: 'create-recipe-template',
+            // hidden: true,
+            component: () => import('@/views/recipeTemplate/CreateRecipeTemplate'),
+            meta: { title: '创建处方模板', keepAlive: true, permission: [ 'createRecipeTemplate' ] }
           }
         ]
       },
@@ -127,7 +134,7 @@ export const asyncRouterMap = [
         children: [
           {
             path: '/medicine/medicine-list',
-            name: 'medicine',
+            name: 'medicine-list',
             component: () => import('@/views/medicine/MedicineList'),
             meta: { title: '药品列表', keepAlive: true, permission: [ 'medicine' ] }
           }

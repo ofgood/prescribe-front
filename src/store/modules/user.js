@@ -45,6 +45,7 @@ const user = {
           storage.set(ACCESS_TOKEN, result.token, 7 * 24 * 60 * 60 * 1000)
           commit('SET_TOKEN', result.token)
           resolve()
+          window.location.reload()
         }).catch(error => {
           reject(error)
         })
@@ -66,7 +67,7 @@ const user = {
             commit('SET_ROLE', result.userType)
             commit('SET_INFO', result)
           } else {
-            reject(new Error('getInfo: roles must be a non-null array !'))
+            reject(new Error('用户角色类型不能为空!'))
           }
 
           commit('SET_NAME', { name: result.userName, welcome: welcome() })

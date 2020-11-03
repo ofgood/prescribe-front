@@ -207,8 +207,11 @@ export default {
   },
   methods: {
     handleAdd () {
-      this.mdl = null
-      this.visible = true
+      // this.mdl = null
+      // this.visible = true
+      this.$router.push({
+        name: 'create-recipe-template'
+      })
     },
     handleEdit (record) {
       this.visible = true

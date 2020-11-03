@@ -3,7 +3,7 @@
     <a-card class="card" title="患者信息" :bordered="false">
       <repository-form ref="repository" :showSubmit="false" />
     </a-card>
-    <a-card class="card" title="药品信息" :bordered="false">
+    <a-card class="card" title="处方信息" :bordered="false">
       <task-form ref="task" :showSubmit="false" />
     </a-card>
 

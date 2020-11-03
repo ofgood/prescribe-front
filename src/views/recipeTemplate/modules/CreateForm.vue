@@ -1,7 +1,7 @@
 <template>
   <a-modal
     title="新建处方模板"
-    :width="640"
+    width="80%"
     :visible="visible"
     :confirmLoading="loading"
     @ok="() => { $emit('ok') }"

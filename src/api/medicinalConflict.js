@@ -5,7 +5,7 @@ const api = {
   findMedicinalConflict: '/medicinalConflictInfo/findMedicinal', // 根据编号查询药品信息
   importMedicinalConflict: '/medicinalConflictInfo/importMedicinalConflict', // 导入药品冲突信息
   medicinalConflictList: '/medicinalConflictInfo/medicinalConflictList', // 查询药品列表
-  medicinalConflictSaveOrUpdate: '​/medicinalConflictInfo​/saveOrUpdate'// 新增|编辑
+  medicinalConflictSaveOrUpdate: '/medicinalConflictInfo/saveOrUpdate'// 新增|编辑
 }
 
 export function medicinalConflictInfoDelete (parameter) {

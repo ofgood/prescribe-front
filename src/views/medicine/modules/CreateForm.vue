@@ -13,34 +13,36 @@
         <a-form-item v-if="model && model.id > 0" label="主键ID">
           <a-input v-decorator="['id', { initialValue: 0 }]" disabled />
         </a-form-item>
-        <a-form-item label="名称">
-          <a-input v-decorator="['medicinalName', {rules: [{required: true, message: '请输入患者姓名'}]}]" placeholder="请输入"/>
+        <a-form-item label="药品名称">
+          <a-input v-decorator="['medicinalName', {rules: [{required: true, message: '请输入药品名称'}]}]" placeholder="请输入药品名称"/>
         </a-form-item>
-        <a-form-item label="联系电话">
-          <a-input placeholder="请输入联系电话" v-decorator="['medicinalStand', {rules: [{required: true, message: '请输入联系电话'}]}]" />
+        <a-form-item label="药品编码">
+          <a-input v-decorator="['medicinalCode', {rules: [{required: true, message: '请输入药品编码'}]}]" placeholder="请输入药品编码"/>
         </a-form-item>
-        <a-form-item label="医生类别">
-          <a-select placeholder="请选择医生类别" v-decorator="['doctorType', {rules: [{required: true, message: '请选择医生类别'}]}]">
-            <a-select-option v-for="item in doctorType" :key="item.value">
+        <a-form-item label="药品规格">
+          <a-select placeholder="请选择药品规格" v-decorator="['medicinalStand', {rules: [{required: true, message: '请选择药品规格'}]}]">
+            <a-select-option v-for="item in medicinalStands" :key="item.value">
               {{ item.label }}
             </a-select-option>
           </a-select>
         </a-form-item>
-        <a-form-item label="诊所">
-          <a-select mode="multiple" placeholder="请选择诊所" :filterOption="filterOption" v-decorator="['clinicIds', {rules: [{required: true, message: '请选择诊所'}]}]">
-            <a-select-option v-for="item in clinics" :key="item.id">
-              {{ item.clinicName }}
-            </a-select-option>
-          </a-select>
+        <a-form-item label="单位">
+          <a-input v-decorator="['unit', {rules: [{required: true, message: '请输入单位'}]}]" placeholder="请输入单位"/>
         </a-form-item>
-        <a-form-item label="联系地址">
-          <a-input placeholder="请输入联系地址" v-decorator="['address', {rules: [{required: true, message: '请输入联系地址'}]}]" />
+        <a-form-item label="药品价格">
+          <a-input placeholder="请输入药品价格" prefix="￥" v-decorator="['price', { initialValue: '0.00', rules: [{required: true, message: '请输入药品价格'}] }]"/>
         </a-form-item>
-        <a-form-item label="出生日期">
-          <a-date-picker style="width:100%" placeholder="请选择出生日期" valueFormat="YYYY-MM-DD" v-decorator="['birthday', {rules: [{message: '请选择出生日期'}]}]" />
+        <a-form-item label="药品来源">
+          <a-input v-decorator="['origin', {rules: [{required: true, message: '请输入药品来源'}]}]" placeholder="请输入药品来源"/>
         </a-form-item>
-        <a-form-item label="身份证号">
-          <a-input placeholder="请输入" v-decorator="['idCard', {rules: [{required: false, message: ''}]}]" />
+        <a-form-item label="药品剂量">
+          <a-input v-decorator="['dosage']" placeholder="请输入药品剂量"/>
+        </a-form-item>
+        <a-form-item label="药品最大剂量">
+          <a-input v-decorator="['maxDosage']" placeholder="请输入药品最大剂量"/>
+        </a-form-item>
+        <a-form-item label="药品煎煮顺序">
+          <a-input v-decorator="['druggingOrder']" placeholder="请输入药品煎煮顺序"/>
         </a-form-item>
       </a-form>
     </a-spin>
@@ -49,7 +51,7 @@
 
 <script>
 import pick from 'lodash.pick'
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 import { filterOption } from '@/utils/util'
 // 表单字段
 const fields = ['description', 'id']
@@ -85,7 +87,7 @@ export default {
     }
   },
   computed: {
-     ...mapGetters(['doctorType', 'clinics'])
+     ...mapGetters(['medicinalStands'])
   },
   created () {
     // 防止表单未注册
@@ -95,10 +97,8 @@ export default {
     this.$watch('model', () => {
       this.model && this.form.setFieldsValue(pick(this.model, fields))
     })
-    this.GetClinicList()
   },
   methods: {
-    ...mapActions(['GetClinicList']),
     filterOption
   }
 }

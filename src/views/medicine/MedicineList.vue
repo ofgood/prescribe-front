@@ -6,24 +6,9 @@
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
               <a-form-item label="药品名称">
-                <a-input v-model="queryParam.medicinalName" placeholder="请输入医生姓名"/>
+                <a-input v-model="queryParam.medicinalName" placeholder="请输入药品名称"/>
               </a-form-item>
             </a-col>
-
-            <!-- <a-col :md="8" :sm="24">
-              <a-form-item label="联系电话">
-                <a-input v-model="queryParam.tel" placeholder="请输入联系电话"/>
-              </a-form-item>
-            </a-col> -->
-            <!-- <a-col :md="8" :sm="24">
-              <a-form-item label="所在诊所">
-                <a-select v-model="queryParam.sex" placeholder="请选择性别" default-value="0">
-                  <a-select-option v-for="item in genderAll" :value="item.value" :key="item.value">
-                    {{ item.label }}
-                  </a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col> -->
             <a-col :md="24" :sm="24">
               <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' } || {} ">
                 <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
@@ -56,13 +41,6 @@
         :data="loadData"
         showPagination="auto"
       >
-        <!-- <span slot="action" slot-scope="text, record">
-          <template>
-            <a @click="handleEdit(record)">配置</a>
-            <a-divider type="vertical" />
-            <a @click="handleSub(record)">订阅报警</a>
-          </template>
-        </span> -->
       </s-table>
 
       <create-form
@@ -94,7 +72,7 @@ const columns = [
     dataIndex: 'medicinalPyCode'
   },
   {
-    title: '标准',
+    title: '规格',
     dataIndex: 'medicinalStand'
   },
   {
@@ -120,25 +98,6 @@ const columns = [
   //   scopedSlots: { customRender: 'action' }
   // }
 ]
-
-const statusMap = {
-  0: {
-    status: 'default',
-    text: '关闭'
-  },
-  1: {
-    status: 'processing',
-    text: '运行中'
-  },
-  2: {
-    status: 'success',
-    text: '已上线'
-  },
-  3: {
-    status: 'error',
-    text: '异常'
-  }
-}
 export default {
   name: 'DoctorList',
   components: {
@@ -171,17 +130,6 @@ export default {
       selectedRowKeys: [],
       selectedRows: []
     }
-  },
-  filters: {
-    statusFilter (type) {
-      return statusMap[type].text
-    },
-    statusTypeFilter (type) {
-      return statusMap[type].status
-    }
-  },
-  created () {
-
   },
   computed: {
      ...mapGetters(['genderAll'])
@@ -219,6 +167,9 @@ export default {
             })
           } else {
             // 新增
+            values.dosage = +values.dosage
+            values.maxDosage = +values.maxDosage
+            values.price = +values.price
             medicinalInfoSaveOrUpdate({ ...values }).then(res => {
               if (res.success) {
                 this.visible = false
