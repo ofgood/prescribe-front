@@ -1,9 +1,10 @@
 <template>
   <page-header-wrapper content="">
-    <a-card class="card" title="填写处方信息" :bordered="false">
+    <a-card size="small" class="card" title="填写处方信息" :bordered="false">
       <repository-form ref="repository" :showSubmit="false" />
-      <a-card title="药品列表">
+      <a-card size="small" title="药品列表">
         <a-table
+          size="middle"
           :columns="columns"
           :dataSource="data"
           :pagination="false"
@@ -87,6 +88,7 @@ import RepositoryForm from './RepositoryForm'
 import FooterToolBar from '@/components/FooterToolbar'
 import { baseMixin } from '@/store/app-mixin'
 import { medicinalSelect } from '@/api/medicinal'
+import { recipeTemplateSaveOrUpdate } from '@/api/recipeTemplate'
 const fieldLabels = {
   name: '仓库名',
   url: '仓库域名',
@@ -120,7 +122,6 @@ export default {
       inputCols: [
        'orderNum',
        'medicinalCode',
-       'pinyinCode',
        'medicinalStand',
        'dosage',
        'maxDosage',
@@ -133,7 +134,7 @@ export default {
           title: '序号',
           dataIndex: 'orderNum',
           key: 'orderNum',
-          width: '8%',
+          width: '80px',
           scopedSlots: { customRender: 'orderNum' }
         },
          {
@@ -149,13 +150,6 @@ export default {
           key: 'medicinalCode',
           width: '8%',
           scopedSlots: { customRender: 'medicinalCode' }
-        },
-         {
-          title: '拼音码',
-          dataIndex: 'pinyinCode',
-          key: 'pinyinCode',
-          width: '10%',
-          scopedSlots: { customRender: 'pinyinCode' }
         },
         {
           title: '规格',
@@ -202,6 +196,7 @@ export default {
         {
           title: '操作',
           key: 'action',
+          width: '120px',
           scopedSlots: { customRender: 'operation' }
         }
       ],
@@ -209,7 +204,6 @@ export default {
          {
             orderNum: '1',
             medicinalCode: '',
-            pinyinCode: '',
             medicineName: '',
             medicinalStand: '',
             dosage: '',
@@ -272,7 +266,6 @@ export default {
       this.data.push({
         orderNum: length === 0 ? '1' : (parseInt(this.data[length - 1].orderNum) + 1).toString(),
         medicinalCode: '',
-        pinyinCode: '',
         medicineName: '',
         medicinalStand: '',
         dosage: '',
@@ -297,7 +290,6 @@ export default {
       const {
        orderNum,
        medicinalCode,
-       pinyinCode,
        medicinalName,
        medicinalStand,
        dosage,
@@ -306,7 +298,7 @@ export default {
        druggingOrder,
        toxic
        } = record
-      if (!toxic || !maxDosage || !unit || !druggingOrder || !orderNum || !medicinalCode || !pinyinCode || !medicinalName || !medicinalStand || !dosage) {
+      if (!toxic || !maxDosage || !unit || !druggingOrder || !orderNum || !medicinalCode || !medicinalName || !medicinalStand || !dosage) {
         this.memberLoading = false
         this.$message.error('请填写完整药品信息!')
         return
@@ -359,6 +351,9 @@ export default {
       this.errors = []
       Promise.all([repositoryForm]).then(values => {
         console.log('values', values)
+        recipeTemplateSaveOrUpdate(values[0]).then(res => {
+          console.log('res', res)
+        })
         $notification['error']({
           message: 'Received values of form:',
           description: JSON.stringify(values)

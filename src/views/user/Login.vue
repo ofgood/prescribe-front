@@ -90,15 +90,7 @@
                 'clinic',
                 {rules: [{ required: true, message: '请选择药店' }], validateTrigger: 'blur'}
               ]">
-              <a-select-option value="HYS">
-                好药师
-              </a-select-option>
-              <a-select-option value="YST">
-                养生堂
-              </a-select-option>
-              <a-select-option value="LYS">
-                雷允上
-              </a-select-option>
+              <a-select-option v-for="item in clinics" :value="item.id" :key="item.id">{{ item.clinicName }}</a-select-option>
             </a-select>
           </a-form-item>
         </a-tab-pane>
@@ -130,6 +122,9 @@
 import md5 from 'md5'
 import { mapActions } from 'vuex'
 import { timeFix } from '@/utils/util'
+import { getClinicListByUseName } from '@/api/login'
+import storage from 'store'
+import { CLINIC_ID } from '@/config/storageTypes'
 export default {
   name: 'Login',
   data () {
@@ -142,7 +137,8 @@ export default {
       state: {
         time: 60,
         loginBtn: false
-      }
+      },
+      clinics: []
     }
   },
   methods: {
@@ -173,6 +169,7 @@ export default {
           loginParams.password = md5(values.password)
           if (customActiveKey === 'tab2') {
             loginParams.userType = doctorType
+            storage.set(CLINIC_ID, loginParams.clinic)
           }
           Login(loginParams)
             .then((res) => this.loginSuccess(res))
@@ -222,7 +219,16 @@ export default {
         this.$message.info('请联系管理员')
     },
     changeUserName () {
-
+      console.log(this.form.getFieldValue('username'))
+        getClinicListByUseName(
+          {
+            username: this.form.getFieldValue('username')
+          }
+        ).then(res => {
+          if (res.success) {
+              this.clinics = res.data || []
+          }
+        })
     }
   }
 }

@@ -20,7 +20,11 @@ const getters = {
   medicinalStands: state => state.dicData.medicinalStands,
   conflictType: state => state.dicData.conflictType,
   recipeTemplateType: state => state.dicData.recipeTemplateType,
-  recipeType: state => state.dicData.recipeType
+  recipeType: state => state.dicData.recipeType,
+  recipeTypeAll: state => state.dicData.recipeTypeAll,
+  recipeTypes: state => state.dicData.recipeTypes,
+  druggingOrders: state => state.dicData.druggingOrders,
+  grabMedicineTypes: state => state.dicData.grabMedicineTypes
 }
 
 export default getters

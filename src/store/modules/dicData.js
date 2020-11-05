@@ -2,11 +2,11 @@ const dicData = {
   state: {
     whether: [
       {
-        value: '1',
+        value: 'Y',
         label: '是'
       },
       {
-        value: '0',
+        value: 'N',
         label: '否'
       }
     ],
@@ -16,11 +16,11 @@ const dicData = {
         label: '全部'
       },
       {
-        value: '1',
+        value: 'Y',
         label: '是'
       },
       {
-        value: '0',
+        value: 'N',
         label: '否'
       }
     ],
@@ -84,7 +84,25 @@ const dicData = {
         value: 'PRIVATE'
       }
     ],
-    recipeType: [
+    recipeTypes: [
+      {
+        label: '代煎',
+        value: 'FRIED'
+      },
+      {
+        label: '自煎',
+        value: 'SELF_FRIED'
+      },
+      {
+        label: '膏方',
+        value: 'CREAM_FORMULA'
+      }
+    ],
+    recipeTypeAll: [
+      {
+        label: '全部',
+        value: ''
+      },
       {
         label: '经典模板',
         value: 'CLASSIC'
@@ -92,6 +110,42 @@ const dicData = {
       {
         label: '医生自建模板',
         value: 'PRIVATE'
+      }
+    ],
+    druggingOrders: [
+      {
+        label: '先煎药',
+        value: 'FRIED_FIRST'
+      },
+      {
+        label: '后下药',
+        value: 'FRIED_LAST'
+      },
+      {
+        label: '包煎药',
+        value: 'FRIED_PACKAGE'
+      },
+      {
+        label: '烊化药',
+        value: 'UNIFY'
+      },
+      {
+        label: '兑服药',
+        value: 'SURRENDER'
+      },
+      {
+        label: '捣碎药',
+        value: 'MASHED'
+      }
+    ],
+    grabMedicineTypes: [
+      {
+        label: '代煎',
+        value: 'FRIED'
+      },
+      {
+        label: '代配',
+        value: 'SUBSTITUTE'
       }
     ]
   }

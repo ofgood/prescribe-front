@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 const api = {
-  openRecipe: '/recepeInfo/openRecipe' //  开药方
+  openRecipe: '/recipeInfo/openRecipe' //  开药方
 }
 
 export function openRecipe (parameter) {

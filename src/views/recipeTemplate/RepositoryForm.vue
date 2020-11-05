@@ -20,6 +20,16 @@
         </a-form-item>
       </a-col>
       <a-col :lg="6" :md="12" :sm="24">
+        <a-form-item label="抓药方式">
+          <a-input
+            placeholder="请输入抓药方式"
+            v-decorator="[
+              'grabMedicineType',
+              {rules: [{ required: true, message: '请输入抓药方式', whitespace: true}]}
+            ]" />
+        </a-form-item>
+      </a-col>
+      <a-col :lg="6" :md="12" :sm="24">
         <a-form-item label="模板名称">
           <a-input
             placeholder="请输入模板名称"
@@ -60,6 +70,17 @@
         </a-form-item>
       </a-col>
     </a-row>
+    <a-row>
+      <a-col :lg="6" :md="12" :sm="24">
+        <a-form-item label="病症">
+          <a-textarea
+            v-decorator="['disease', {rules: [{required: true, message: '请输入病症'}]}]"
+            placeholder="请输入病症"
+            :auto-size="{ minRows: 3, maxRows: 5 }"
+          />
+        </a-form-item>
+      </a-col>
+    </a-row>
     <a-form-item v-if="showSubmit">
       <a-button htmlType="submit" >Submit</a-button>
     </a-form-item>
@@ -82,7 +103,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['recipeTemplateType', 'recipeType'])
+    ...mapGetters(['recipeTemplateType', 'recipeType', 'grabMedicineTypes'])
   },
   methods: {
     handleSubmit (e) {
@@ -106,11 +127,3 @@ export default {
   }
 }
 </script>
-
-<style lang="less">
-  .form-row{
-    .ant-form-item{
-      margin-bottom: 10px;
-    }
-  }
-</style>

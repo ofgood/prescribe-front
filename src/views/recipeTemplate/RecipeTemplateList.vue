@@ -5,14 +5,19 @@
         <a-form layout="inline">
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
-              <a-form-item label="姓名">
-                <a-input v-model="queryParam.patientName" placeholder="请输入医生姓名"/>
+              <a-form-item label="模板名称">
+                <a-input v-model="queryParam.recipeTemplateName	" placeholder="请输入模板名称"/>
               </a-form-item>
             </a-col>
 
             <a-col :md="8" :sm="24">
-              <a-form-item label="联系电话">
-                <a-input v-model="queryParam.tel" placeholder="请输入联系电话"/>
+              <a-form-item label="处方类型">
+                <!-- <a-input v-model="queryParam.recipeType" placeholder="请输入处方类型"/> -->
+                <a-select v-model="queryParam.recipeType" placeholder="请选择处方类型">
+                  <a-select-option v-for="item in recipeTypeAll" :value="item.value" :key="item.value">
+                    {{ item.label }}
+                  </a-select-option>
+                </a-select>
               </a-form-item>
             </a-col>
             <!-- <a-col :md="8" :sm="24">
@@ -86,52 +91,32 @@ import CreateForm from './modules/CreateForm'
 
 const columns = [
   {
-    title: '姓名',
-    dataIndex: 'patientName'
+    title: '模板名称',
+    dataIndex: 'recipeTemplateName'
   },
   {
-    title: '性别',
-    dataIndex: 'sexStr'
+    title: '处方类型',
+    dataIndex: 'recipeTemplateType'
   },
   {
-    title: '年龄',
-    dataIndex: 'age'
+    title: '抓药方式',
+    dataIndex: 'grabMedicineType'
   },
   {
-    title: '联系电话',
-    dataIndex: 'tel'
+    title: '贴数',
+    dataIndex: 'postNumbers'
   },
   {
-    title: '配送地址',
-    dataIndex: 'shippingAddress'
+    title: '每贴包数',
+    dataIndex: 'postPackageNumbers'
   },
   {
-    title: '住址',
-    dataIndex: 'address'
-  },
-  {
-    title: '身份证号',
-    dataIndex: 'idCard'
-  },
-   {
-    title: '出生年月',
-    dataIndex: 'birthday'
-  },
-  {
-    title: '邮编',
-    dataIndex: 'patientPyCode'
-  },
-  {
-    title: '过敏史',
-    dataIndex: 'hyperSusceptibility'
+    title: '病症',
+    dataIndex: 'disease'
   },
   {
     title: '创建时间',
     dataIndex: 'createTime'
-  },
-   {
-    title: '修改时间',
-    dataIndex: 'updateTime'
   }
   // {
   //   title: '操作',
@@ -173,10 +158,9 @@ export default {
       visible: false,
       confirmLoading: false,
       mdl: null,
-      // 高级搜索 展开/关闭
-      advanced: false,
       // 查询参数
       queryParam: {
+        recipeType: ''
       },
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
@@ -203,7 +187,7 @@ export default {
 
   },
   computed: {
-     ...mapGetters(['genderAll'])
+     ...mapGetters(['recipeTypeAll'])
   },
   methods: {
     handleAdd () {

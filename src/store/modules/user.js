@@ -1,8 +1,10 @@
 import storage from 'store'
 import { login, getInfo, logout } from '@/api/login'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
+import { DOCTOR_ID, CLINIC_ID } from '@/config/storageTypes'
 import { welcome } from '@/utils/util'
 import { roleConfig } from '@/config/roleConfig'
+
 const user = {
   state: {
     token: '',
@@ -44,7 +46,7 @@ const user = {
           const result = response.data
           storage.set(ACCESS_TOKEN, result.token, 7 * 24 * 60 * 60 * 1000)
           commit('SET_TOKEN', result.token)
-          resolve()
+          resolve(result)
           window.location.reload()
         }).catch(error => {
           reject(error)
@@ -66,6 +68,7 @@ const user = {
             commit('SET_ROLES', result.role)
             commit('SET_ROLE', result.userType)
             commit('SET_INFO', result)
+            storage.set(DOCTOR_ID, result.id)
           } else {
             reject(new Error('用户角色类型不能为空!'))
           }
@@ -91,6 +94,8 @@ const user = {
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
           storage.remove(ACCESS_TOKEN)
+          storage.remove(CLINIC_ID)
+          storage.remove(DOCTOR_ID)
         })
       })
     }
