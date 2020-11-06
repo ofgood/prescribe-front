@@ -17,7 +17,7 @@
         <a-form-item label="搜索模板">
           <a-select
             label-in-value
-            :value="value"
+            show-search
             placeholder="搜索模板"
             style="width: 100%"
             :filter-option="false"
@@ -26,8 +26,8 @@
             @change="handleChange"
           >
             <a-spin v-if="fetching" slot="notFoundContent" size="small" />
-            <a-select-option v-for="d in data" :key="d.value">
-              {{ d.text }}
+            <a-select-option v-for="d in data" :value="d.value" :key="d.value">
+              {{ d.label }}
             </a-select-option>
           </a-select>
         </a-form-item>
@@ -58,6 +58,7 @@
       <a-col :lg="4" :md="12" :sm="24">
         <a-form-item label="贴数">
           <a-input-number
+            :min="1"
             style="width: 100%"
             placeholder="请填写贴数"
             v-decorator="['postNumbers', { rules: [{ required: true, message: '请填写贴数' }] }]"
@@ -67,22 +68,31 @@
       </a-col>
       <a-col :lg="4" :md="12" :sm="24">
         <a-form-item label="每贴包数">
-          <a-input-number
-            style="width: 100%"
+          <a-select
             placeholder="请选择每贴包数"
             v-decorator="['postPackageNumbers', { rules: [{ required: true, message: '请选择每贴包数' }] }]"
           >
-          </a-input-number>
+            <a-select-option :value="1">1</a-select-option>
+            <a-select-option :value="2">2</a-select-option>
+            <a-select-option :value="3">3</a-select-option>
+            <a-select-option :value="4">4</a-select-option>
+            <a-select-option :value="5">5</a-select-option>
+            <a-select-option :value="6">6</a-select-option>
+            <a-select-option :value="7">7</a-select-option>
+          </a-select>
         </a-form-item>
       </a-col>
       <a-col :lg="4" :md="12" :sm="24">
-        <a-form-item label="每包容量">
-          <a-input-number
-            style="width: 100%"
-            placeholder="请填写每包容量"
-            v-decorator="['packageCap	', { rules: [{ required: true, message: '请填写每包容量' }] }]"
+        <a-form-item label="每包容量(ml)">
+          <a-select
+            placeholder="请选择每包容量"
+            v-decorator="['packageCap', { rules: [{ required: true, message: '请选择每包容量' }] }]"
           >
-          </a-input-number>
+            <a-select-option :value="100">100</a-select-option>
+            <a-select-option :value="120">120</a-select-option>
+            <a-select-option :value="150">150</a-select-option>
+            <a-select-option :value="200">200</a-select-option>
+          </a-select>
         </a-form-item>
       </a-col>
     </a-row>
@@ -106,6 +116,7 @@
 <script>
 import debounce from 'lodash/debounce'
 import { mapGetters } from 'vuex'
+import { recipeTemplateSelect } from '@/api/recipeTemplate'
 export default {
   name: 'TaskForm',
   props: {
@@ -147,24 +158,23 @@ export default {
       const fetchId = this.lastFetchId
       this.data = []
       this.fetching = true
-      fetch('https://randomuser.me/api/?results=5')
-        .then(response => response.json())
-        .then(body => {
-          if (fetchId !== this.lastFetchId) {
+      recipeTemplateSelect({
+        key: value
+      }).then(res => {
+           if (fetchId !== this.lastFetchId) {
             // for fetch callback order
             return
           }
-          const data = body.results.map(user => ({
-            text: `${user.name.first} ${user.name.last}`,
-            value: user.login.username
+          const data = res.data.map(user => ({
+            label: user.patientName,
+            value: user.idCard
           }))
           this.data = data
           this.fetching = false
         })
     },
-    handleChange (value) {
+    handleChange () {
       Object.assign(this, {
-        value,
         data: [],
         fetching: false
       })

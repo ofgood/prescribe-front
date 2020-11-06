@@ -39,7 +39,9 @@
             key="medicinalName"
             :value="text"
             placeholder="药品名称"
+            :show-arrow="false"
             :default-active-first-option="false"
+            :not-found-content="fetching ? undefined : null"
             :filter-option="false"
             @search="handleSearch"
             @change="(value, option) => handleChange(value, record.orderNum, 'medicinalName', option)"
@@ -85,30 +87,6 @@
     </a-card>
     <!-- fixed footer toolbar -->
     <footer-tool-bar :is-mobile="isMobile" :collapsed="sideCollapsed">
-      <span class="popover-wrapper">
-        <a-popover
-          title="表单校验信息"
-          overlayClassName="antd-pro-pages-forms-style-errorPopover"
-          trigger="click"
-          :getPopupContainer="(trigger) => trigger.parentNode"
-        >
-          <template slot="content">
-            <li
-              v-for="item in errors"
-              :key="item.key"
-              @click="scrollToField(item.key)"
-              class="antd-pro-pages-forms-style-errorListItem"
-            >
-              <a-icon type="cross-circle-o" class="antd-pro-pages-forms-style-errorIcon" />
-              <div class="">{{ item.message }}</div>
-              <div class="antd-pro-pages-forms-style-errorField">{{ item.fieldLabel }}</div>
-            </li>
-          </template>
-          <span class="antd-pro-pages-forms-style-errorIcon" v-if="errors.length > 0">
-            <a-icon type="exclamation-circle" />{{ errors.length }}
-          </span>
-        </a-popover>
-      </span>
       <a-space>
         <a-button type="danger" @click="validate" :loading="loading">清空</a-button>
         <a-button type="primary" @click="validate" :loading="loading">保存</a-button>
@@ -126,23 +104,8 @@ import FooterToolBar from '@/components/FooterToolbar'
 import { baseMixin } from '@/store/app-mixin'
 import { medicinalSelect } from '@/api/medicinal'
 import { openRecipe } from '@/api/recepeInfo'
-const fieldLabels = {
-  name: '仓库名',
-  url: '仓库域名',
-  owner: '仓库管理员',
-  approver: '审批人',
-  dateRange: '生效日期',
-  type: '仓库类型',
-  name2: '任务名',
-  url2: '任务描述',
-  owner2: '执行人',
-  approver2: '责任人',
-  dateRange2: '生效日期',
-  type2: '任务类型'
-}
-
 export default {
-  name: 'AdvancedForm',
+  name: 'OpenRecipe',
   mixins: [baseMixin],
   components: {
     FooterToolBar,
@@ -158,44 +121,21 @@ export default {
       currentValue: null,
       selects: [],
       // table
-      inputCols: [
-        'orderNum',
-        'medicinalCode',
-        'medicinalStand',
-        'dosage',
-        'maxDosage',
-        'unit',
-        'druggingOrder',
-        'toxic'
-      ],
+      inputCols: ['orderNum', 'dosage', 'druggingOrder', 'toxic'],
       columns: [
         {
           title: '序号',
           dataIndex: 'orderNum',
           key: 'orderNum',
-          width: 40,
+          width: 50,
           scopedSlots: { customRender: 'orderNum' }
         },
         {
           title: '药材名称',
           dataIndex: 'medicinalName',
           key: 'medicinalName',
-          width: 120,
+          width: '20%',
           scopedSlots: { customRender: 'medicinalName' }
-        },
-        {
-          title: '药材编码',
-          dataIndex: 'medicinalCode',
-          key: 'medicinalCode',
-          width: 80,
-          scopedSlots: { customRender: 'medicinalCode' }
-        },
-        {
-          title: '规格',
-          dataIndex: 'medicinalStand',
-          key: 'medicinalStand',
-          width: '10%',
-          scopedSlots: { customRender: 'medicinalStand' }
         },
         {
           title: '剂量',
@@ -203,20 +143,6 @@ export default {
           key: 'dosage',
           width: '10%',
           scopedSlots: { customRender: 'dosage' }
-        },
-        {
-          title: '最大剂量',
-          dataIndex: 'maxDosage',
-          key: 'maxDosage',
-          width: '10%',
-          scopedSlots: { customRender: 'maxDosage' }
-        },
-        {
-          title: '单位',
-          dataIndex: 'unit',
-          key: 'unit',
-          width: '10%',
-          scopedSlots: { customRender: 'unit' }
         },
         {
           title: '下药顺序',
@@ -233,21 +159,38 @@ export default {
           scopedSlots: { customRender: 'toxic' }
         },
         {
+          title: '规格',
+          dataIndex: 'medicinalStand',
+          key: 'medicinalStand',
+          width: '10%'
+        },
+        {
+          title: '最大剂量',
+          dataIndex: 'maxDosage',
+          key: 'maxDosage',
+          width: '10%'
+        },
+        {
+          title: '单位',
+          dataIndex: 'unit',
+          key: 'unit',
+          width: '10%'
+        },
+        {
           title: '操作',
           key: 'action',
-          width: '120px',
+          width: 140,
           scopedSlots: { customRender: 'operation' }
         }
       ],
       data: [
         {
-          orderNum: '1',
-          medicinalCode: '',
+          orderNum: 1,
           medicineName: '',
-          medicinalStand: '',
+          medicinalStand: '统',
           dosage: '',
           maxDosage: '',
-          unit: '',
+          unit: 'g',
           druggingOrder: '',
           toxic: '',
           editable: true
@@ -300,7 +243,6 @@ export default {
       const length = this.data.length
       this.data.push({
         orderNum: length === 0 ? '1' : (parseInt(this.data[length - 1].orderNum) + 1).toString(),
-        medicinalCode: '',
         medicineName: '',
         medicinalStand: '',
         dosage: '',
@@ -319,28 +261,8 @@ export default {
     saveRow (record) {
       console.log(record)
       this.memberLoading = true
-      const {
-        orderNum,
-        medicinalCode,
-        medicinalName,
-        medicinalStand,
-        dosage,
-        maxDosage,
-        unit,
-        druggingOrder,
-        toxic
-      } = record
-      if (
-        !toxic ||
-        !maxDosage ||
-        !unit ||
-        !druggingOrder ||
-        !orderNum ||
-        !medicinalCode ||
-        !medicinalName ||
-        !medicinalStand ||
-        !dosage
-      ) {
+      const { orderNum, medicinalName, dosage, druggingOrder, toxic } = record
+      if (!toxic || !druggingOrder || !medicinalName || !dosage) {
         this.memberLoading = false
         this.$message.error('请填写完整药品信息!')
         return
@@ -367,12 +289,27 @@ export default {
       })
       target._originalData = undefined
     },
-    handleChange (value, orderNum, column) {
+    handleChange (value, orderNum, column, options) {
       const newData = [...this.data]
       const target = newData.find((item) => orderNum === item.orderNum)
-      if (target) {
-        target[column] = value
+      const { itemData } = options.data.attrs
+      console.log('target', target)
+      console.log(itemData)
+      if (column === 'medicinalName') {
+        // target.
+        Object.keys(target).forEach((key) => {
+          if (itemData[key]) {
+            target[key] = itemData[key]
+          }
+        })
+        console.log(newData)
+        console.log(target)
         this.data = newData
+      } else {
+        if (target) {
+          target[column] = value
+          this.data = newData
+        }
       }
     },
 
@@ -407,9 +344,9 @@ export default {
       this.errors = []
       Promise.all([repositoryForm, taskForm])
         .then((values) => {
-          openRecipe(values[0]).then(res => {
-          console.log('res', res)
-        })
+          openRecipe(values[0]).then((res) => {
+            console.log('res', res)
+          })
           $notification['error']({
             message: 'Received values of form:',
             description: JSON.stringify(values)
@@ -429,15 +366,8 @@ export default {
         .filter((key) => errors[key])
         .map((key) => ({
           key: key,
-          message: errors[key][0],
-          fieldLabel: fieldLabels[key]
+          message: errors[key][0]
         }))
-    },
-    scrollToField (fieldKey) {
-      const labelNode = document.querySelector(`label[for="${fieldKey}"]`)
-      if (labelNode) {
-        labelNode.scrollIntoView(true)
-      }
     }
   }
 }

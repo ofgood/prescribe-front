@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 const api = {
   findPatient: '/patientInfo​/findPatient', // 根据编号查询患者信息
-  findSelect: '/patientInfo/findSelect', // 医生查询患者
+  findPatientSelect: '/patientInfo/findSelect', // 医生查询患者
   patientList: '/patientInfo/patientList', // 查询患者列表
   saveOrUpdate: '/patientInfo/saveOrUpdate' // 新增|编辑
 }
@@ -15,9 +15,9 @@ export function findPatient (parameter) {
   })
 }
 
-export function findSelect (parameter) {
+export function findPatientSelect (parameter) {
   return request({
-    url: api.findSelect,
+    url: api.findPatientSelect,
     method: 'post',
     data: parameter
   })
