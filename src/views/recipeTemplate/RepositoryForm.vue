@@ -1,35 +1,7 @@
 <template>
   <a-form @submit="handleSubmit" :form="form" class="form">
     <a-row class="form-row" :gutter="16">
-      <a-col :lg="6" :md="12" :sm="24">
-        <a-form-item label="处方模板类型">
-          <a-select placeholder="请选择处方模板类型" v-decorator="[ 'recipeTemplateType', {rules: [{ required: true, message: '请选择处方模板类型'}]} ]">
-            <a-select-option v-for="item in recipeTemplateType" :value="item.value" :key="item.value">
-              {{ item.label }}
-            </a-select-option>
-          </a-select>
-        </a-form-item>
-      </a-col>
-      <a-col :lg="6" :md="12" :sm="24">
-        <a-form-item label="处方类型">
-          <a-select placeholder="请选择处方类型" v-decorator="[ 'recipeType', {rules: [{ required: true, message: '请选择处方类型'}]} ]">
-            <a-select-option v-for="item in recipeType" :value="item.value" :key="item.value">
-              {{ item.label }}
-            </a-select-option>
-          </a-select>
-        </a-form-item>
-      </a-col>
-      <a-col :lg="6" :md="12" :sm="24">
-        <a-form-item label="抓药方式">
-          <a-input
-            placeholder="请输入抓药方式"
-            v-decorator="[
-              'grabMedicineType',
-              {rules: [{ required: true, message: '请输入抓药方式', whitespace: true}]}
-            ]" />
-        </a-form-item>
-      </a-col>
-      <a-col :lg="6" :md="12" :sm="24">
+      <a-col :lg="4" :md="12" :sm="24">
         <a-form-item label="模板名称">
           <a-input
             placeholder="请输入模板名称"
@@ -39,48 +11,89 @@
             ]" />
         </a-form-item>
       </a-col>
-      <a-col :lg="6" :md="12" :sm="24">
-        <a-form-item label="每包贴数">
-          <a-input
-            placeholder="请输入每包贴数"
-            v-decorator="[
-              'postPackageNumbers',
-              {rules: [{ required: true, message: '请输入每包贴数', whitespace: true}]}
-            ]" />
+      <a-col :lg="4" :md="12" :sm="24">
+        <a-form-item label="处方模板类型">
+          <a-select placeholder="请选择处方模板类型" v-decorator="[ 'recipeTemplateType', {rules: [{ required: true, message: '请选择处方模板类型'}]} ]">
+            <a-select-option v-for="item in recipeTemplateType" :value="item.value" :key="item.value">
+              {{ item.label }}
+            </a-select-option>
+          </a-select>
         </a-form-item>
       </a-col>
-      <a-col :lg="6" :md="12" :sm="24">
+      <a-col :lg="4" :md="12" :sm="24">
+        <a-form-item label="处方类型">
+          <a-select placeholder="请选择处方类型" v-decorator="[ 'recipeType', {rules: [{ required: true, message: '请选择处方类型'}]} ]">
+            <a-select-option v-for="item in recipeTypes" :value="item.value" :key="item.value">
+              {{ item.label }}
+            </a-select-option>
+          </a-select>
+        </a-form-item>
+      </a-col>
+      <a-col :lg="4" :md="12" :sm="24">
+        <a-form-item label="抓药方式">
+          <a-select
+            placeholder="请选择抓药方式"
+            v-decorator="['grabMedicineType', { rules: [{ required: true, message: '请选择抓药方式' }] }]"
+          >
+            <a-select-option v-for="item in grabMedicineTypes" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
+          </a-select>
+        </a-form-item>
+      </a-col>
+    </a-row>
+    <a-row class="form-row" :gutter="16">
+      <a-col :lg="4" :md="12" :sm="24">
         <a-form-item label="贴数">
-          <a-input
-            placeholder="请输入贴数"
-            v-decorator="[
-              'postNumbers',
-              {rules: [{ required: true, message: '请输入贴数', whitespace: true}]}
-            ]" />
+          <a-input-number
+            :min="1"
+            style="width: 100%"
+            placeholder="请填写贴数"
+            v-decorator="['postNumbers', { rules: [{ required: true, message: '请填写贴数' }] }]"
+          >
+          </a-input-number>
         </a-form-item>
       </a-col>
-      <a-col :lg="6" :md="12" :sm="24">
-        <a-form-item label="每包容量">
-          <a-input
-            placeholder="请输入每包容量"
-            v-decorator="[
-              'packageCap',
-              {rules: [{ required: true, message: '请输入每包容量', whitespace: true}]}
-            ]" />
+      <a-col :lg="4" :md="12" :sm="24">
+        <a-form-item label="每贴包数">
+          <a-select
+            placeholder="请选择每贴包数"
+            v-decorator="['postPackageNumbers', { rules: [{ required: true, message: '请选择每贴包数' }] }]"
+          >
+            <a-select-option :value="1">1</a-select-option>
+            <a-select-option :value="2">2</a-select-option>
+            <a-select-option :value="3">3</a-select-option>
+            <a-select-option :value="4">4</a-select-option>
+            <a-select-option :value="5">5</a-select-option>
+            <a-select-option :value="6">6</a-select-option>
+            <a-select-option :value="7">7</a-select-option>
+          </a-select>
+        </a-form-item>
+      </a-col>
+      <a-col :lg="4" :md="12" :sm="24">
+        <a-form-item label="每包容量(ml)">
+          <a-select
+            placeholder="请选择每包容量"
+            v-decorator="['packageCap', { rules: [{ required: true, message: '请选择每包容量' }] }]"
+          >
+            <a-select-option :value="100">100</a-select-option>
+            <a-select-option :value="120">120</a-select-option>
+            <a-select-option :value="150">150</a-select-option>
+            <a-select-option :value="200">200</a-select-option>
+          </a-select>
         </a-form-item>
       </a-col>
     </a-row>
     <a-row>
-      <a-col :lg="6" :md="12" :sm="24">
-        <a-form-item label="病症">
+      <a-col :lg="8" :md="12" :sm="24">
+        <a-form-item label="辩证">
           <a-textarea
-            v-decorator="['disease', {rules: [{required: true, message: '请输入病症'}]}]"
-            placeholder="请输入病症"
-            :auto-size="{ minRows: 3, maxRows: 5 }"
+            style="resize: none;width: 97%"
+            placeholder="请输入辩证"
+            v-decorator="['disease', { rules: [{ required: false, message: '请输入辩证', whitespace: true }] }]"
           />
         </a-form-item>
       </a-col>
     </a-row>
+
     <a-form-item v-if="showSubmit">
       <a-button htmlType="submit" >Submit</a-button>
     </a-form-item>
@@ -103,7 +116,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['recipeTemplateType', 'recipeType', 'grabMedicineTypes'])
+    ...mapGetters(['recipeTemplateType', 'recipeTypes', 'grabMedicineTypes'])
   },
   methods: {
     handleSubmit (e) {
@@ -116,13 +129,6 @@ export default {
           })
         }
       })
-    },
-    validate (rule, value, callback) {
-      const regex = /^user-(.*)$/
-      if (!regex.test(value)) {
-        callback(new Error('需要以 user- 开头'))
-      }
-      callback()
     }
   }
 }

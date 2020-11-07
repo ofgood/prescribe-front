@@ -24,6 +24,6 @@ export const roleConfig = {
     COMPANY_MANAGER: allRoute,
     AREA_MANAGER: allRoute,
     CLINIC_MANAGER: allRoute,
-    DOCTOR: ['recipe', 'recipeTemplate', 'dashboard'],
-    DOCTOR_STAR: ['recipe', 'recipeTemplate', 'dashboard']
+    DOCTOR: ['recipe', 'recipeTemplate', 'dashboard', 'createRecipeTemplate'],
+    DOCTOR_STAR: ['recipe', 'recipeTemplate', 'dashboard', 'createRecipeTemplate']
 }

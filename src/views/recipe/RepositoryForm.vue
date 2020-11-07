@@ -12,7 +12,7 @@
             :filter-option="false"
             :not-found-content="fetching ? undefined : null"
             @search="fetchUser"
-            @change="handleChange"
+            @change="(value,option) => handleChange(value,option)"
             v-decorator="[
               'patientId',
               {rules: [{ required: true, message: '请输入患者姓名'}]}
@@ -157,18 +157,31 @@ export default {
             // for fetch callback order
             return
           }
-          const data = res.data.map(user => ({
+          const data = res.data && res.data.map(user => ({
             label: user.patientName,
-            value: user.idCard
+            value: user.id,
+            birthday: user.birthday,
+            address: user.address,
+            hyperSusceptibility: user.hyperSusceptibility,
+            tel: user.tel,
+            sex: user.sex
           }))
           this.data = data
           this.fetching = false
         })
     },
-    handleChange (value) {
-      console.log(value)
+    handleChange (value, option) {
+      const { form: { setFieldsValue } } = this
+      const patientInfo = this.data.filter(item => item.value === value.key)
+      const { address, birthday, hyperSusceptibility, tel, sex } = patientInfo[0]
+      this.patientGender = sex
+      this.birthday = birthday
+      setFieldsValue({
+        hyperSusceptibility,
+        tel,
+        address
+      })
       Object.assign(this, {
-        data: [],
         fetching: false
       })
     }

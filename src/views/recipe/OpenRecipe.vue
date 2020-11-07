@@ -15,21 +15,32 @@
         :rowKey="(record, index) => index"
         :loading="memberLoading"
       >
-        <template v-for="(col, i) in inputCols" :slot="col" slot-scope="text, record">
-          <template v-if="col != 'orderNum'">
-            <a-input
-              :key="col"
-              v-if="record.editable"
-              style="margin: -5px 0"
-              :value="text"
-              :placeholder="columns[i].title"
-              @change="(e) => handleChange(e.target.value, record.orderNum, col)"
-            />
-            <template v-else>{{ text }}</template>
-          </template>
-          <template v-else>
-            {{ text }}
-          </template>
+        <template slot="druggingOrder" slot-scope="text, record">
+          <a-select
+            labelInValue
+            style="width: 100%"
+            :value="text"
+            key="druggingOrder"
+            placeholder="选择下药顺序"
+            v-if="record.editable"
+            @change="(value) => handleChange(value, record.orderNum, 'druggingOrder')"
+          >
+            <a-select-option v-for="item in druggingOrders" :value="item.value" :key="item.value">
+              {{ item.label }}
+            </a-select-option>
+          </a-select>
+          <template v-else>{{ text.label }}</template>
+        </template>
+        <template slot="dosage" slot-scope="text, record">
+          <a-input
+            key="dosage"
+            v-if="record.editable"
+            style="margin: -5px 0"
+            :value="text"
+            placeholder="请输入剂量"
+            @change="(e) => handleChange(e.target.value, record.orderNum, 'dosage')"
+          />
+          <template v-else>{{ text }}</template>
         </template>
         <template slot="medicinalName" slot-scope="text, record">
           <a-select
@@ -104,6 +115,10 @@ import FooterToolBar from '@/components/FooterToolbar'
 import { baseMixin } from '@/store/app-mixin'
 import { medicinalSelect } from '@/api/medicinal'
 import { openRecipe } from '@/api/recepeInfo'
+import storage from 'store'
+import { DOCTOR_ID, CLINIC_ID } from '@/config/storageTypes'
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'OpenRecipe',
   mixins: [baseMixin],
@@ -121,60 +136,72 @@ export default {
       currentValue: null,
       selects: [],
       // table
-      inputCols: ['orderNum', 'dosage', 'druggingOrder', 'toxic'],
       columns: [
         {
           title: '序号',
           dataIndex: 'orderNum',
           key: 'orderNum',
-          width: 50,
-          scopedSlots: { customRender: 'orderNum' }
+          align: 'center',
+          width: 50
         },
         {
           title: '药材名称',
           dataIndex: 'medicinalName',
           key: 'medicinalName',
-          width: '20%',
-          scopedSlots: { customRender: 'medicinalName' }
+          width: '10%',
+          scopedSlots: { customRender: 'medicinalName' },
+           align: 'center'
         },
         {
           title: '剂量',
           dataIndex: 'dosage',
           key: 'dosage',
           width: '10%',
-          scopedSlots: { customRender: 'dosage' }
+          scopedSlots: { customRender: 'dosage' },
+           align: 'center'
         },
         {
           title: '下药顺序',
           dataIndex: 'druggingOrder',
           key: 'druggingOrder',
           width: '10%',
-          scopedSlots: { customRender: 'druggingOrder' }
+          scopedSlots: { customRender: 'druggingOrder' },
+           align: 'center'
         },
         {
           title: '是否毒性',
           dataIndex: 'toxic',
           key: 'toxic',
           width: '10%',
-          scopedSlots: { customRender: 'toxic' }
+           align: 'center'
         },
         {
           title: '规格',
           dataIndex: 'medicinalStand',
           key: 'medicinalStand',
-          width: '10%'
+          width: '10%',
+           align: 'center'
         },
         {
           title: '最大剂量',
           dataIndex: 'maxDosage',
           key: 'maxDosage',
-          width: '10%'
+          width: '10%',
+           align: 'center'
         },
         {
           title: '单位',
           dataIndex: 'unit',
           key: 'unit',
-          width: '10%'
+          width: '10%',
+           align: 'center'
+        },
+        {
+          title: '价格',
+          dataIndex: 'price',
+          key: 'price',
+          width: '10%',
+           align: 'center'
         },
         {
           title: '操作',
@@ -185,19 +212,23 @@ export default {
       ],
       data: [
         {
+          medicinalCode: '',
           orderNum: 1,
-          medicineName: '',
-          medicinalStand: '统',
+          medicinalName: undefined,
+          medicinalStand: '',
           dosage: '',
           maxDosage: '',
-          unit: 'g',
-          druggingOrder: '',
+          unit: '',
+          druggingOrder: undefined,
           toxic: '',
           editable: true
         }
       ],
       errors: []
     }
+  },
+  computed: {
+    ...mapGetters(['druggingOrders'])
   },
   methods: {
     fetch (value, callback) {
@@ -213,9 +244,8 @@ export default {
         }
         medicinalSelect(params)
           .then((d) => {
-            console.log(d)
             if (this.currentValue === value) {
-              const result = d.data
+              const result = d.data || []
               const data = []
               result.forEach((r) => {
                 data.push({
@@ -243,7 +273,7 @@ export default {
       const length = this.data.length
       this.data.push({
         orderNum: length === 0 ? '1' : (parseInt(this.data[length - 1].orderNum) + 1).toString(),
-        medicineName: '',
+        medicinalName: undefined,
         medicinalStand: '',
         dosage: '',
         maxDosage: '',
@@ -257,17 +287,19 @@ export default {
     remove (orderNum) {
       const newData = this.data.filter((item) => item.orderNum !== orderNum)
       this.data = newData
+      this.data.forEach((item, index) => {
+        item.orderNum = index + 1
+      })
     },
     saveRow (record) {
       console.log(record)
       this.memberLoading = true
-      const { orderNum, medicinalName, dosage, druggingOrder, toxic } = record
-      if (!toxic || !druggingOrder || !medicinalName || !dosage) {
+      const { orderNum, medicinalName, dosage, druggingOrder } = record
+      if (!druggingOrder || !medicinalName || !dosage) {
         this.memberLoading = false
         this.$message.error('请填写完整药品信息!')
         return
       }
-      // 模拟网络请求、卡顿 800ms
       const target = this.data.find((item) => item.orderNum === orderNum)
       target.editable = false
       target.isNew = false
@@ -289,21 +321,22 @@ export default {
       })
       target._originalData = undefined
     },
-    handleChange (value, orderNum, column, options) {
+    handleChange (value, orderNum, column, option) {
+      console.log('value', value)
       const newData = [...this.data]
       const target = newData.find((item) => orderNum === item.orderNum)
-      const { itemData } = options.data.attrs
-      console.log('target', target)
-      console.log(itemData)
       if (column === 'medicinalName') {
-        // target.
-        Object.keys(target).forEach((key) => {
-          if (itemData[key]) {
-            target[key] = itemData[key]
-          }
-        })
-        console.log(newData)
-        console.log(target)
+        const { itemData } = option.data.attrs
+        target.editable = true
+        target.dosage = itemData.dosage
+        target.druggingOrder = itemData.druggingOrder
+        target.medicinalCode = itemData.medicinalCode
+        target.medicinalStand = itemData.medicinalStand
+        target.medicinalName = itemData.medicinalName
+        target.toxic = itemData.toxic
+        target.medicinalPyCode = itemData.medicinalPyCode
+        target.price = itemData.price
+        target.unit = itemData.unit
         this.data = newData
       } else {
         if (target) {
@@ -325,7 +358,7 @@ export default {
             reject(err)
             return
           } else {
-            values.details = JSON.stringify(this.data)
+            values.medicinalList = this.data
           }
           resolve(values)
         })
@@ -344,7 +377,12 @@ export default {
       this.errors = []
       Promise.all([repositoryForm, taskForm])
         .then((values) => {
-          openRecipe(values[0]).then((res) => {
+          console.log(values)
+          const params = Object.assign({}, values[0], values[1])
+          params.patientId = params.patientId.key
+          params.clinicId = storage.get(CLINIC_ID)
+          params.doctorId = storage.get(DOCTOR_ID)
+          openRecipe(params).then((res) => {
             console.log('res', res)
           })
           $notification['error']({

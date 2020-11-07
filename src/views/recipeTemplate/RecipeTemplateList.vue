@@ -20,15 +20,6 @@
                 </a-select>
               </a-form-item>
             </a-col>
-            <!-- <a-col :md="8" :sm="24">
-              <a-form-item label="所在诊所">
-                <a-select v-model="queryParam.sex" placeholder="请选择性别" default-value="0">
-                  <a-select-option v-for="item in genderAll" :value="item.value" :key="item.value">
-                    {{ item.label }}
-                  </a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col> -->
             <a-col :md="24" :sm="24">
               <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' } || {} ">
                 <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
@@ -61,6 +52,14 @@
         :data="loadData"
         showPagination="auto"
       >
+        <a-table
+          slot="expandedRowRender"
+          slot-scope="text"
+          :columns="innerColumns"
+          :data-source="innerData(text)"
+          :pagination="false"
+        >
+        </a-table>
         <!-- <span slot="action" slot-scope="text, record">
           <template>
             <a @click="handleEdit(record)">配置</a>
@@ -88,7 +87,17 @@ import { STable, Ellipsis } from '@/components'
 import { recipeTemplateList, recipeTemplateSaveOrUpdate } from '@/api/recipeTemplate'
 import { mapGetters } from 'vuex'
 import CreateForm from './modules/CreateForm'
-
+const innerColumns = [
+  { title: '序号', dataIndex: 'orderNum', key: 'orderNum' },
+  { title: '药材名称', dataIndex: 'medicinalName', key: 'medicinalName' },
+  { title: '剂量', dataIndex: 'dosage', key: 'dosage' },
+  { title: '下药顺序', dataIndex: 'druggingOrder', key: 'druggingOrder' },
+  { title: '是否毒性', dataIndex: 'toxic', key: 'toxic' },
+  { title: '规格', dataIndex: 'medicinalStand', key: 'medicinalStand' },
+  { title: '最大剂量', dataIndex: 'maxDosage', key: 'maxDosage' },
+  { title: '单位', dataIndex: 'unit', key: 'unit' },
+  { title: '价格', dataIndex: 'price', key: 'price' }
+]
 const columns = [
   {
     title: '模板名称',
@@ -125,25 +134,6 @@ const columns = [
   //   scopedSlots: { customRender: 'action' }
   // }
 ]
-
-const statusMap = {
-  0: {
-    status: 'default',
-    text: '关闭'
-  },
-  1: {
-    status: 'processing',
-    text: '运行中'
-  },
-  2: {
-    status: 'success',
-    text: '已上线'
-  },
-  3: {
-    status: 'error',
-    text: '异常'
-  }
-}
 export default {
   name: 'DoctorList',
   components: {
@@ -157,6 +147,7 @@ export default {
       // create model
       visible: false,
       confirmLoading: false,
+      innerColumns,
       mdl: null,
       // 查询参数
       queryParam: {
@@ -174,17 +165,6 @@ export default {
       selectedRowKeys: [],
       selectedRows: []
     }
-  },
-  filters: {
-    statusFilter (type) {
-      return statusMap[type].text
-    },
-    statusTypeFilter (type) {
-      return statusMap[type].status
-    }
-  },
-  created () {
-
   },
   computed: {
      ...mapGetters(['recipeTypeAll'])
@@ -263,6 +243,9 @@ export default {
       this.queryParam = {
         date: moment(new Date())
       }
+    },
+    innerData (text) {
+      return JSON.parse(text.details)
     }
   }
 }
