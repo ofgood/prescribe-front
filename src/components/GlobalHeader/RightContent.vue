@@ -2,18 +2,28 @@
   <div :class="wrpCls">
     <avatar-dropdown :menu="showMenu" :current-user="currentUser" :class="prefixCls" />
     <!-- <select-lang :class="prefixCls" /> -->
+    <create-form
+      ref="createModal"
+      :visible="visible"
+      :loading="confirmLoading"
+      :model="mdl"
+      @cancel="handleCancel"
+      @ok="handleOk"
+    />
   </div>
 </template>
 
 <script>
 import AvatarDropdown from './AvatarDropdown'
 import SelectLang from '@/components/SelectLang'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
+import CreateForm from '@/views/account/settings/ResetPassword.vue'
 export default {
   name: 'RightContent',
   components: {
     AvatarDropdown,
-    SelectLang
+    SelectLang,
+    CreateForm
   },
   props: {
     prefixCls: {
@@ -36,7 +46,10 @@ export default {
   data () {
     return {
       showMenu: true,
-      currentUser: {}
+      currentUser: {},
+      visible: false,
+      confirmLoading: false,
+      mdl: null
     }
   },
   computed: {
@@ -54,6 +67,38 @@ export default {
         name: this.userInfo.userName
       }
     }, 500)
+  },
+  methods: {
+    ...mapActions(['ResetPasssord']),
+    handleCancel () {
+      this.visible = false
+    },
+     handleOk () {
+      const form = this.$refs.createModal.form
+      this.confirmLoading = true
+      form.validateFields((errors, values) => {
+        if (!errors) {
+           // 新增
+            this.ResetPasssord({ ...values }).then(res => {
+              console.log('res', res)
+              if (res.success) {
+                this.visible = false
+                this.confirmLoading = false
+                // 重置表单数据
+                form.resetFields()
+                this.$router.push({
+                  name: 'login'
+                })
+              } else {
+                this.$message.info(res.message)
+                this.confirmLoading = false
+              }
+            })
+        } else {
+          this.confirmLoading = false
+        }
+      })
+    }
   }
 }
 </script>

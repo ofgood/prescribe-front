@@ -4,6 +4,7 @@ const userApi = {
   Login: '/userInfo/login',
   Logout: '/userInfo/logout',
   ForgePassword: '/userInfo/forge-password',
+  ResetPasssord: '/userInfo/resetPasssord',
   UserInfo: '/userInfo/getUserInfo',
   getClinicListByUseName: '/userInfo/getClinicList'
 }
@@ -49,6 +50,17 @@ export function logout () {
 export function getClinicListByUseName (parameter) {
   return request({
     url: userApi.getClinicListByUseName,
+    method: 'post',
+    data: parameter,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8'
+    }
+  })
+}
+
+export function resetPasssord (parameter) {
+  return request({
+    url: userApi.ResetPasssord,
     method: 'post',
     data: parameter,
     headers: {

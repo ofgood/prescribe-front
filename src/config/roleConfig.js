@@ -17,7 +17,9 @@ const allRoute = [
       'recipe',
       'recipeTemplate',
       'customer',
-      'createRecipeTemplate'
+      'createRecipeTemplate',
+      'result',
+      'exception'
 ]
 export const roleConfig = {
     SUPER_USER: allRoute,

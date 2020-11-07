@@ -1,5 +1,5 @@
 import storage from 'store'
-import { login, getInfo, logout } from '@/api/login'
+import { login, getInfo, logout, resetPasssord } from '@/api/login'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 import { DOCTOR_ID, CLINIC_ID } from '@/config/storageTypes'
 import { welcome } from '@/utils/util'
@@ -96,6 +96,24 @@ const user = {
           storage.remove(ACCESS_TOKEN)
           storage.remove(CLINIC_ID)
           storage.remove(DOCTOR_ID)
+        })
+      })
+    },
+    // 重置密码
+    ResetPasssord ({ commit, state }, data) {
+      return new Promise((resolve) => {
+        resetPasssord(data).then((res) => {
+          if (res.success) {
+            commit('SET_TOKEN', '')
+            commit('SET_ROLES', [])
+            storage.remove(ACCESS_TOKEN)
+            storage.remove(CLINIC_ID)
+            storage.remove(DOCTOR_ID)
+          }
+          resolve(res)
+        }).catch(() => {
+          resolve()
+        }).finally(() => {
         })
       })
     }
