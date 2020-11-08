@@ -6,7 +6,7 @@
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
               <a-form-item label="模板名称">
-                <a-input v-model="queryParam.recipeTemplateName	" placeholder="请输入模板名称"/>
+                <a-input v-model="queryParam.recipeTemplateName" placeholder="请输入模板名称" />
               </a-form-item>
             </a-col>
 
@@ -21,9 +21,9 @@
               </a-form-item>
             </a-col>
             <a-col :md="24" :sm="24">
-              <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' } || {} ">
+              <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' } || {}">
                 <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
-                <a-button style="margin-left: 8px" @click="() => this.queryParam = {}">重置</a-button>
+                <a-button style="margin-left: 8px" @click="() => (this.queryParam = {})">重置</a-button>
               </span>
             </a-col>
           </a-row>
@@ -38,37 +38,23 @@
             <!-- lock | unlock -->
             <a-menu-item key="2"><a-icon type="lock" />锁定</a-menu-item>
           </a-menu>
-          <a-button style="margin-left: 8px">
-            批量操作 <a-icon type="down" />
-          </a-button>
+          <a-button style="margin-left: 8px"> 批量操作 <a-icon type="down" /> </a-button>
         </a-dropdown>
       </div>
 
       <s-table
         ref="table"
         size="default"
-        :rowKey="record => record.id"
+        @expand="expand"
+        @expandedRowsChange="expand"
+        :rowKey="(record) => record.id"
         :columns="columns"
         :data="loadData"
         showPagination="auto"
       >
-        <div slot="expandedRowRender" slot-scope="text">
-          <a-table
-            :rowKey="record => record.medicinalCode"
-            :columns="innerColumns"
-            :data-source="innerData(text)"
-            :pagination="false"
-          >
-          </a-table>
+        <div slot="expandedRowRender">
+          <a-table :columns="innerColumns" :data-source="innerData" :pagination="false"> </a-table>
         </div>
-        <!-- <a-table
-          slot="expandedRowRender"
-          slot-scope="text"
-          :columns="innerColumns"
-          :data-source="innerData(text)"
-          :pagination="false"
-        >
-        </a-table> -->
         <!-- <span slot="action" slot-scope="text, record">
           <template>
             <a @click="handleEdit(record)">配置</a>
@@ -77,15 +63,6 @@
           </template>
         </span> -->
       </s-table>
-
-      <create-form
-        ref="createModal"
-        :visible="visible"
-        :loading="confirmLoading"
-        :model="mdl"
-        @cancel="handleCancel"
-        @ok="handleOk"
-      />
     </a-card>
   </page-header-wrapper>
 </template>
@@ -93,9 +70,8 @@
 <script>
 import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
-import { recipeTemplateList, recipeTemplateSaveOrUpdate } from '@/api/recipeTemplate'
+import { recipeInfoList, getRecipeMedicinalList } from '@/api/recepeInfo'
 import { mapGetters } from 'vuex'
-import CreateForm from './modules/CreateForm'
 const innerColumns = [
   { title: '序号', dataIndex: 'orderNum', key: 'orderNum' },
   { title: '药材名称', dataIndex: 'medicinalName', key: 'medicinalName' },
@@ -109,12 +85,24 @@ const innerColumns = [
 ]
 const columns = [
   {
-    title: '模板名称',
-    dataIndex: 'recipeTemplateName'
+    title: '处方号',
+    dataIndex: 'prescriptionNo'
   },
   {
-    title: '处方模板类型',
-    dataIndex: 'recipeTemplateType'
+    title: '医生',
+    dataIndex: 'doctorName'
+  },
+  {
+    title: '患者姓名',
+    dataIndex: 'patientName'
+  },
+  {
+    title: '诊所',
+    dataIndex: 'clinicName'
+  },
+  {
+    title: '处方类型',
+    dataIndex: 'recipeType'
   },
   {
     title: '抓药方式',
@@ -133,6 +121,10 @@ const columns = [
     dataIndex: 'disease'
   },
   {
+    title: '支付状态',
+    dataIndex: 'payStatus'
+  },
+  {
     title: '创建时间',
     dataIndex: 'createTime'
   }
@@ -147,15 +139,12 @@ export default {
   name: 'DoctorList',
   components: {
     STable,
-    Ellipsis,
-    CreateForm
+    Ellipsis
   },
   data () {
     this.columns = columns
     return {
-      // create model
-      visible: false,
-      confirmLoading: false,
+      innerData: [],
       innerColumns,
       mdl: null,
       // 查询参数
@@ -163,20 +152,19 @@ export default {
         recipeType: ''
       },
       // 加载数据方法 必须为 Promise 对象
-      loadData: parameter => {
+      loadData: (parameter) => {
         const requestParameters = Object.assign({}, parameter, this.queryParam)
         console.log('loadData request parameters:', requestParameters)
-        return recipeTemplateList(requestParameters)
-          .then(res => {
-            return res.data
-          })
+        return recipeInfoList(requestParameters).then((res) => {
+          return res.data
+        })
       },
       selectedRowKeys: [],
       selectedRows: []
     }
   },
   computed: {
-     ...mapGetters(['recipeTypeAll', 'druggingOrders'])
+    ...mapGetters(['recipeTypeAll', 'druggingOrders'])
   },
   methods: {
     handleAdd () {
@@ -190,57 +178,6 @@ export default {
       this.visible = true
       this.mdl = { ...record }
     },
-    handleOk () {
-      const form = this.$refs.createModal.form
-      this.confirmLoading = true
-      form.validateFields((errors, values) => {
-        if (!errors) {
-          console.log('values', values)
-          if (values.id > 0) {
-            // 修改 e.g.
-            new Promise((resolve, reject) => {
-              setTimeout(() => {
-                resolve()
-              }, 1000)
-            }).then(res => {
-              this.visible = false
-              this.confirmLoading = false
-              // 重置表单数据
-              form.resetFields()
-              // 刷新表格
-              this.$refs.table.refresh()
-
-              this.$message.info('修改成功')
-            })
-          } else {
-            // 新增
-            recipeTemplateSaveOrUpdate({ ...values }).then(res => {
-              if (res.success) {
-                this.visible = false
-                this.confirmLoading = false
-                // 重置表单数据
-                form.resetFields()
-                // 刷新表格
-                this.$refs.table.refresh()
-
-                this.$message.info('新增成功')
-              } else {
-                this.$message.info(res.message)
-                this.confirmLoading = false
-              }
-            })
-          }
-        } else {
-          this.confirmLoading = false
-        }
-      })
-    },
-    handleCancel () {
-      this.visible = false
-
-      const form = this.$refs.createModal.form
-      form.resetFields() // 清理表单数据（可不做）
-    },
     handleSub (record) {
       if (record.status !== 0) {
         this.$message.info(`${record.no} 订阅成功`)
@@ -253,20 +190,21 @@ export default {
         date: moment(new Date())
       }
     },
-    innerData (text) {
-      const details = JSON.parse(text.details)
-      details.forEach(item => {
-        Object.keys(item).forEach(key => {
-          if (key === 'druggingOrder') {
-            item[key] = this.orderFilter(item[key])
-          }
+    expand (expanded, record) {
+      if (expanded) {
+        const { id } = record
+        getRecipeMedicinalList({
+          id
+        }).then((res) => {
+          console.log(res)
+          res.data.forEach((item, index) => {
+            item.orderNum = index + 1
+          })
+          this.innerData = res.data || []
         })
-      })
-      return details
-    },
-     orderFilter (druggingOrder) {
-      const druggingOrderText = this.druggingOrders.filter(item => item.value === druggingOrder)[0]
-      return druggingOrderText && druggingOrderText.label || ''
+      } else {
+        this.innerData = []
+      }
     }
   }
 }

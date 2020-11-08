@@ -110,7 +110,7 @@
     <footer-tool-bar :is-mobile="isMobile" :collapsed="sideCollapsed">
       <a-space>
         <a-button type="danger" @click="validate" :loading="loading">清空</a-button>
-        <a-button type="primary" @click="validate" :loading="loading">保存</a-button>
+        <a-button type="primary" @click="save" :loading="loading">{{ hasPrescriptionNo? '编辑' : '保存' }}</a-button>
         <a-button type="primary" @click="validate" :loading="loading">提交</a-button>
         <a-button type="primary" @click="printRecipe" :loading="loading">打印药方</a-button>
       </a-space>
@@ -162,7 +162,7 @@
           </div>
           <div class="patient-info-row">
             <div class="patient-info-item">
-              <span class="recipe-label">临床辩证:</span>
+              <span class="recipe-label">临床病症:</span>
               {{ recipeInfoListVo.diease }}
             </div>
           </div>
@@ -325,7 +325,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['druggingOrders'])
+    ...mapGetters(['druggingOrders']),
+    hasPrescriptionNo () {
+      return !!this.prescriptionNo
+    }
   },
   methods: {
     fetch (value, callback) {
@@ -543,6 +546,9 @@ export default {
     },
     handleCancel () {
       this.visible = false
+    },
+    save () {
+      this.validate()
     }
   }
 }

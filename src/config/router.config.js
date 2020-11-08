@@ -99,6 +99,12 @@ export const asyncRouterMap = [
             name: 'openRecipe',
             component: () => import('@/views/recipe/OpenRecipe'),
             meta: { title: '开处方', keepAlive: true, permission: [ 'recipe' ] }
+          },
+          {
+            path: '/recipe/recipe-list',
+            name: 'recipeList',
+            component: () => import('@/views/recipe/RecipeList'),
+            meta: { title: '处方列表', keepAlive: true, permission: [ 'recipe' ] }
           }
         ]
       },
