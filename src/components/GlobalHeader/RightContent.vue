@@ -18,6 +18,7 @@ import AvatarDropdown from './AvatarDropdown'
 import SelectLang from '@/components/SelectLang'
 import { mapGetters, mapActions } from 'vuex'
 import CreateForm from '@/views/account/settings/ResetPassword.vue'
+import md5 from 'md5'
 export default {
   name: 'RightContent',
   components: {
@@ -79,7 +80,11 @@ export default {
       form.validateFields((errors, values) => {
         if (!errors) {
            // 新增
-            this.ResetPasssord({ ...values }).then(res => {
+           const params = { ...values }
+           params.confirmPassword = md5(values.confirmPassword)
+           params.newPassword = md5(values.newPassword)
+           params.oldPassword = md5(values.oldPassword)
+            this.ResetPasssord({ ...params }).then(res => {
               console.log('res', res)
               if (res.success) {
                 this.visible = false

@@ -104,7 +104,7 @@ const columns = [
     dataIndex: 'recipeTemplateName'
   },
   {
-    title: '处方类型',
+    title: '处方模板类型',
     dataIndex: 'recipeTemplateType'
   },
   {

@@ -42,7 +42,11 @@
           <a-input v-decorator="['maxDosage']" placeholder="请输入药品最大剂量"/>
         </a-form-item>
         <a-form-item label="药品煎煮顺序">
-          <a-input v-decorator="['druggingOrder']" placeholder="请输入药品煎煮顺序"/>
+          <a-select placeholder="请输入药品煎煮顺序" v-decorator="['druggingOrder', {rules: [{required: true, message: '请输入药品煎煮顺序'}]}]">
+            <a-select-option v-for="item in druggingOrders" :key="item.value">
+              {{ item.label }}
+            </a-select-option>
+          </a-select>
         </a-form-item>
       </a-form>
     </a-spin>
@@ -87,7 +91,7 @@ export default {
     }
   },
   computed: {
-     ...mapGetters(['medicinalStands'])
+     ...mapGetters(['medicinalStands', 'druggingOrders'])
   },
   created () {
     // 防止表单未注册

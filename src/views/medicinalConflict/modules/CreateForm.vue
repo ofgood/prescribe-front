@@ -15,25 +15,47 @@
         </a-form-item>
         <a-form-item label="药品名称">
           <a-select
-            v-decorator="['medicinalName', {rules: [{required: true, message: '请输药品名称'}]}]"
             show-search
-            :value="value"
-            placeholder="请输药品名称"
-            style="width: 200px"
+            label-in-value
+            key="medicinalName"
+            placeholder="药品名称"
             :show-arrow="false"
+            :default-active-first-option="false"
+            :not-found-content="fetching ? undefined : null"
             :filter-option="false"
-            :not-found-content="null"
-            @search="handleSearch('')"
-            @change="handleChange"
+            @search="handleSearch"
+            v-decorator="[
+              'medicinalName',
+              {rules: [{ required: true, message: '请输入药品名称'}]}
+            ]"
           >
-            <a-select-option v-for="d in data" :key="d.value">
+            <a-spin v-if="fetching" slot="notFoundContent" size="small" />
+            <a-select-option v-for="d in selects" :key="d.value" :itemData="d">
               {{ d.text }}
             </a-select-option>
           </a-select>
-          <a-input v-decorator="['medicinalName', {rules: [{required: true, message: '请输药品名称'}]}]" placeholder="请输入药品名称"/>
         </a-form-item>
         <a-form-item label="冲突药品名称">
-          <a-input placeholder="请输入冲突药品名称" v-decorator="['conflictMedicinalName', {rules: [{required: true, message: '请输入冲突药品名称'}]}]" />
+          <a-select
+            show-search
+            label-in-value
+            key="medicinalName"
+            placeholder="请输入冲突药品名称"
+            :show-arrow="false"
+            :default-active-first-option="false"
+            :not-found-content="fetching ? undefined : null"
+            :filter-option="false"
+            @search="handleSearch"
+            v-decorator="[
+              'conflictMedicinalName',
+              {rules: [{ required: true, message: '请输入冲突药品名称'}]}
+            ]"
+          >
+            <a-spin v-if="fetching" slot="notFoundContent" size="small" />
+            <a-select-option v-for="d in selects" :key="d.value" :itemData="d">
+              {{ d.text }}
+            </a-select-option>
+          </a-select>
         </a-form-item>
         <a-form-item label="冲突类型">
           <a-select placeholder="请选择冲突类型" v-decorator="['conflictType', {rules: [{required: true, message: '请选择冲突类型'}]}]">
@@ -44,6 +66,7 @@
         </a-form-item>
         <a-form-item label="备注">
           <a-textarea
+            :maxLength="300"
             v-decorator="['remark', {rules: [{required: false, message: ''}]}]"
             placeholder="请输入备注"
             :auto-size="{ minRows: 3, maxRows: 5 }"
@@ -58,6 +81,7 @@
 import pick from 'lodash.pick'
 import { mapGetters, mapActions } from 'vuex'
 import { filterOption } from '@/utils/util'
+import { medicinalSelect } from '@/api/medicinal'
 // 表单字段
 const fields = ['description', 'id']
 export default {
@@ -88,7 +112,9 @@ export default {
       }
     }
     return {
-      form: this.$form.createForm(this)
+      form: this.$form.createForm(this),
+      fetching: false,
+      selects: []
     }
   },
   computed: {
@@ -106,7 +132,42 @@ export default {
   },
   methods: {
     ...mapActions(['GetClinicList']),
-    filterOption
+    filterOption,
+     fetch (value, callback) {
+      if (this.timeout) {
+        clearTimeout(this.timeout)
+        this.timeout = null
+      }
+      this.fetching = true
+      this.currentValue = value
+      const fake = () => {
+        const params = {
+          key: value
+        }
+        medicinalSelect(params)
+          .then((d) => {
+            if (this.currentValue === value) {
+              const result = d.data || []
+              const data = []
+              result.forEach((r) => {
+                data.push({
+                  value: r['medicinalCode'],
+                  text: r['medicinalName'],
+                  ...r
+                })
+              })
+              callback(data)
+            }
+          })
+          .finally(() => {
+            this.fetching = false
+          })
+      }
+      this.timeout = setTimeout(fake, 300)
+    },
+     handleSearch (value) {
+      this.fetch(value, (data) => (this.selects = data))
+    }
   }
 }
 </script>

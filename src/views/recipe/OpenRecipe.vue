@@ -17,7 +17,6 @@
       >
         <template slot="druggingOrder" slot-scope="text, record">
           <a-select
-            labelInValue
             style="width: 100%"
             :value="text"
             key="druggingOrder"
@@ -29,7 +28,7 @@
               {{ item.label }}
             </a-select-option>
           </a-select>
-          <template v-else>{{ text.label }}</template>
+          <template v-else>{{ orderFilter(text) }}</template>
         </template>
         <template slot="dosage" slot-scope="text, record">
           <a-input
@@ -39,6 +38,17 @@
             :value="text"
             placeholder="请输入剂量"
             @change="(e) => handleChange(e.target.value, record.orderNum, 'dosage')"
+          />
+          <template v-else>{{ text }}</template>
+        </template>
+        <template slot="weigthEvery" slot-scope="text, record">
+          <a-input
+            key="weigthEvery"
+            v-if="record.editable"
+            style="margin: -5px 0"
+            :value="text"
+            placeholder="请输入单贴量"
+            @change="(e) => handleChange(e.target.value, record.orderNum, 'weigthEvery')"
           />
           <template v-else>{{ text }}</template>
         </template>
@@ -102,9 +112,79 @@
         <a-button type="danger" @click="validate" :loading="loading">清空</a-button>
         <a-button type="primary" @click="validate" :loading="loading">保存</a-button>
         <a-button type="primary" @click="validate" :loading="loading">提交</a-button>
-        <a-button type="primary" @click="validate" :loading="loading">打印药方</a-button>
+        <a-button type="primary" @click="printRecipe" :loading="loading">打印药方</a-button>
       </a-space>
     </footer-tool-bar>
+    <a-modal
+      title="打印处方"
+      :visible="visible"
+      :confirm-loading="confirmLoading"
+      @ok="handleOk"
+      @cancel="handleCancel"
+    >
+      <div class="recipe-wrap" ref="printSection">
+        <div class="recipte-top">
+          <img id="barcode"/>
+        </div>
+        <div class="recipe-title">
+          {{ clinicInfoVo.clinicName }}
+          <span class="recipe-name">处方笺</span>
+        </div>
+        <div class="recipe-num">
+          <div><span class="recipe-label">开具日期:</span> {{ recipeInfoListVo.sickTime }}</div>
+          <div><span class="recipe-label">处方号:</span> {{ recipeInfoListVo.prescriptionNo }}</div>
+        </div>
+        <div class="divide-line"></div>
+        <div class="patient-info">
+          <div class="patient-info-row">
+            <div class="patient-info-item">
+              <span class="recipe-label">姓名:</span>
+              {{ patientInfoVo.patientName }}
+            </div>
+            <div class="patient-info-item">
+              <span class="recipe-label">性别:</span>
+              {{ patientInfoVo.sexStr }}
+            </div>
+            <div class="patient-info-item">
+              <span class="recipe-label">年龄:</span>
+              {{ patientInfoVo.age }}
+            </div>
+          </div>
+          <div class="patient-info-row">
+            <div class="patient-info-item">
+              <span class="recipe-label">地址:</span>
+              {{ patientInfoVo.address }}
+            </div>
+            <div class="patient-info-item">
+              <span class="recipe-label">电话:</span>
+              {{ patientInfoVo.tel }}
+            </div>
+          </div>
+          <div class="patient-info-row">
+            <div class="patient-info-item">
+              <span class="recipe-label">临床辩证:</span>
+              {{ recipeInfoListVo.diease }}
+            </div>
+          </div>
+          <div class="divide-line"></div>
+          <div class="medicine-list">
+            <ul>
+              <li v-for="item in medicinalListVoList" :key="item.medicinalCode">
+                <span class="mainSpan"> {{ item.medicinalName }}</span>
+                <span class="unitSPan">{{ item.dosage }}{{ item.unit }}</span>
+              </li>
+            </ul>
+          </div>
+          <div class="divide-line"></div>
+          <div class="recipe-bottom">
+            <div>
+              <span> <span class="recipe-label">医师:</span> {{ doctorInfoVo.doctorName }}</span>
+              <span><span class="recipe-label">药品总价:</span> {{}}</span>
+            </div>
+          </div>
+        </div>
+      </div></a-modal
+    >
   </page-header-wrapper>
 </template>
 
@@ -114,11 +194,11 @@ import TaskForm from './TaskForm'
 import FooterToolBar from '@/components/FooterToolbar'
 import { baseMixin } from '@/store/app-mixin'
 import { medicinalSelect } from '@/api/medicinal'
-import { openRecipe } from '@/api/recepeInfo'
+import { openRecipe, getPrintRecipeInfo } from '@/api/recepeInfo'
 import storage from 'store'
 import { DOCTOR_ID, CLINIC_ID } from '@/config/storageTypes'
 import { mapGetters } from 'vuex'
-
+import JsBarcode from 'jsbarcode'
 export default {
   name: 'OpenRecipe',
   mixins: [baseMixin],
@@ -129,12 +209,20 @@ export default {
   },
   data () {
     return {
+      visible: false,
+      confirmLoading: false,
       fetching: false,
       loading: false,
       memberLoading: false,
       timeout: null,
       currentValue: null,
       selects: [],
+      prescriptionNo: '',
+      clinicInfoVo: '',
+      doctorInfoVo: '',
+      medicinalListVoList: '',
+      patientInfoVo: '',
+      recipeInfoListVo: '',
       // table
       columns: [
         {
@@ -150,7 +238,7 @@ export default {
           key: 'medicinalName',
           width: '10%',
           scopedSlots: { customRender: 'medicinalName' },
-           align: 'center'
+          align: 'center'
         },
         {
           title: '剂量',
@@ -158,7 +246,15 @@ export default {
           key: 'dosage',
           width: '10%',
           scopedSlots: { customRender: 'dosage' },
-           align: 'center'
+          align: 'center'
+        },
+        {
+          title: '单贴量',
+          dataIndex: 'weigthEvery',
+          key: 'weigthEvery',
+          width: '10%',
+          scopedSlots: { customRender: 'weigthEvery' },
+          align: 'center'
         },
         {
           title: '下药顺序',
@@ -166,42 +262,42 @@ export default {
           key: 'druggingOrder',
           width: '10%',
           scopedSlots: { customRender: 'druggingOrder' },
-           align: 'center'
+          align: 'center'
         },
         {
           title: '是否毒性',
           dataIndex: 'toxic',
           key: 'toxic',
           width: '10%',
-           align: 'center'
+          align: 'center'
         },
         {
           title: '规格',
           dataIndex: 'medicinalStand',
           key: 'medicinalStand',
           width: '10%',
-           align: 'center'
+          align: 'center'
         },
         {
           title: '最大剂量',
           dataIndex: 'maxDosage',
           key: 'maxDosage',
           width: '10%',
-           align: 'center'
+          align: 'center'
         },
         {
           title: '单位',
           dataIndex: 'unit',
           key: 'unit',
           width: '10%',
-           align: 'center'
+          align: 'center'
         },
         {
           title: '价格',
           dataIndex: 'price',
           key: 'price',
           width: '10%',
-           align: 'center'
+          align: 'center'
         },
         {
           title: '操作',
@@ -221,6 +317,7 @@ export default {
           unit: '',
           druggingOrder: undefined,
           toxic: '',
+          weigthEvery: '',
           editable: true
         }
       ],
@@ -279,6 +376,7 @@ export default {
         maxDosage: '',
         unit: '',
         druggingOrder: '',
+        weigthEvery: '',
         toxic: '',
         editable: true,
         isNew: true
@@ -336,6 +434,7 @@ export default {
         target.toxic = itemData.toxic
         target.medicinalPyCode = itemData.medicinalPyCode
         target.price = itemData.price
+        target.weigthEvery = itemData.weigthEvery
         target.unit = itemData.unit
         this.data = newData
       } else {
@@ -358,7 +457,8 @@ export default {
             reject(err)
             return
           } else {
-            values.medicinalList = this.data
+            const medicinalList = [...this.data]
+            values.medicinalList = medicinalList
           }
           resolve(values)
         })
@@ -383,35 +483,130 @@ export default {
           params.clinicId = storage.get(CLINIC_ID)
           params.doctorId = storage.get(DOCTOR_ID)
           openRecipe(params).then((res) => {
-            console.log('res', res)
-          })
-          $notification['error']({
-            message: 'Received values of form:',
-            description: JSON.stringify(values)
+            if (res.success) {
+              this.prescriptionNo = res.data.prescriptionNo || ''
+              $notification['success']({
+                message: res.message
+              })
+              // setTimeout(() => {
+              //   this.$router.push({
+              //     name: 'recipe-template-list'
+              //   })
+              // }, 1500)
+            } else {
+              $notification['error']({
+                message: res.message
+              })
+            }
           })
         })
         .catch(() => {
-          const errors = Object.assign({}, repository.form.getFieldsError(), task.form.getFieldsError())
-          const tmp = { ...errors }
-          this.errorList(tmp)
+          $notification['error']({
+            message: '操作失败'
+          })
         })
     },
-    errorList (errors) {
-      if (!errors || errors.length === 0) {
-        return
+    orderFilter (druggingOrder) {
+      const druggingOrderText = this.druggingOrders.filter((item) => item.value === druggingOrder)[0]
+      return druggingOrderText.label
+    },
+    printRecipe () {
+      const { $notification } = this
+      if (this.prescriptionNo) {
+        getPrintRecipeInfo({
+          prescriptionNo: this.prescriptionNo
+        }).then((res) => {
+          if (res.success) {
+            const { clinicInfoVo, doctorInfoVo, medicinalListVoList, patientInfoVo, recipeInfoListVo } = res.data
+            this.clinicInfoVo = clinicInfoVo
+            this.doctorInfoVo = doctorInfoVo
+            this.medicinalListVoList = medicinalListVoList
+            this.patientInfoVo = patientInfoVo
+            this.recipeInfoListVo = recipeInfoListVo
+            this.showModel()
+            this.$nextTick(() => {
+               JsBarcode('#barcode', recipeInfoListVo.prescriptionNo)
+            })
+          }
+        })
+      } else {
+        $notification['error']({
+          message: '请先保存药方之后打印'
+        })
       }
-      this.errors = Object.keys(errors)
-        .filter((key) => errors[key])
-        .map((key) => ({
-          key: key,
-          message: errors[key][0]
-        }))
+    },
+    showModel () {
+      this.visible = true
+    },
+    handleOk () {
+      this.$print(this.$refs.printSection) //
+    },
+    handleCancel () {
+      this.visible = false
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
+.medicine-list{
+  ul{
+    li {
+      display: inline-block;
+      width: 30%;
+      margin-bottom: 5px;
+    }
+  }
+}
+.recipte-top{
+  height: 44px;
+  img {
+    height: 44px;
+  }
+}
+.medicine-list{
+  height: 300px;
+}
+.mainSpan {
+  font-size: 16px;
+}
+.unitSPan {
+  font-size: 12px;
+  vertical-align: sub;
+}
+.divide-line {
+  height: 1px;
+  background-color: #666;
+  width: 100%;
+  margin: 5px 0;
+}
+.recipe-title {
+  width: 100%;
+  position: relative;
+  text-align: center;
+  font-size: 20px;
+  color: #333;
+  margin-bottom: 10px;
+  .recipe-name {
+    position: absolute;
+    right: 10px;
+    top: 0;
+  }
+}
+.recipe-num {
+  display: flex;
+  justify-content: space-between;
+}
+.recipe-label {
+  color: #333;
+}
+.patient-info-item {
+  min-width: 100px;
+  display: inline-block;
+  .info-item-label {
+    color: #333;
+  }
+}
 .card {
   margin-bottom: 24px;
 }

@@ -183,6 +183,7 @@ export const asyncRouterMap = [
       {
         path: '/result',
         name: 'result',
+        hidden: true,
         component: RouteView,
         redirect: '/result/success',
         meta: { title: '结果页', icon: 'check-circle-o', permission: [ 'result' ] },
@@ -208,6 +209,7 @@ export const asyncRouterMap = [
         name: 'exception',
         component: RouteView,
         redirect: '/exception/403',
+        hidden: true,
         meta: { title: '异常页', icon: 'warning', permission: [ 'exception' ] },
         children: [
           {

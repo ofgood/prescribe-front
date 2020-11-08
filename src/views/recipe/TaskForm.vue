@@ -100,9 +100,20 @@
       <a-col :lg="8" :md="12" :sm="24">
         <a-form-item label="辩证">
           <a-textarea
+            :maxLength="300"
             style="resize: none;width: 97%"
             placeholder="请输入辩证"
-            v-decorator="['disease', { rules: [{ required: false, message: '请输入辩证', whitespace: true }] }]"
+            v-decorator="['disease', { rules: [{ required: true, message: '请输入辩证', whitespace: true }] }]"
+          />
+        </a-form-item>
+      </a-col>
+      <a-col :lg="8" :md="12" :sm="24">
+        <a-form-item label="用法用量">
+          <a-textarea
+            :maxLength="300"
+            style="resize: none;width: 97%"
+            placeholder="请输入辩证"
+            v-decorator="['usage', { rules: [{ required: true, message: '请输入用法用量', whitespace: true }] }]"
           />
         </a-form-item>
       </a-col>

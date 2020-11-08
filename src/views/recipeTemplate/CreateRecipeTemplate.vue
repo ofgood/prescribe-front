@@ -13,7 +13,6 @@
         >
           <template slot="druggingOrder" slot-scope="text, record">
             <a-select
-              labelInValue
               style="width: 100%"
               :value="text"
               key="druggingOrder"
@@ -25,7 +24,7 @@
                 {{ item.label }}
               </a-select-option>
             </a-select>
-            <template v-else>{{ text.label }}</template>
+            <template v-else>{{ orderFilter(text) }}</template>
           </template>
           <template slot="dosage" slot-scope="text, record">
             <a-input
@@ -35,6 +34,17 @@
               :value="text"
               placeholder="请输入剂量"
               @change="(e) => handleChange(e.target.value, record.orderNum, 'dosage')"
+            />
+            <template v-else>{{ text }}</template>
+          </template>
+          <template slot="weigthEvery" slot-scope="text, record">
+            <a-input
+              key="weigthEvery"
+              v-if="record.editable"
+              style="margin: -5px 0"
+              :value="text"
+              placeholder="请输入单贴量"
+              @change="(e) => handleChange(e.target.value, record.orderNum, 'weigthEvery')"
             />
             <template v-else>{{ text }}</template>
           </template>
@@ -149,6 +159,14 @@ export default {
           scopedSlots: { customRender: 'dosage' },
           align: 'center'
         },
+         {
+          title: '单贴量',
+          dataIndex: 'weigthEvery',
+          key: 'weigthEvery',
+          width: '10%',
+          scopedSlots: { customRender: 'weigthEvery' },
+          align: 'center'
+        },
         {
           title: '下药顺序',
           dataIndex: 'druggingOrder',
@@ -210,6 +228,7 @@ export default {
           unit: '',
           druggingOrder: undefined,
           toxic: '',
+          weigthEvery: '',
           editable: true
         }
       ],
@@ -276,6 +295,7 @@ export default {
         unit: '',
         druggingOrder: '',
         toxic: '',
+        weigthEvery: '',
         editable: true,
         isNew: true
       })
@@ -332,6 +352,7 @@ export default {
         target.toxic = itemData.toxic
         target.medicinalPyCode = itemData.medicinalPyCode
         target.price = itemData.price
+        target.weigthEvery = itemData.weigthEvery
         target.unit = itemData.unit
         this.data = newData
       } else {
@@ -386,6 +407,11 @@ export default {
             message: '创建模板失败'
           })
         })
+    },
+    orderFilter (druggingOrder) {
+      console.log(druggingOrder)
+      const druggingOrderText = this.druggingOrders.filter(item => item.value === druggingOrder)[0]
+      return druggingOrderText.label
     }
   }
 }

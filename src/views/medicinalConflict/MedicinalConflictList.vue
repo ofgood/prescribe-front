@@ -6,22 +6,13 @@
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
               <a-form-item label="药品名称">
-                <a-input v-model="queryParam.medicinalName" placeholder="请输入药品名称"/>
+                <a-input v-model="queryParam.medicinalName" placeholder="请输入药品名称" />
               </a-form-item>
             </a-col>
-            <!-- <a-col :md="8" :sm="24">
-              <a-form-item label="所在诊所">
-                <a-select v-model="queryParam.sex" placeholder="请选择性别" default-value="0">
-                  <a-select-option v-for="item in genderAll" :value="item.value" :key="item.value">
-                    {{ item.label }}
-                  </a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col> -->
             <a-col :md="24" :sm="24">
-              <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' } || {} ">
+              <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' } || {}">
                 <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
-                <a-button style="margin-left: 8px" @click="() => this.queryParam = {}">重置</a-button>
+                <a-button style="margin-left: 8px" @click="() => (this.queryParam = {})">重置</a-button>
               </span>
             </a-col>
           </a-row>
@@ -36,16 +27,14 @@
             <!-- lock | unlock -->
             <a-menu-item key="2"><a-icon type="lock" />锁定</a-menu-item>
           </a-menu>
-          <a-button style="margin-left: 8px">
-            批量操作 <a-icon type="down" />
-          </a-button>
+          <a-button style="margin-left: 8px"> 批量操作 <a-icon type="down" /> </a-button>
         </a-dropdown>
       </div>
 
       <s-table
         ref="table"
         size="default"
-        :rowKey="record => record.id"
+        :rowKey="(record) => record.id"
         :columns="columns"
         :data="loadData"
         showPagination="auto"
@@ -121,23 +110,20 @@ export default {
         medicinalName: ''
       },
       // 加载数据方法 必须为 Promise 对象
-      loadData: parameter => {
+      loadData: (parameter) => {
         const requestParameters = Object.assign({}, parameter, this.queryParam)
         console.log('loadData request parameters:', requestParameters)
-        return medicinalConflictList(requestParameters)
-          .then(res => {
-            return res.data
-          })
+        return medicinalConflictList(requestParameters).then((res) => {
+          return res.data
+        })
       },
       selectedRowKeys: [],
       selectedRows: []
     }
   },
-  created () {
-
-  },
+  created () {},
   computed: {
-     ...mapGetters(['genderAll'])
+    ...mapGetters(['genderAll'])
   },
   methods: {
     handleAdd () {
@@ -160,7 +146,7 @@ export default {
               setTimeout(() => {
                 resolve()
               }, 1000)
-            }).then(res => {
+            }).then((res) => {
               this.visible = false
               this.confirmLoading = false
               // 重置表单数据
@@ -172,7 +158,12 @@ export default {
             })
           } else {
             // 新增
-            medicinalConflictSaveOrUpdate({ ...values }).then(res => {
+            const params = { ...values }
+            params.conflictMedicinalName = values.conflictMedicinalName.label
+            params.medicinalName = values.medicinalName.label
+            params.conflictMedicinalCode = values.conflictMedicinalName.key
+            params.medicinalCode = values.medicinalName.key
+            medicinalConflictSaveOrUpdate({ ...params }).then((res) => {
               if (res.success) {
                 this.visible = false
                 this.confirmLoading = false
