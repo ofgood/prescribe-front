@@ -5,8 +5,8 @@
         <a-form layout="inline">
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
-              <a-form-item label="模板名称">
-                <a-input v-model="queryParam.recipeTemplateName" placeholder="请输入模板名称" />
+              <a-form-item label="患者名称">
+                <a-input v-model="queryParam.patientName" placeholder="请输入患者名称" />
               </a-form-item>
             </a-col>
 
@@ -52,8 +52,8 @@
         :data="loadData"
         showPagination="auto"
       >
-        <div slot="expandedRowRender">
-          <a-table :columns="innerColumns" :data-source="innerData" :pagination="false"> </a-table>
+        <div slot="expandedRowRender" slot-scope="text">
+          <a-table :columns="innerColumns" :rowKey="(record) => record.medicinalCode" :data-source="innerDataMap[text.id]" :pagination="false"> </a-table>
         </div>
         <!-- <span slot="action" slot-scope="text, record">
           <template>
@@ -136,7 +136,7 @@ const columns = [
   // }
 ]
 export default {
-  name: 'DoctorList',
+  name: 'RecipeList',
   components: {
     STable,
     Ellipsis
@@ -145,6 +145,7 @@ export default {
     this.columns = columns
     return {
       innerData: [],
+      innerDataMap: {},
       innerColumns,
       mdl: null,
       // 查询参数
@@ -200,7 +201,11 @@ export default {
           res.data.forEach((item, index) => {
             item.orderNum = index + 1
           })
-          this.innerData = res.data || []
+          // this.innerData = res.data || []
+          this.$nextTick(() => {
+            this.innerDataMap[id] = res.data || []
+            this.$forceUpdate()
+          })
         })
       } else {
         this.innerData = []
