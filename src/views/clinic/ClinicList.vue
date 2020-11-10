@@ -40,6 +40,7 @@
       </div>
 
       <s-table
+        :row-selection="rowSelection"
         ref="table"
         size="default"
         :rowKey="record => record.id"
@@ -144,6 +145,7 @@ export default {
   data () {
     this.columns = columns
     return {
+      rowSelection: {},
       // create model
       visible: false,
       confirmLoading: false,

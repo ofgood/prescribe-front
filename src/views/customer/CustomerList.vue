@@ -51,6 +51,7 @@
       <s-table
         ref="table"
         size="default"
+        :row-selection="rowSelection"
         :rowKey="record => record.id"
         :columns="columns"
         :data="loadData"
@@ -157,6 +158,7 @@ export default {
       visible: false,
       confirmLoading: false,
       mdl: null,
+      rowSelection: {},
       // 高级搜索 展开/关闭
       advanced: false,
       // 查询参数

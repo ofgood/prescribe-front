@@ -47,6 +47,7 @@
       <s-table
         ref="table"
         size="default"
+        :row-selection="rowSelection"
         :rowKey="record => record.id"
         :columns="columns"
         :data="loadData"
@@ -153,6 +154,7 @@ export default {
   data () {
     this.columns = columns
     return {
+      rowSelection: {},
       // create model
       visible: false,
       confirmLoading: false,

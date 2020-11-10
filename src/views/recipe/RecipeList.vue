@@ -45,6 +45,7 @@
       <s-table
         ref="table"
         size="default"
+        :row-selection="rowSelection"
         @expand="expand"
         @expandedRowsChange="expand"
         :rowKey="(record) => record.id"
@@ -144,6 +145,7 @@ export default {
   data () {
     this.columns = columns
     return {
+      rowSelection: {},
       innerData: [],
       innerDataMap: {},
       innerColumns,

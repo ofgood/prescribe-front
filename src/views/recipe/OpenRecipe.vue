@@ -111,7 +111,7 @@
       <a-space>
         <a-button type="danger" @click="validate" :loading="loading">清空</a-button>
         <a-button type="primary" @click="save" :loading="loading">{{ hasPrescriptionNo? '编辑' : '保存' }}</a-button>
-        <a-button type="primary" @click="validate" :loading="loading">提交</a-button>
+        <a-button type="primary" @click="submit" :loading="loading">提交</a-button>
         <a-button type="primary" @click="printRecipe" :loading="loading">打印药方</a-button>
       </a-space>
     </footer-tool-bar>
@@ -194,7 +194,7 @@ import TaskForm from './TaskForm'
 import FooterToolBar from '@/components/FooterToolbar'
 import { baseMixin } from '@/store/app-mixin'
 import { medicinalSelect } from '@/api/medicinal'
-import { openRecipe, getPrintRecipeInfo } from '@/api/recepeInfo'
+import { openRecipe, getPrintRecipeInfo, submitRecipeInfo } from '@/api/recepeInfo'
 import storage from 'store'
 import { DOCTOR_ID, CLINIC_ID } from '@/config/storageTypes'
 import { mapGetters } from 'vuex'
@@ -549,6 +549,11 @@ export default {
     },
     save () {
       this.validate()
+    },
+    submit () {
+      submitRecipeInfo({
+        prescriptionNo: this.prescriptionNo
+      })
     }
   }
 }
