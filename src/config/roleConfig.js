@@ -30,7 +30,10 @@ const SUPER_USER_ROUTE = [
     'customer',
     'createRecipeTemplate',
     'result',
-    'exception'
+    'exception',
+    'recipeAdmin',
+    'recipeList',
+    'recipeTemplate'
 ]
 const COMPANY_MANAGER_ROUTE = [
     'dashboard',
@@ -42,7 +45,10 @@ const COMPANY_MANAGER_ROUTE = [
     'customer',
     'createRecipeTemplate',
     'result',
-    'exception'
+    'exception',
+    'recipeAdmin',
+    'recipeList',
+    'recipeTemplate'
 ]
 const AREA_MANAGER_ROUTE = [
     'dashboard',
@@ -56,7 +62,10 @@ const AREA_MANAGER_ROUTE = [
     'customer',
     'createRecipeTemplate',
     'result',
-    'exception'
+    'exception',
+    'recipeAdmin',
+    'recipeList',
+    'recipeTemplate'
 ]
 const CLINIC_MANAGER_ROUTE = [
     'dashboard',
@@ -70,13 +79,16 @@ const CLINIC_MANAGER_ROUTE = [
     'customer',
     'createRecipeTemplate',
     'result',
-    'exception'
+    'exception',
+    'recipeAdmin',
+    'recipeList',
+    'recipeTemplate'
 ]
 const DOCTOR_ROUTE = [
-    'recipe', 'recipeTemplate', 'dashboard', 'createRecipeTemplate'
+    'recipeAdmin', 'recipe', 'recipeList', 'recipeTemplate', 'dashboard', 'createRecipeTemplate'
 ]
 const DOCTOR_STAR_ROUTE = [
-    'recipe', 'recipeTemplate', 'dashboard', 'createRecipeTemplate'
+    'recipeAdmin', 'recipe', 'recipeList', 'recipeTemplate', 'dashboard', 'createRecipeTemplate'
 ]
 export const roleConfig = {
     SUPER_USER: SUPER_USER_ROUTE,

@@ -145,7 +145,8 @@ export default {
       data: [],
       value: [],
       fetching: false,
-      whetherSelectTpl: 'N'
+      whetherSelectTpl: 'N',
+      recipeTemplates: []
     }
   },
   computed: {
@@ -176,17 +177,30 @@ export default {
             // for fetch callback order
             return
           }
+          this.recipeTemplates = res.data
           const data = res.data.map(user => ({
-            label: user.patientName,
-            value: user.idCard
+            label: user.recipeTemplateName,
+            value: user.id
           }))
           this.data = data
           this.fetching = false
         })
     },
-    handleChange () {
+    handleChange (value, option) {
+      const { form: { setFieldsValue } } = this
+      const recipeTemplateData = this.recipeTemplates.filter(item => item.id === value.key)[0]
+      const { grabMedicineType, postPackageNumbers, recipeType, postNumbers, packageCap, disease, usage } = recipeTemplateData
+      setFieldsValue({
+        postPackageNumbers,
+        grabMedicineType,
+        recipeType,
+        postNumbers,
+        packageCap,
+        disease,
+        usage
+      })
+      this.$emit('selectTemplate', JSON.parse(recipeTemplateData.details))
       Object.assign(this, {
-        data: [],
         fetching: false
       })
     }

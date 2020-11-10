@@ -4,7 +4,7 @@
       <repository-form ref="repository" :showSubmit="false" />
     </a-card>
     <a-card size="small" class="card" title="处方信息" :bordered="false">
-      <task-form ref="task" :showSubmit="false" />
+      <task-form ref="task" :showSubmit="false" @selectTemplate="getTemplateData" />
     </a-card>
     <a-card size="small" class="card" title="药品列表">
       <a-table
@@ -109,10 +109,10 @@
     <!-- fixed footer toolbar -->
     <footer-tool-bar :is-mobile="isMobile" :collapsed="sideCollapsed">
       <a-space>
-        <a-button type="danger" @click="validate" :loading="loading">清空</a-button>
-        <a-button type="primary" @click="save" :loading="loading">{{ hasPrescriptionNo? '编辑' : '保存' }}</a-button>
-        <a-button type="primary" @click="submit" :loading="loading">提交</a-button>
-        <a-button type="primary" @click="printRecipe" :loading="loading">打印药方</a-button>
+        <a-button type="danger" icon="redo" @click="validate" :loading="loading">清空</a-button>
+        <a-button type="primary" icon="save" @click="save" :loading="loading">{{ '保存' }}</a-button>
+        <a-button type="primary" icon="cloud-upload" @click="submit" :loading="loading">提交</a-button>
+        <a-button type="primary" icon="printer" @click="printRecipe" :loading="loading">打印药方</a-button>
       </a-space>
     </footer-tool-bar>
     <a-modal
@@ -447,7 +447,9 @@ export default {
         }
       }
     },
-
+    getTemplateData (data) {
+      this.data = data
+    },
     // 最终全页面提交
     validate () {
       const {

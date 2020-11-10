@@ -107,7 +107,7 @@
 
     <!-- fixed footer toolbar -->
     <footer-tool-bar :is-mobile="isMobile" :collapsed="sideCollapsed">
-      <a-button type="primary" @click="validate" :loading="loading">创建</a-button>
+      <a-button icon="cloud-upload" type="primary" @click="validate" :loading="loading">创建</a-button>
     </footer-tool-bar>
   </page-header-wrapper>
 </template>

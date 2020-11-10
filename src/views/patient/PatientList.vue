@@ -36,7 +36,7 @@
       </div>
 
       <div class="table-operator">
-        <a-button type="primary" icon="plus" @click="handleAdd">新建</a-button>
+        <!-- <a-button type="primary" icon="plus" @click="handleAdd">新建</a-button> -->
         <a-dropdown v-action:edit v-if="selectedRowKeys.length > 0">
           <a-menu slot="overlay">
             <a-menu-item key="1"><a-icon type="delete" />删除</a-menu-item>
@@ -88,7 +88,7 @@ import { STable, Ellipsis } from '@/components'
 import { patientList, saveOrUpdate } from '@/api/patientInfo​'
 import { mapGetters } from 'vuex'
 import CreateForm from './modules/CreateForm'
-
+import { roleMixin } from '@/store/role-mixin'
 const columns = [
   {
     title: '姓名',
@@ -172,6 +172,7 @@ export default {
     Ellipsis,
     CreateForm
   },
+  mixins: [roleMixin],
   data () {
     this.columns = columns
     return {

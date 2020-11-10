@@ -92,7 +92,7 @@ export const asyncRouterMap = [
         name: 'recipe',
         component: RouteView,
         redirect: '/recipe/open-recipe',
-        meta: { title: '处方管理', icon: 'file-done', permission: [ 'recipe' ] },
+        meta: { title: '处方管理', icon: 'file-done', permission: [ 'recipeAdmin' ] },
         children: [
           {
             path: '/recipe/open-recipe',
@@ -104,7 +104,7 @@ export const asyncRouterMap = [
             path: '/recipe/recipe-list',
             name: 'recipeList',
             component: () => import('@/views/recipe/RecipeList'),
-            meta: { title: '处方列表', keepAlive: true, permission: [ 'recipe' ] }
+            meta: { title: '处方列表', keepAlive: true, permission: [ 'recipeList' ] }
           }
         ]
       },
