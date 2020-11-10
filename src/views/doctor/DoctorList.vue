@@ -6,7 +6,7 @@
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
               <a-form-item label="姓名">
-                <a-input v-model="queryParam.patientName" placeholder="请输入医生姓名"/>
+                <a-input v-model="queryParam.doctorName" placeholder="请输入医生姓名"/>
               </a-form-item>
             </a-col>
 
@@ -26,8 +26,8 @@
             </a-col> -->
             <a-col :md="24" :sm="24">
               <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' } || {} ">
-                <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
-                <a-button style="margin-left: 8px" @click="() => this.queryParam = {}">重置</a-button>
+                <a-button icon="redo" @click="() => this.queryParam = {}">重置</a-button>
+                <a-button icon="search" style="margin-left: 8px" type="primary" @click="$refs.table.refresh(true)">查询</a-button>
               </span>
             </a-col>
           </a-row>
@@ -86,10 +86,6 @@ import { mapGetters } from 'vuex'
 import CreateForm from './modules/CreateForm'
 
 const columns = [
-  {
-    title: '工号',
-    dataIndex: 'jobNum'
-  },
   {
     title: '姓名',
     dataIndex: 'doctorName'

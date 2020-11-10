@@ -22,8 +22,8 @@
             </a-col>
             <a-col :md="24" :sm="24">
               <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' } || {}">
-                <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
-                <a-button style="margin-left: 8px" @click="() => (this.queryParam = {})">重置</a-button>
+                <a-button icon="redo" @click="() => this.queryParam = {}">重置</a-button>
+                <a-button icon="search" style="margin-left: 8px" type="primary" @click="$refs.table.refresh(true)">查询</a-button>
               </span>
             </a-col>
           </a-row>

@@ -3,7 +3,7 @@
     <template v-slot:content>
       <div class="page-header-content">
         <div class="avatar">
-          <a-avatar size="large" icon="user"/>
+          <a-avatar size="large" :src="isDoctor ? doctorAvatar : managerAvatar " icon="user"/>
         </div>
         <div class="content">
           <div class="content-title">
@@ -31,7 +31,9 @@ import { timeFix } from '@/utils/util'
 import { mapState } from 'vuex'
 import { PageHeaderWrapper } from '@ant-design-vue/pro-layout'
 import { Radar } from '@/components'
-
+import doctorAvatar from '@/assets/doctor.png'
+import managerAvatar from '@/assets/user.png'
+import { roleMixin } from '@/store/role-mixin'
 // import { getRoleList, getServiceList } from '@/api/manage'
 
 const DataSet = require('@antv/data-set')
@@ -42,12 +44,14 @@ export default {
     PageHeaderWrapper,
     Radar
   },
+  mixins: [roleMixin],
   data () {
     return {
       timeFix: timeFix(),
       avatar: '',
       user: {},
-
+      doctorAvatar,
+      managerAvatar,
       projects: [],
       loading: true,
       radarLoading: true,

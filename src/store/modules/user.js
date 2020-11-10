@@ -14,8 +14,8 @@ const user = {
     roles: [],
     role: '',
     info: {},
-    isDoctor: false,
-    isManager: false
+    isDoctor: '',
+    isManager: ''
   },
 
   mutations: {
@@ -42,7 +42,7 @@ const user = {
       state.isDoctor = isDoctor
     },
     SET_IS_MANAGER: (state, isManager) => {
-      state.isDoctor = isManager
+      state.isManager = isManager
     }
   },
 
