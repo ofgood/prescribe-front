@@ -7,6 +7,17 @@
     DOCTOR("DOCTOR","医生"),
     DOCTOR_STAR("DOCTOR_STAR","名医");
  */
+export const managerRoles = [
+    'SUPER_USER',
+    'COMPANY_MANAGER',
+    'AREA_MANAGER',
+    'CLINIC_MANAGER'
+]
+export const doctorRoles = [
+    'DOCTOR',
+    'DOCTOR_STAR'
+]
+
 const SUPER_USER_ROUTE = [
     'dashboard',
     'patient',

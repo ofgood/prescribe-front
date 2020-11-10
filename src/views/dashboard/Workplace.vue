@@ -3,7 +3,7 @@
     <template v-slot:content>
       <div class="page-header-content">
         <div class="avatar">
-          <a-avatar size="large" :src="currentUser.avatar"/>
+          <a-avatar size="large" icon="user"/>
         </div>
         <div class="content">
           <div class="content-title">
@@ -99,8 +99,7 @@ export default {
     }),
     currentUser () {
       return {
-        name: 'Serati Ma',
-        avatar: 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png'
+        name: 'Serati Ma'
       }
     },
     userInfo () {
