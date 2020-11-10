@@ -48,6 +48,9 @@
         :data="loadData"
         showPagination="auto"
       >
+        <span class="main-color" slot="clinicName" slot-scope="text, record">
+          {{ record.clinicName }}
+        </span>
         <!-- <span slot="action" slot-scope="text, record">
           <template>
             <a @click="handleEdit(record)">配置</a>
@@ -79,7 +82,8 @@ import CreateForm from './modules/CreateForm'
 const columns = [
   {
     title: '诊所名称',
-    dataIndex: 'clinicName'
+    dataIndex: 'clinicName',
+    scopedSlots: { customRender: 'clinicName' }
   },
   {
     title: '诊所电话',

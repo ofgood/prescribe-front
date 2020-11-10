@@ -42,6 +42,9 @@
         :data="loadData"
         showPagination="auto"
       >
+        <span class="main-color" slot="medicinalName" slot-scope="text">
+          {{ text }}
+        </span>
       </s-table>
 
       <create-form
@@ -66,7 +69,8 @@ import CreateForm from './modules/CreateForm'
 const columns = [
   {
     title: '药品名称',
-    dataIndex: 'medicinalName'
+    dataIndex: 'medicinalName',
+    scopedSlots: { customRender: 'medicinalName' }
   },
   {
     title: '拼音码',

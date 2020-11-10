@@ -53,6 +53,9 @@
         :data="loadData"
         showPagination="auto"
       >
+        <span class="main-color" slot="recipeTemplateName" slot-scope="text">
+          {{ text }}
+        </span>
         <div slot="expandedRowRender" slot-scope="text">
           <a-table
             :rowKey="record => record.medicinalCode"
@@ -111,7 +114,8 @@ const innerColumns = [
 const columns = [
   {
     title: '模板名称',
-    dataIndex: 'recipeTemplateName'
+    dataIndex: 'recipeTemplateName',
+    scopedSlots: { customRender: 'recipeTemplateName' }
   },
   {
     title: '处方模板类型',

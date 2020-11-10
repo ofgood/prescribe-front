@@ -15,15 +15,6 @@
                 <a-input v-model="queryParam.tel" placeholder="请输入联系电话"/>
               </a-form-item>
             </a-col>
-            <!-- <a-col :md="8" :sm="24">
-              <a-form-item label="所在诊所">
-                <a-select v-model="queryParam.sex" placeholder="请选择性别" default-value="0">
-                  <a-select-option v-for="item in genderAll" :value="item.value" :key="item.value">
-                    {{ item.label }}
-                  </a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col> -->
             <a-col :md="24" :sm="24">
               <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' } || {} ">
                 <a-button icon="redo" @click="() => this.queryParam = {}">重置</a-button>
@@ -57,6 +48,9 @@
         :data="loadData"
         showPagination="auto"
       >
+        <span class="main-color" slot="doctorName" slot-scope="text">
+          {{ text }}
+        </span>
         <!-- <span slot="action" slot-scope="text, record">
           <template>
             <a @click="handleEdit(record)">配置</a>
@@ -88,7 +82,8 @@ import CreateForm from './modules/CreateForm'
 const columns = [
   {
     title: '姓名',
-    dataIndex: 'doctorName'
+    dataIndex: 'doctorName',
+    scopedSlots: { customRender: 'doctorName' }
   },
   {
     title: '联系电话',

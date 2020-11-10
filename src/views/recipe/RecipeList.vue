@@ -56,6 +56,9 @@
         <div slot="expandedRowRender" slot-scope="text">
           <a-table :columns="innerColumns" :rowKey="(record) => record.medicinalCode" :data-source="innerDataMap[text.id]" :pagination="false"> </a-table>
         </div>
+        <span class="main-color" slot="prescriptionNo" slot-scope="text">
+          {{ text }}
+        </span>
         <!-- <span slot="action" slot-scope="text, record">
           <template>
             <a @click="handleEdit(record)">配置</a>
@@ -87,7 +90,8 @@ const innerColumns = [
 const columns = [
   {
     title: '处方号',
-    dataIndex: 'prescriptionNo'
+    dataIndex: 'prescriptionNo',
+    scopedSlots: { customRender: 'prescriptionNo' }
   },
   {
     title: '医生',

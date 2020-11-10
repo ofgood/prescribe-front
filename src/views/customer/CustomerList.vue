@@ -57,13 +57,9 @@
         :data="loadData"
         showPagination="auto"
       >
-        <!-- <span slot="action" slot-scope="text, record">
-          <template>
-            <a @click="handleEdit(record)">配置</a>
-            <a-divider type="vertical" />
-            <a @click="handleSub(record)">订阅报警</a>
-          </template>
-        </span> -->
+        <span class="main-color" slot="customerName" slot-scope="text">
+          {{ text }}
+        </span>
       </s-table>
 
       <create-form
@@ -88,7 +84,8 @@ import CreateForm from './modules/CreateForm'
 const columns = [
   {
     title: '客户名称',
-    dataIndex: 'customerName'
+    dataIndex: 'customerName',
+    scopedSlots: { customRender: 'customerName' }
   },
   {
     title: '客户地址',
