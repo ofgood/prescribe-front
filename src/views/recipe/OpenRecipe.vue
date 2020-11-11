@@ -223,6 +223,7 @@ export default {
       medicinalListVoList: '',
       patientInfoVo: '',
       recipeInfoListVo: '',
+      medicinalPriceTotal: 0,
       // table
       columns: [
         {
