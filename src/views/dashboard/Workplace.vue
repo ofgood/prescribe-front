@@ -9,17 +9,17 @@
           <div class="content-title">
             {{ timeFix }}，{{ user.userName }}<span class="welcome-text"></span>
           </div>
-          <div>著名专家 | 新华医院 - 某某科室 - 主任医师</div>
+          <div>--</div>
         </div>
       </div>
     </template>
     <template v-slot:extraContent>
       <div class="extra-content">
         <div class="stat-item">
-          <a-statistic title="当天处方量" :value="56" />
+          <a-statistic title="当天处方量" :value="recipeToday" />
         </div>
         <div class="stat-item">
-          <a-statistic title="总处方量" :value="568"/>
+          <a-statistic title="总处方量" :value="recipeTotal"/>
         </div>
       </div>
     </template>
@@ -34,6 +34,7 @@ import { Radar } from '@/components'
 import doctorAvatar from '@/assets/doctor.png'
 import managerAvatar from '@/assets/user.png'
 import { roleMixin } from '@/store/role-mixin'
+import { findDoctorRecipeCount, findDoctorRecipeToday } from '@/api/recepeInfo'
 // import { getRoleList, getServiceList } from '@/api/manage'
 
 const DataSet = require('@antv/data-set')
@@ -57,7 +58,8 @@ export default {
       radarLoading: true,
       activities: [],
       teams: [],
-
+      recipeTotal: '',
+      recipeToday: '',
       // data
       axis1Opts: {
         dataKey: 'item',
@@ -122,6 +124,8 @@ export default {
     // getServiceList().then(res => {
     //   // console.log('workplace -> call getServiceList()', res)
     // })
+    this.getRecipeTotal()
+    this.getRecipeToday()
   },
   mounted () {
     // this.getProjects()
@@ -149,9 +153,19 @@ export default {
           this.teams = res.result
         })
     },
+    getRecipeTotal () {
+      findDoctorRecipeCount().then(res => {
+        console.log(res)
+        this.recipeTotal = res.data || 0
+      })
+    },
+    getRecipeToday () {
+      findDoctorRecipeToday().then(res => {
+        this.recipeToday = res.data || 0
+      })
+    },
     initRadar () {
       this.radarLoading = true
-
       this.$http.get('/workplace/radar')
         .then(res => {
           const dv = new DataSet.View().source(res.result)

@@ -8,7 +8,6 @@ const api = {
   recipeInfoList: '/recipeInfo/recipeInfoList', //  获取打印信息
   submitRecipeInfo: '/recipeInfo/submitRecipeInfo', //  处方提交
   getRecipeMedicinalList: '/recipeInfo/getRecipeMedicinalList' //  获取处方药物列表
-
 }
 
 export function openRecipe (parameter) {
