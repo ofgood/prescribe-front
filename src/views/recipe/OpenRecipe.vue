@@ -109,7 +109,7 @@
     <!-- fixed footer toolbar -->
     <footer-tool-bar :is-mobile="isMobile" :collapsed="sideCollapsed">
       <a-space>
-        <a-button type="danger" icon="redo" @click="validate" :loading="loading">清空</a-button>
+        <a-button type="danger" icon="redo" @click="clearData" :loading="loading">清空</a-button>
         <a-button type="primary" icon="save" @click="save" :loading="loading">{{ '保存' }}</a-button>
         <a-button type="primary" icon="cloud-upload" @click="submit" :loading="loading">提交</a-button>
         <a-button type="primary" icon="printer" @click="printRecipe" :loading="loading">打印药方</a-button>
@@ -556,6 +556,9 @@ export default {
       submitRecipeInfo({
         prescriptionNo: this.prescriptionNo
       })
+    },
+    clearData () {
+      Object.assign(this.$data, this.$options.data())
     }
   }
 }
