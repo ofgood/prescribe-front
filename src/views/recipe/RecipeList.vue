@@ -14,7 +14,7 @@
               <a-form-item label="处方类型">
                 <!-- <a-input v-model="queryParam.recipeType" placeholder="请输入处方类型"/> -->
                 <a-select v-model="queryParam.recipeType" placeholder="请选择处方类型">
-                  <a-select-option v-for="item in recipeTypeAll" :value="item.value" :key="item.value">
+                  <a-select-option v-for="item in recipeAllTypes" :value="item.value" :key="item.value">
                     {{ item.label }}
                   </a-select-option>
                 </a-select>
@@ -171,7 +171,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['recipeTypeAll', 'druggingOrders'])
+    ...mapGetters(['recipeTypeAll', 'druggingOrders', 'recipeAllTypes'])
   },
   methods: {
     handleAdd () {

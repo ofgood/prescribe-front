@@ -12,15 +12,6 @@
         </a-form-item>
       </a-col>
       <a-col :lg="4" :md="12" :sm="24">
-        <a-form-item label="处方模板类型">
-          <a-select placeholder="请选择处方模板类型" v-decorator="[ 'recipeTemplateType', {rules: [{ required: true, message: '请选择处方模板类型'}]} ]">
-            <a-select-option v-for="item in recipeTemplateType" :value="item.value" :key="item.value">
-              {{ item.label }}
-            </a-select-option>
-          </a-select>
-        </a-form-item>
-      </a-col>
-      <a-col :lg="4" :md="12" :sm="24">
         <a-form-item label="处方类型">
           <a-select placeholder="请选择处方类型" v-decorator="[ 'recipeType', {rules: [{ required: true, message: '请选择处方类型'}]} ]">
             <a-select-option v-for="item in recipeTypes" :value="item.value" :key="item.value">

@@ -99,15 +99,16 @@ const user = {
     Logout ({ commit, state }) {
       return new Promise((resolve) => {
         logout(state.token).then(() => {
-          resolve()
-        }).catch(() => {
-          resolve()
-        }).finally(() => {
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
           storage.remove(ACCESS_TOKEN)
           storage.remove(CLINIC_ID)
           storage.remove(DOCTOR_ID)
+          resolve()
+        }).catch(() => {
+          resolve()
+        }).finally(() => {
+
         })
       })
     },

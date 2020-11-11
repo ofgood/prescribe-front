@@ -36,6 +36,7 @@
           </a-form-item>
         </a-tab-pane>
         <a-tab-pane key="tab2" tab="医生登录">
+          <a-alert v-if="isLoginError" type="error" showIcon style="margin-bottom: 24px" :message="errMessage" />
           <a-form-item>
             <a-input-group style="display: inline-block; vertical-align: middle" :compact="true">
               <a-select size="large" v-model="doctorType" style="width: 100px">
@@ -130,6 +131,7 @@ export default {
     ...mapActions(['Login', 'Logout']),
     // handler
     handleTabClick (key) {
+      this.isLoginError = false
       this.customActiveKey = key
       this.form.resetFields()
     },
@@ -171,6 +173,7 @@ export default {
       })
     },
     loginSuccess (res) {
+      console.log(res)
       if (res.success) {
         this.$router.push({ path: '/' })
         // 延迟 1 秒显示欢迎信息
