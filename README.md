@@ -1,7 +1,7 @@
 
 <h1 align="center">处方管理系统</h1>
 <div align="center">
-    处方管理
+    处方管理系统
 </div>
 
 <div align="center">
