@@ -22,6 +22,7 @@ const getters = {
   recipeTemplateType: state => state.dicData.recipeTemplateType,
   recipeType: state => state.dicData.recipeType,
   recipeTypeAll: state => state.dicData.recipeTypeAll,
+  recipeAllTypes: state => state.dicData.recipeAllTypes,
   recipeTypes: state => state.dicData.recipeTypes,
   druggingOrders: state => state.dicData.druggingOrders,
   grabMedicineTypes: state => state.dicData.grabMedicineTypes

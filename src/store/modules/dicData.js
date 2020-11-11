@@ -98,6 +98,24 @@ const dicData = {
         value: 'CREAM_FORMULA'
       }
     ],
+    recipeAllTypes: [
+      {
+        label: '全部',
+        value: ''
+      },
+      {
+        label: '代煎',
+        value: 'FRIED'
+      },
+      {
+        label: '自煎',
+        value: 'SELF_FRIED'
+      },
+      {
+        label: '膏方',
+        value: 'CREAM_FORMULA'
+      }
+    ],
     recipeTypeAll: [
       {
         label: '全部',
