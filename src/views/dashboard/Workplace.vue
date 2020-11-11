@@ -14,7 +14,7 @@
       </div>
     </template>
     <template v-slot:extraContent>
-      <div class="extra-content" v-if="isDoctor">
+      <div class="extra-content">
         <div class="stat-item">
           <a-statistic title="当天处方量" :value="recipeToday" />
         </div>
