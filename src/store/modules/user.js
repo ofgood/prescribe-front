@@ -108,7 +108,11 @@ const user = {
         }).catch(() => {
           resolve()
         }).finally(() => {
-
+          commit('SET_TOKEN', '')
+          commit('SET_ROLES', [])
+          storage.remove(ACCESS_TOKEN)
+          storage.remove(CLINIC_ID)
+          storage.remove(DOCTOR_ID)
         })
       })
     },
