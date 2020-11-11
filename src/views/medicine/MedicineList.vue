@@ -21,7 +21,13 @@
 
       <div class="table-operator">
         <a-button type="primary" icon="plus" @click="handleAdd">新建</a-button>
-        <a-button type="primary" icon="plus" style="margin-left: 8px" @click="handleAdd">导入药品</a-button>
+        <a-upload
+          name="file"
+          :showUploadList="false"
+          action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+        >
+          <a-button> <a-icon type="upload" /> 导入药品</a-button>
+        </a-upload>
         <a-dropdown v-action:edit v-if="selectedRowKeys.length > 0">
           <a-menu slot="overlay">
             <a-menu-item key="1"><a-icon type="delete" />删除</a-menu-item>

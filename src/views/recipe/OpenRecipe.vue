@@ -124,7 +124,7 @@
     >
       <div class="recipe-wrap" ref="printSection">
         <div class="recipte-top">
-          <img id="barcode"/>
+          <img id="barcode" />
         </div>
         <div class="recipe-title">
           {{ clinicInfoVo.clinicName }}
@@ -179,7 +179,8 @@
           <div class="recipe-bottom">
             <div>
               <span> <span class="recipe-label">医师:</span> {{ doctorInfoVo.doctorName }}</span>
-              <span><span class="recipe-label">药品总价:</span> {{}}</span>
+              &nbsp; &nbsp;
+              <span><span class="recipe-label">药品总价:</span> {{ medicinalPriceTotal }}</span>
             </div>
           </div>
         </div>
@@ -199,6 +200,7 @@ import storage from 'store'
 import { DOCTOR_ID, CLINIC_ID } from '@/config/storageTypes'
 import { mapGetters } from 'vuex'
 import JsBarcode from 'jsbarcode'
+import { accAdd } from '@/utils/util'
 export default {
   name: 'OpenRecipe',
   mixins: [baseMixin],
@@ -523,15 +525,20 @@ export default {
           prescriptionNo: this.prescriptionNo
         }).then((res) => {
           if (res.success) {
+            let totalPrice = 0
             const { clinicInfoVo, doctorInfoVo, medicinalListVoList, patientInfoVo, recipeInfoListVo } = res.data
             this.clinicInfoVo = clinicInfoVo
             this.doctorInfoVo = doctorInfoVo
             this.medicinalListVoList = medicinalListVoList
             this.patientInfoVo = patientInfoVo
             this.recipeInfoListVo = recipeInfoListVo
+            medicinalListVoList.forEach(item => {
+              totalPrice = accAdd(totalPrice, item.price)
+            })
+            this.medicinalPriceTotal = totalPrice
             this.showModel()
             this.$nextTick(() => {
-               JsBarcode('#barcode', recipeInfoListVo.prescriptionNo)
+              JsBarcode('#barcode', recipeInfoListVo.prescriptionNo)
             })
           }
         })
@@ -554,9 +561,16 @@ export default {
       this.validate()
     },
     submit () {
-      submitRecipeInfo({
-        prescriptionNo: this.prescriptionNo
-      })
+      const { $notification } = this
+      if (this.prescriptionNo) {
+        submitRecipeInfo({
+          prescriptionNo: this.prescriptionNo
+        })
+      } else {
+        $notification['error']({
+          message: '请先保存药方之后再提交'
+        })
+      }
     },
     clearData () {
       Object.assign(this.$data, this.$options.data())
@@ -566,8 +580,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.medicine-list{
-  ul{
+.medicine-list {
+  ul {
     li {
       display: inline-block;
       width: 30%;
@@ -575,13 +589,13 @@ export default {
     }
   }
 }
-.recipte-top{
+.recipte-top {
   height: 44px;
   img {
     height: 44px;
   }
 }
-.medicine-list{
+.medicine-list {
   height: 300px;
 }
 .mainSpan {
