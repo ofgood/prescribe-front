@@ -17,7 +17,7 @@
   >
     <a-spin :spinning="loading">
       <a-form :form="form" v-bind="formLayout">
-        <a-alert v-if="isResetError" type="error" showIcon style="margin-bottom: 24px" message="账号或密码错误" />
+        <a-alert v-if="isResetError" type="error" showIcon style="margin-bottom: 24px" message="两次输入密码不一致" />
         <a-form-item label="旧密码">
           <a-input-password
             size="large"
