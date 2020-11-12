@@ -41,17 +41,6 @@
           />
           <template v-else>{{ text }}</template>
         </template>
-        <template slot="weigthEvery" slot-scope="text, record">
-          <a-input
-            key="weigthEvery"
-            v-if="record.editable"
-            style="margin: -5px 0"
-            :value="text"
-            placeholder="请输入单贴量"
-            @change="(e) => handleChange(e.target.value, record.orderNum, 'weigthEvery')"
-          />
-          <template v-else>{{ text }}</template>
-        </template>
         <template slot="medicinalName" slot-scope="text, record">
           <a-select
             style="width: 100%"
@@ -239,7 +228,7 @@ export default {
           title: '药材名称',
           dataIndex: 'medicinalName',
           key: 'medicinalName',
-          width: '10%',
+          width: '18%',
           scopedSlots: { customRender: 'medicinalName' },
           align: 'center'
         },
@@ -249,14 +238,6 @@ export default {
           key: 'dosage',
           width: '10%',
           scopedSlots: { customRender: 'dosage' },
-          align: 'center'
-        },
-        {
-          title: '单贴量',
-          dataIndex: 'weigthEvery',
-          key: 'weigthEvery',
-          width: '10%',
-          scopedSlots: { customRender: 'weigthEvery' },
           align: 'center'
         },
         {
@@ -292,14 +273,14 @@ export default {
           title: '单位',
           dataIndex: 'unit',
           key: 'unit',
-          width: '10%',
+          width: '8%',
           align: 'center'
         },
         {
           title: '价格',
           dataIndex: 'price',
           key: 'price',
-          width: '10%',
+          width: '8%',
           align: 'center'
         },
         {
@@ -320,7 +301,6 @@ export default {
           unit: '',
           druggingOrder: undefined,
           toxic: '',
-          weigthEvery: '',
           editable: true
         }
       ],
@@ -382,7 +362,6 @@ export default {
         maxDosage: '',
         unit: '',
         druggingOrder: '',
-        weigthEvery: '',
         toxic: '',
         editable: true,
         isNew: true
@@ -440,7 +419,6 @@ export default {
         target.toxic = itemData.toxic
         target.medicinalPyCode = itemData.medicinalPyCode
         target.price = itemData.price
-        target.weigthEvery = itemData.weigthEvery
         target.unit = itemData.unit
         this.data = newData
       } else {

@@ -37,17 +37,6 @@
             />
             <template v-else>{{ text }}</template>
           </template>
-          <template slot="weigthEvery" slot-scope="text, record">
-            <a-input
-              key="weigthEvery"
-              v-if="record.editable"
-              style="margin: -5px 0"
-              :value="text"
-              placeholder="请输入单贴量"
-              @change="(e) => handleChange(e.target.value, record.orderNum, 'weigthEvery')"
-            />
-            <template v-else>{{ text }}</template>
-          </template>
           <template slot="medicinalName" slot-scope="text, record">
             <a-select
               style="width: 100%"
@@ -147,7 +136,7 @@ export default {
           title: '药材名称',
           dataIndex: 'medicinalName',
           key: 'medicinalName',
-          width: '10%',
+          width: '18%',
           scopedSlots: { customRender: 'medicinalName' },
           align: 'center'
         },
@@ -155,16 +144,8 @@ export default {
           title: '剂量',
           dataIndex: 'dosage',
           key: 'dosage',
-          width: '10%',
+          width: '8%',
           scopedSlots: { customRender: 'dosage' },
-          align: 'center'
-        },
-         {
-          title: '单贴量',
-          dataIndex: 'weigthEvery',
-          key: 'weigthEvery',
-          width: '10%',
-          scopedSlots: { customRender: 'weigthEvery' },
           align: 'center'
         },
         {
@@ -186,7 +167,7 @@ export default {
           title: '规格',
           dataIndex: 'medicinalStand',
           key: 'medicinalStand',
-          width: '10%',
+          width: '8%',
           align: 'center'
         },
         {
@@ -200,7 +181,7 @@ export default {
           title: '单位',
           dataIndex: 'unit',
           key: 'unit',
-          width: '10%',
+          width: '8%',
           align: 'center'
         },
         {
@@ -228,7 +209,6 @@ export default {
           unit: '',
           druggingOrder: undefined,
           toxic: '',
-          weigthEvery: '',
           editable: true
         }
       ],
@@ -295,7 +275,6 @@ export default {
         unit: '',
         druggingOrder: '',
         toxic: '',
-        weigthEvery: '',
         editable: true,
         isNew: true
       })
@@ -352,7 +331,6 @@ export default {
         target.toxic = itemData.toxic
         target.medicinalPyCode = itemData.medicinalPyCode
         target.price = itemData.price
-        target.weigthEvery = itemData.weigthEvery
         target.unit = itemData.unit
         this.data = newData
       } else {
