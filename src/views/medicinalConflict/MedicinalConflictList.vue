@@ -22,11 +22,12 @@
       <div class="table-operator">
         <a-button type="primary" icon="plus" @click="handleAdd">新建</a-button>
         <a-upload
+          @change="uploadMedicine"
           name="file"
           :showUploadList="false"
-          action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+          :action="actionUrl"
         >
-          <a-button> <a-icon type="upload" /> 导入药品</a-button>
+          <a-button> <a-icon type="upload" /> 导入药品冲突</a-button>
         </a-upload>
         <a-dropdown v-action:edit v-if="selectedRowKeys.length > 0">
           <a-menu slot="overlay">
@@ -136,9 +137,15 @@ export default {
   },
   created () {},
   computed: {
-    ...mapGetters(['genderAll'])
+    ...mapGetters(['genderAll']),
+     actionUrl () {
+       return process.env.VUE_APP_API_BASE_URL + '/medicinalConflictInfo/importMedicinalConflict'
+     }
   },
   methods: {
+    uploadMedicine (data) {
+      console.log(data)
+    },
     handleAdd () {
       this.mdl = null
       this.visible = true

@@ -184,7 +184,8 @@ export default {
             address: user.address,
             hyperSusceptibility: user.hyperSusceptibility,
             tel: user.tel,
-            sex: user.sex
+            sex: user.sex,
+            shippingAddress: user.shippingAddress
           }))
           this.data = data
           this.fetching = false
@@ -193,13 +194,14 @@ export default {
     handleChange (value, option) {
       const { form: { setFieldsValue } } = this
       const patientInfo = this.data.filter(item => item.value === value.key)
-      const { address, birthday, hyperSusceptibility, tel, sex } = patientInfo[0]
+      const { address, birthday, hyperSusceptibility, tel, sex, shippingAddress } = patientInfo[0]
       this.patientGender = sex
       this.birthday = birthday
       setFieldsValue({
         hyperSusceptibility,
         tel,
-        address
+        address,
+        shippingAddress
       })
       Object.assign(this, {
         fetching: false
