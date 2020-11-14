@@ -22,13 +22,14 @@
       <div class="table-operator">
         <a-button type="primary" icon="plus" @click="handleAdd">新建</a-button>
         <a-upload
+          v-if="isManager"
           :headers="headers"
           @change="uploadMedicine"
           name="file"
           :showUploadList="false"
           :action="actionUrl"
         >
-          <a-button> <a-icon type="upload" /> 导入药品冲突</a-button>
+          <a-button :loading="importLoading"> <a-icon type="upload" /> 导入药品冲突</a-button>
         </a-upload>
         <a-dropdown v-action:edit v-if="selectedRowKeys.length > 0">
           <a-menu slot="overlay">
@@ -81,6 +82,8 @@ import { mapGetters } from 'vuex'
 import CreateForm from './modules/CreateForm'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 import storage from 'store'
+import { roleMixin } from '@/store/role-mixin'
+
 const columns = [
   {
     title: '药品名称',
@@ -111,9 +114,11 @@ export default {
     Ellipsis,
     CreateForm
   },
+  mixins: [roleMixin],
   data () {
     this.columns = columns
     return {
+      importLoading: false,
       headers: {
         token: storage.get(ACCESS_TOKEN)
       },
@@ -148,8 +153,15 @@ export default {
      }
   },
   methods: {
-    uploadMedicine (data) {
-      console.log(data)
+    uploadMedicine (info) {
+      this.importLoading = true
+      if (info.file.status === 'done') {
+        this.$message.success(`${info.file.name} 导入成功`)
+         this.importLoading = false
+      } else if (info.file.status === 'error') {
+        this.$message.error(`${info.file.name} 导入失败`)
+        this.importLoading = false
+      }
     },
     handleAdd () {
       this.mdl = null

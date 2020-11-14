@@ -27,6 +27,16 @@
 
       <div class="table-operator">
         <a-button type="primary" icon="plus" @click="handleAdd">新建</a-button>
+        <a-upload
+          v-if="isManager"
+          :headers="headers"
+          @change="uploadClinic"
+          name="file"
+          :showUploadList="false"
+          :action="actionUrl"
+        >
+          <a-button :loading="importLoading"> <a-icon type="upload" /> 导入诊所</a-button>
+        </a-upload>
         <a-dropdown v-action:edit v-if="selectedRowKeys.length > 0">
           <a-menu slot="overlay">
             <a-menu-item key="1"><a-icon type="delete" />删除</a-menu-item>
@@ -78,7 +88,9 @@ import { STable, Ellipsis } from '@/components'
 import { clinicList, clinicSaveOrUpdate } from '@/api/clinic'
 import { mapGetters } from 'vuex'
 import CreateForm from './modules/CreateForm'
-
+import { ACCESS_TOKEN } from '@/store/mutation-types'
+import storage from 'store'
+import { roleMixin } from '@/store/role-mixin'
 const columns = [
   {
     title: '诊所名称',
@@ -146,9 +158,14 @@ export default {
     Ellipsis,
     CreateForm
   },
+  mixins: [roleMixin],
   data () {
     this.columns = columns
     return {
+      importLoading: false,
+      headers: {
+        token: storage.get(ACCESS_TOKEN)
+      },
       rowSelection: {},
       // create model
       visible: false,
@@ -183,7 +200,10 @@ export default {
 
   },
   computed: {
-     ...mapGetters(['genderAll'])
+     ...mapGetters(['genderAll']),
+      actionUrl () {
+       return process.env.VUE_APP_API_BASE_URL + '/clinic/importClinic'
+     }
   },
   methods: {
     handleAdd () {
@@ -255,6 +275,16 @@ export default {
     resetSearchForm () {
       this.queryParam = {
         date: moment(new Date())
+      }
+    },
+    uploadClinic (info) {
+      this.importLoading = true
+      if (info.file.status === 'done') {
+        this.$message.success(`${info.file.name} 导入成功`)
+         this.importLoading = false
+      } else if (info.file.status === 'error') {
+        this.$message.error(`${info.file.name} 导入失败`)
+        this.importLoading = false
       }
     }
   }
