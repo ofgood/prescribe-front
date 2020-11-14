@@ -22,6 +22,7 @@
       <div class="table-operator">
         <a-button type="primary" icon="plus" @click="handleAdd">新建</a-button>
         <a-upload
+          :headers="headers"
           @change="uploadMedicine"
           name="file"
           :showUploadList="false"
@@ -73,7 +74,8 @@ import { STable, Ellipsis } from '@/components'
 import { medicinalList, medicinalInfoSaveOrUpdate } from '@/api/medicinal'
 import { mapGetters } from 'vuex'
 import CreateForm from './modules/CreateForm'
-
+import { ACCESS_TOKEN } from '@/store/mutation-types'
+import storage from 'store'
 const columns = [
   {
     title: '药品名称',
@@ -121,6 +123,9 @@ export default {
   data () {
     this.columns = columns
     return {
+      headers: {
+        token: storage.get(ACCESS_TOKEN)
+      },
       rowSelection: {},
       // create model
       visible: false,
