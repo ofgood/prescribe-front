@@ -61,13 +61,13 @@
         <span class="main-color" slot="clinicName" slot-scope="text, record">
           {{ record.clinicName }}
         </span>
-        <!-- <span slot="action" slot-scope="text, record">
+        <span slot="action" slot-scope="text, record">
           <template>
-            <a @click="handleEdit(record)">配置</a>
+            <a @click="handleEdit(record)">编辑</a>
             <a-divider type="vertical" />
-            <a @click="handleSub(record)">订阅报警</a>
+            <a @click="handleDel(record)">删除</a>
           </template>
-        </span> -->
+        </span>
       </s-table>
 
       <create-form
@@ -85,7 +85,7 @@
 <script>
 import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
-import { clinicList, clinicSaveOrUpdate } from '@/api/clinic'
+import { clinicList, clinicSaveOrUpdate, clinicDelete } from '@/api/clinic'
 import { mapGetters } from 'vuex'
 import CreateForm from './modules/CreateForm'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
@@ -124,13 +124,13 @@ const columns = [
    {
     title: '修改时间',
     dataIndex: 'updateTime'
+  },
+  {
+    title: '操作',
+    dataIndex: 'action',
+    width: '150px',
+    scopedSlots: { customRender: 'action' }
   }
-  // {
-  //   title: '操作',
-  //   dataIndex: 'action',
-  //   width: '150px',
-  //   scopedSlots: { customRender: 'action' }
-  // }
 ]
 
 const statusMap = {
@@ -214,6 +214,15 @@ export default {
       this.visible = true
       this.mdl = { ...record }
     },
+    handleDel (record) {
+      clinicDelete(
+        {
+
+        }
+      ).then(res => {
+
+      })
+    },
     handleOk () {
       const form = this.$refs.createModal.form
       this.confirmLoading = true
@@ -221,20 +230,21 @@ export default {
         if (!errors) {
           console.log('values', values)
           if (values.id > 0) {
-            // 修改 e.g.
-            new Promise((resolve, reject) => {
-              setTimeout(() => {
-                resolve()
-              }, 1000)
-            }).then(res => {
-              this.visible = false
-              this.confirmLoading = false
-              // 重置表单数据
-              form.resetFields()
-              // 刷新表格
-              this.$refs.table.refresh()
+             // 修改
+            clinicSaveOrUpdate({ ...values }).then(res => {
+              if (res.success) {
+                this.visible = false
+                this.confirmLoading = false
+                // 重置表单数据
+                form.resetFields()
+                // 刷新表格
+                this.$refs.table.refresh()
 
-              this.$message.info('修改成功')
+                this.$message.info('修改成功')
+              } else {
+                this.$message.info(res.message)
+                this.confirmLoading = false
+              }
             })
           } else {
             // 新增

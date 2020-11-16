@@ -5,25 +5,10 @@
         <a-form layout="inline">
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
-              <a-form-item label="姓名">
-                <a-input v-model="queryParam.customerName" placeholder="请输入医生姓名"/>
+              <a-form-item label="区域名称">
+                <a-input v-model="queryParam.area" placeholder="请输入区域名称"/>
               </a-form-item>
             </a-col>
-
-            <!-- <a-col :md="8" :sm="24">
-              <a-form-item label="联系电话">
-                <a-input v-model="queryParam.tel" placeholder="请输入联系电话"/>
-              </a-form-item>
-            </a-col> -->
-            <!-- <a-col :md="8" :sm="24">
-              <a-form-item label="所在诊所">
-                <a-select v-model="queryParam.sex" placeholder="请选择性别" default-value="0">
-                  <a-select-option v-for="item in genderAll" :value="item.value" :key="item.value">
-                    {{ item.label }}
-                  </a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col> -->
             <a-col :md="24" :sm="24">
               <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' } || {} ">
                 <a-button icon="redo" @click="() => this.queryParam = {}">重置</a-button>
@@ -57,7 +42,7 @@
         :data="loadData"
         showPagination="auto"
       >
-        <span class="main-color" slot="customerName" slot-scope="text">
+        <span class="main-color" slot="area" slot-scope="text">
           {{ text }}
         </span>
         <span slot="action" slot-scope="text, record">
@@ -84,39 +69,35 @@
 <script>
 import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
-import { customerList, customerRegister } from '@/api/customer'
+import { areaList, areaSaveOrUpdate } from '@/api/area'
 import { mapGetters } from 'vuex'
 import CreateForm from './modules/CreateForm'
 
 const columns = [
   {
-    title: '客户名称',
-    dataIndex: 'customerName',
-    scopedSlots: { customRender: 'customerName' }
+    title: '名称',
+    dataIndex: 'area',
+    scopedSlots: { customRender: 'area' }
   },
   {
-    title: '客户地址',
-    dataIndex: 'address'
+    title: '所在省份',
+    dataIndex: 'province'
   },
   {
-    title: '联系人',
-    dataIndex: 'linkMen'
+    title: '所在城市',
+    dataIndex: 'city'
   },
   {
-    title: '联系人电话',
-    dataIndex: 'linkTel'
+    title: '负责人姓名',
+    dataIndex: 'responsible'
   },
   {
-    title: '法人',
-    dataIndex: 'legalPerson'
+    title: '负责人电话',
+    dataIndex: 'responsibleTel'
   },
   {
-    title: '合作开始时间',
-    dataIndex: 'cooperationStartTime'
-  },
-  {
-    title: '合作结束时间',
-    dataIndex: 'cooperationEndTime'
+    title: '备注',
+    dataIndex: 'remark'
   },
   {
     title: '创建时间',
@@ -172,7 +153,7 @@ export default {
       loadData: parameter => {
         const requestParameters = Object.assign({}, parameter, this.queryParam)
         console.log('loadData request parameters:', requestParameters)
-        return customerList(requestParameters)
+        return areaList(requestParameters)
           .then(res => {
             return res.data
           })
@@ -215,7 +196,7 @@ export default {
           console.log('values', values)
           if (values.id > 0) {
             // 修改 e.g.
-              customerRegister({ ...values }).then(res => {
+              areaSaveOrUpdate({ ...values }).then(res => {
               if (res.success) {
                 this.visible = false
                 this.confirmLoading = false
@@ -232,7 +213,7 @@ export default {
             })
           } else {
             // 新增
-            customerRegister({ ...values }).then(res => {
+            areaSaveOrUpdate({ ...values }).then(res => {
               if (res.success) {
                 this.visible = false
                 this.confirmLoading = false

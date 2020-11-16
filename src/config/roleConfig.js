@@ -33,11 +33,13 @@ const SUPER_USER_ROUTE = [
     'exception',
     'recipeAdmin',
     'recipeList',
+    'area',
     'recipeTemplate'
 ]
 const COMPANY_MANAGER_ROUTE = [
     'dashboard',
     'patient',
+    'area',
     'medicine',
     'medicinalConflict',
     'doctor',
@@ -53,6 +55,7 @@ const COMPANY_MANAGER_ROUTE = [
 const AREA_MANAGER_ROUTE = [
     'dashboard',
     'patient',
+    'area',
     'medicine',
     'medicinalConflict',
     'doctor',

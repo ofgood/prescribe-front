@@ -51,13 +51,13 @@
         <span class="main-color" slot="doctorName" slot-scope="text">
           {{ text }}
         </span>
-        <!-- <span slot="action" slot-scope="text, record">
+        <span slot="action" slot-scope="text, record">
           <template>
-            <a @click="handleEdit(record)">配置</a>
+            <a @click="handleEdit(record)">编辑</a>
             <a-divider type="vertical" />
-            <a @click="handleSub(record)">订阅报警</a>
+            <a @click="handleDel(record)">删除</a>
           </template>
-        </span> -->
+        </span>
       </s-table>
 
       <create-form
@@ -112,13 +112,13 @@ const columns = [
    {
     title: '修改时间',
     dataIndex: 'updateTime'
+  },
+  {
+    title: '操作',
+    dataIndex: 'action',
+    width: '150px',
+    scopedSlots: { customRender: 'action' }
   }
-  // {
-  //   title: '操作',
-  //   dataIndex: 'action',
-  //   width: '150px',
-  //   scopedSlots: { customRender: 'action' }
-  // }
 ]
 
 const statusMap = {
@@ -194,6 +194,9 @@ export default {
     handleEdit (record) {
       this.visible = true
       this.mdl = { ...record }
+    },
+     handleDel (record) {
+      console.log(record)
     },
     handleOk () {
       const form = this.$refs.createModal.form

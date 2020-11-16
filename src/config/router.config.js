@@ -40,6 +40,22 @@ export const asyncRouterMap = [
         ]
       },
       {
+        path: '/area',
+        name: 'area',
+        component: RouteView,
+        redirect: '/area/area-list',
+        meta: { title: '区域管理', icon: 'cluster', permission: [ 'area' ] },
+        children: [
+          {
+            path: '/area/area-list',
+            name: 'area-list',
+            hideChildrenInMenu: true,
+            component: () => import('@/views/area/AreaList'),
+            meta: { title: '区域列表', keepAlive: true, permission: [ 'area' ] }
+          }
+        ]
+      },
+      {
         path: '/customer',
         name: 'customer',
         component: RouteView,

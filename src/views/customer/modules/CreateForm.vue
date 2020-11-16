@@ -10,7 +10,7 @@
     <a-spin :spinning="loading">
       <a-form :form="form" v-bind="formLayout">
         <!-- 检查是否有 id 并且大于0，大于0是修改。其他是新增，新增不显示主键ID -->
-        <a-form-item v-if="model && model.id > 0" label="主键ID">
+        <a-form-item v-show="false" v-if="model && model.id > 0" label="主键ID">
           <a-input v-decorator="['id', { initialValue: 0 }]" disabled />
         </a-form-item>
         <a-form-item label="客户姓名">
@@ -45,7 +45,17 @@
 <script>
 import pick from 'lodash.pick'
 // 表单字段
-const fields = ['description', 'id']
+const fields = [
+  'customerName',
+  'customerPhone',
+  'id',
+  'linkMen',
+  'linkTel',
+  'legalPerson',
+  'cooperationStartTime',
+  'cooperationEndTime',
+  'address'
+]
 export default {
   name: 'CreateDoctorForm',
   props: {
