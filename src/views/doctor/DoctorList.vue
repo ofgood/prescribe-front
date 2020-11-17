@@ -27,22 +27,13 @@
 
       <div class="table-operator">
         <a-button type="primary" icon="plus" @click="handleAdd">新建</a-button>
-        <a-dropdown v-action:edit v-if="selectedRowKeys.length > 0">
-          <a-menu slot="overlay">
-            <a-menu-item key="1"><a-icon type="delete" />删除</a-menu-item>
-            <!-- lock | unlock -->
-            <a-menu-item key="2"><a-icon type="lock" />锁定</a-menu-item>
-          </a-menu>
-          <a-button style="margin-left: 8px">
-            批量操作 <a-icon type="down" />
-          </a-button>
-        </a-dropdown>
+        <a-button type="danger" icon="delete" :disabled="batchBtnDisabled" @click="handleDelBatch">删除</a-button>
       </div>
 
       <s-table
         ref="table"
         size="default"
-        :row-selection="rowSelection"
+        :row-selection="{ onChange: onSelectChange }"
         :rowKey="record => record.id"
         :columns="columns"
         :data="loadData"
@@ -75,7 +66,7 @@
 <script>
 import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
-import { doctorList, doctorSaveOrUpdate } from '@/api/doctor'
+import { doctorList, doctorSaveOrUpdate, doctorDelete } from '@/api/doctor'
 import { mapGetters } from 'vuex'
 import CreateForm from './modules/CreateForm'
 
@@ -149,6 +140,7 @@ export default {
   data () {
     this.columns = columns
     return {
+      batchBtnDisabled: true,
       rowSelection: {},
       // create model
       visible: false,
@@ -169,7 +161,8 @@ export default {
           })
       },
       selectedRowKeys: [],
-      selectedRows: []
+      selectedRows: [],
+      selectedIds: ''
     }
   },
   filters: {
@@ -186,7 +179,16 @@ export default {
   computed: {
      ...mapGetters(['genderAll'])
   },
+   watch: {
+    selectedRowKeys (keys) {
+      this.batchBtnDisabled = !keys.length
+    }
+  },
   methods: {
+     onSelectChange (selectedRowKeys) {
+      this.selectedRowKeys = selectedRowKeys
+      this.selectedIds = selectedRowKeys.join(',')
+    },
     handleAdd () {
       this.mdl = null
       this.visible = true
@@ -195,8 +197,32 @@ export default {
       this.visible = true
       this.mdl = { ...record }
     },
-     handleDel (record) {
-      console.log(record)
+    handleDel (record) {
+      this.deleteClinic(record.id)
+    },
+    handleDelBatch () {
+      this.deleteClinic(this.selectedIds)
+    },
+    deleteClinic (ids) {
+      const { $message, $refs } = this
+      this.$confirm({
+        title: '提示',
+        content: '确定要删除?',
+        onOk () {
+          return new Promise((resolve, reject) => {
+            doctorDelete({ ids }).then((res) => {
+              if (res.success) {
+                $message.success(res.message)
+                $refs.table.refresh(true)
+                return resolve
+              } else {
+                 $message.info(res.message)
+                return reject
+              }
+            })
+          }).catch(() => console.log('Oops errors!'))
+        }
+      })
     },
     handleOk () {
       const form = this.$refs.createModal.form

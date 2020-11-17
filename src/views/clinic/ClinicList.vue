@@ -231,7 +231,6 @@ export default {
         content: '确定要删除?',
         onOk () {
           return new Promise((resolve, reject) => {
-            setTimeout(Math.random() > 0.5 ? resolve : reject, 1000)
             clinicDelete({ ids }).then((res) => {
               if (res.success) {
                  $message.success(res.message)

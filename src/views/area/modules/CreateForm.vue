@@ -29,7 +29,7 @@
           <a-input placeholder="请输入负责人电话" v-decorator="['responsibleTel', {trigger: 'blur',rules: [{required: true, whitespace: true,message: '请输入手机号'},{validator: validateCellPhone}]}]" />
         </a-form-item>
         <a-form-item label="备注">
-          <a-textarea :maxLength="300" v-decorator="['remark']" placeholder="请输入备注"></a-textarea>
+          <a-textarea :auto-size="{ minRows: 2, maxRows: 3 }" :maxLength="300" v-decorator="['remark']" placeholder="请输入备注"></a-textarea>
         </a-form-item>
       </a-form>
     </a-spin>
