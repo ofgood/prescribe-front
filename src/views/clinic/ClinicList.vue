@@ -6,19 +6,25 @@
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
               <a-form-item label="诊所名称">
-                <a-input v-model="queryParam.clinicName" placeholder="请输入诊所名称"/>
+                <a-input v-model="queryParam.clinicName" placeholder="请输入诊所名称" />
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
               <a-form-item label="负责人姓名">
-                <a-input v-model="queryParam.responsible" placeholder="请输入联系电话"/>
+                <a-input v-model="queryParam.responsible" placeholder="请输入联系电话" />
               </a-form-item>
             </a-col>
 
             <a-col :md="24" :sm="24">
-              <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' } || {} ">
-                <a-button icon="redo" @click="() => this.queryParam = {}">重置</a-button>
-                <a-button icon="search" style="margin-left: 8px" type="primary" @click="$refs.table.refresh(true)">查询</a-button>
+              <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' } || {}">
+                <a-button icon="redo" @click="() => (this.queryParam = {})">重置</a-button>
+                <a-button
+                  icon="search"
+                  style="margin-left: 8px"
+                  type="primary"
+                  @click="$refs.table.refresh(true)"
+                >查询</a-button
+                >
               </span>
             </a-col>
           </a-row>
@@ -27,6 +33,7 @@
 
       <div class="table-operator">
         <a-button type="primary" icon="plus" @click="handleAdd">新建</a-button>
+        <a-button type="danger" icon="delete" :disabled="batchBtnDisabled" @click="handleDelBatch">删除</a-button>
         <a-upload
           v-if="isManager"
           :headers="headers"
@@ -37,23 +44,13 @@
         >
           <a-button :loading="importLoading"> <a-icon type="upload" /> 导入诊所</a-button>
         </a-upload>
-        <a-dropdown v-action:edit v-if="selectedRowKeys.length > 0">
-          <a-menu slot="overlay">
-            <a-menu-item key="1"><a-icon type="delete" />删除</a-menu-item>
-            <!-- lock | unlock -->
-            <a-menu-item key="2"><a-icon type="lock" />锁定</a-menu-item>
-          </a-menu>
-          <a-button style="margin-left: 8px">
-            批量操作 <a-icon type="down" />
-          </a-button>
-        </a-dropdown>
       </div>
 
       <s-table
-        :row-selection="rowSelection"
+        :row-selection="{ onChange: onSelectChange }"
         ref="table"
         size="default"
-        :rowKey="record => record.id"
+        :rowKey="(record) => record.id"
         :columns="columns"
         :data="loadData"
         showPagination="auto"
@@ -121,7 +118,7 @@ const columns = [
     title: '创建时间',
     dataIndex: 'createTime'
   },
-   {
+  {
     title: '修改时间',
     dataIndex: 'updateTime'
   },
@@ -162,11 +159,11 @@ export default {
   data () {
     this.columns = columns
     return {
+      batchBtnDisabled: true,
       importLoading: false,
       headers: {
         token: storage.get(ACCESS_TOKEN)
       },
-      rowSelection: {},
       // create model
       visible: false,
       confirmLoading: false,
@@ -176,16 +173,16 @@ export default {
       // 查询参数
       queryParam: {},
       // 加载数据方法 必须为 Promise 对象
-      loadData: parameter => {
+      loadData: (parameter) => {
         const requestParameters = Object.assign({}, parameter, this.queryParam)
         console.log('loadData request parameters:', requestParameters)
-        return clinicList(requestParameters)
-          .then(res => {
-            return res.data
-          })
+        return clinicList(requestParameters).then((res) => {
+          return res.data
+        })
       },
       selectedRowKeys: [],
-      selectedRows: []
+      selectedRows: [],
+      selectedIds: ''
     }
   },
   filters: {
@@ -196,16 +193,23 @@ export default {
       return statusMap[type].status
     }
   },
-  created () {
-
-  },
+  created () {},
   computed: {
-     ...mapGetters(['genderAll']),
-      actionUrl () {
-       return process.env.VUE_APP_API_BASE_URL + '/clinic/importClinic'
-     }
+    ...mapGetters(['genderAll']),
+    actionUrl () {
+      return process.env.VUE_APP_API_BASE_URL + '/clinic/importClinic'
+    }
+  },
+  watch: {
+    selectedRowKeys (keys) {
+      this.batchBtnDisabled = !keys.length
+    }
   },
   methods: {
+    onSelectChange (selectedRowKeys) {
+      this.selectedRowKeys = selectedRowKeys
+      this.selectedIds = selectedRowKeys.join(',')
+    },
     handleAdd () {
       this.mdl = null
       this.visible = true
@@ -215,12 +219,31 @@ export default {
       this.mdl = { ...record }
     },
     handleDel (record) {
-      clinicDelete(
-        {
-
+      this.deleteClinic(record.id)
+    },
+    handleDelBatch () {
+      this.deleteClinic(this.selectedIds)
+    },
+    deleteClinic (ids) {
+      const { $message, $refs } = this
+      this.$confirm({
+        title: '提示',
+        content: '确定要删除?',
+        onOk () {
+          return new Promise((resolve, reject) => {
+            setTimeout(Math.random() > 0.5 ? resolve : reject, 1000)
+            clinicDelete({ ids }).then((res) => {
+              if (res.success) {
+                 $message.success(res.message)
+                $refs.table.refresh(true)
+                return resolve
+              } else {
+                 $message.info(res.message)
+                return reject
+              }
+            })
+          }).catch(() => console.log('Oops errors!'))
         }
-      ).then(res => {
-
       })
     },
     handleOk () {
@@ -230,8 +253,8 @@ export default {
         if (!errors) {
           console.log('values', values)
           if (values.id > 0) {
-             // 修改
-            clinicSaveOrUpdate({ ...values }).then(res => {
+            // 修改
+            clinicSaveOrUpdate({ ...values }).then((res) => {
               if (res.success) {
                 this.visible = false
                 this.confirmLoading = false
@@ -248,7 +271,7 @@ export default {
             })
           } else {
             // 新增
-            clinicSaveOrUpdate({ ...values }).then(res => {
+            clinicSaveOrUpdate({ ...values }).then((res) => {
               if (res.success) {
                 this.visible = false
                 this.confirmLoading = false
@@ -291,7 +314,7 @@ export default {
       this.importLoading = true
       if (info.file.status === 'done') {
         this.$message.success(`${info.file.name} 导入成功`)
-         this.importLoading = false
+        this.importLoading = false
       } else if (info.file.status === 'error') {
         this.$message.error(`${info.file.name} 导入失败`)
         this.importLoading = false
