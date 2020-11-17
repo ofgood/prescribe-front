@@ -26,7 +26,7 @@
           <a-input placeholder="请输入负责人姓名" :maxLength="10" v-decorator="['responsible', {rules: [{required: true,whitespace: true, message: '请输入负责人姓名'}]}]" />
         </a-form-item>
         <a-form-item label="负责人电话">
-          <a-input placeholder="请输入负责人电话" v-decorator="['responsibleTel', {trigger: 'blur',rules: [{required: true, whitespace: true,message: '请输入手机号'},{validator: validateCellPhone,trigger: 'blur'}]}]" />
+          <a-input placeholder="请输入负责人电话" v-decorator="['responsibleTel', {trigger: 'blur',rules: [{required: true, whitespace: true,message: '请输入手机号'},{validator: validateCellPhone}]}]" />
         </a-form-item>
         <a-form-item label="备注">
           <a-textarea :maxLength="300" v-decorator="['remark']" placeholder="请输入备注"></a-textarea>

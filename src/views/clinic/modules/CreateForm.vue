@@ -14,19 +14,19 @@
           <a-input v-decorator="['id', { initialValue: 0 }]" disabled />
         </a-form-item>
         <a-form-item label="诊所名称">
-          <a-input v-decorator="['clinicName', {rules: [{required: true, message: '请输入诊所名称'}]}]" placeholder="请输入诊所名称"/>
+          <a-input :maxLength="50" v-decorator="['clinicName', {rules: [{required: true, message: '请输入诊所名称'}]}]" placeholder="请输入诊所名称"/>
         </a-form-item>
         <a-form-item label="诊所地址">
-          <a-input v-decorator="['address', {rules: [{required: true, message: '请输入诊所地址'}]}]" placeholder="请输入诊所地址"/>
+          <a-input :maxLength="50" v-decorator="['address', {rules: [{required: true, message: '请输入诊所地址'}]}]" placeholder="请输入诊所地址"/>
         </a-form-item>
         <a-form-item label="诊所电话">
-          <a-input v-decorator="['clinicTel', {rules: [{required: true, message: '请输入诊所电话'}]}]" placeholder="请输入诊所电话"/>
+          <a-input :maxLength="20" v-decorator="['clinicTel', {rules: [{required: true, message: '请输入诊所电话'}, {validator: validatePhone}],trigger: 'blur'}]" placeholder="请输入诊所电话"/>
         </a-form-item>
         <a-form-item label="负责人">
-          <a-input v-decorator="['responsible', {rules: [{required: true, message: '请输入负责人姓名'}]}]" placeholder="请输入负责人姓名"/>
+          <a-input :maxLength="10" v-decorator="['responsible', {rules: [{required: true, message: '请输入负责人姓名'}]}]" placeholder="请输入负责人姓名"/>
         </a-form-item>
         <a-form-item label="负责人电话">
-          <a-input v-decorator="['responsibleTel', {rules: [{required: true, message: '请输入负责人电话'}]}]" placeholder="请输入负责人电话"/>
+          <a-input v-decorator="['responsibleTel', {rules: [{required: true, message: '请输入负责人电话'}, {validator: validateCellPhone}],trigger: 'blur'}]" placeholder="请输入负责人电话"/>
         </a-form-item>
       </a-form>
     </a-spin>
@@ -36,7 +36,7 @@
 <script>
 import pick from 'lodash.pick'
 import { mapGetters } from 'vuex'
-
+import { validateCellPhone, validatePhone } from '@/utils/validates'
 // 表单字段
 const fields = ['clinicName', 'id', 'responsible', 'responsibleTel', 'clinicTel', 'address']
 export default {
@@ -66,6 +66,8 @@ export default {
       }
     }
     return {
+      validateCellPhone,
+      validatePhone,
       form: this.$form.createForm(this)
     }
   },
