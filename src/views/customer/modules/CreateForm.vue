@@ -14,19 +14,19 @@
           <a-input v-decorator="['id', { initialValue: 0 }]" disabled />
         </a-form-item>
         <a-form-item label="客户姓名">
-          <a-input v-decorator="['customerName', {rules: [{required: true, message: '请输入患者姓名'}]}]" placeholder="请输入"/>
+          <a-input :maxLength="20" v-decorator="['customerName', {rules: [{required: true, message: '请输入客户姓名'}]}]" placeholder="请输入客户姓名"/>
         </a-form-item>
         <a-form-item label="客户电话">
-          <a-input v-decorator="['customerPhone']" placeholder="请输入客户电话"/>
+          <a-input :maxLength="20" v-decorator="['customerPhone',{rules: [{validator: validatePhone}],trigger: 'blur'}]" placeholder="请输入客户电话"/>
         </a-form-item>
         <a-form-item label="联系人">
-          <a-input placeholder="请输入联系人姓名" v-decorator="['linkMen', {rules: [{required: true, message: '请输入联系人姓名'}]}]" />
+          <a-input :maxLength="10" placeholder="请输入联系人姓名" v-decorator="['linkMen', {rules: [{required: true, message: '请输入联系人姓名'}]}]" />
         </a-form-item>
         <a-form-item label="联系电话">
-          <a-input placeholder="请输入联系电话" v-decorator="['linkTel', {rules: [{required: true, message: '请输入联系电话'}]}]" />
+          <a-input placeholder="请输入联系电话" v-decorator="['linkTel', {rules: [{required: true, message: '请输入联系电话'},{validator: validatePhone}],trigger: 'blur'}]" />
         </a-form-item>
         <a-form-item label="法人姓名">
-          <a-input placeholder="请输入法人姓名" v-decorator="['legalPerson', {rules: [{required: true, message: '请输入法人姓名'}]}]" />
+          <a-input :maxLength="10" placeholder="请输入法人姓名" v-decorator="['legalPerson', {rules: [{required: true, message: '请输入法人姓名'}]}]" />
         </a-form-item>
         <a-form-item label="合作开始时间">
           <a-date-picker style="width:100%" placeholder="请选择出生日期" valueFormat="YYYY-MM-DD" v-decorator="['cooperationStartTime', {rules: [{required: true, message: '请选择出生日期'}]}]" />
@@ -35,7 +35,7 @@
           <a-date-picker style="width:100%" placeholder="请选择出生日期" valueFormat="YYYY-MM-DD" v-decorator="['cooperationEndTime', {rules: [{required: true, message: '请选择出生日期'}]}]" />
         </a-form-item>
         <a-form-item label="地址">
-          <a-input placeholder="请输入地址" v-decorator="['address', {rules: [{required: true, message: '请输入地址'}]}]" />
+          <a-textarea :auto-size="{ minRows: 2, maxRows: 3 }" :maxLength="30" placeholder="请输入地址" v-decorator="['address', {rules: [{required: true, message: '请输入地址'}]}]" />
         </a-form-item>
       </a-form>
     </a-spin>
@@ -44,6 +44,7 @@
 
 <script>
 import pick from 'lodash.pick'
+import { validatePhone, validateCellPhone } from '@/utils/validates'
 // 表单字段
 const fields = [
   'customerName',
@@ -84,6 +85,8 @@ export default {
       }
     }
     return {
+      validatePhone,
+      validateCellPhone,
       form: this.$form.createForm(this)
     }
   },
