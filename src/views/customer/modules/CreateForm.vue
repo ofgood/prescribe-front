@@ -23,7 +23,7 @@
           <a-input :maxLength="10" placeholder="请输入联系人姓名" v-decorator="['linkMen', {rules: [{required: true, message: '请输入联系人姓名'}]}]" />
         </a-form-item>
         <a-form-item label="联系电话">
-          <a-input placeholder="请输入联系电话" v-decorator="['linkTel', {rules: [{required: true, message: '请输入联系电话'},{validator: validatePhone}],trigger: 'blur'}]" />
+          <a-input placeholder="请输入联系电话" v-decorator="['linkTel', {rules: [{required: true, message: '请输入联系电话'},{validator: validateCellPhone}],trigger: 'blur'}]" />
         </a-form-item>
         <a-form-item label="法人姓名">
           <a-input :maxLength="10" placeholder="请输入法人姓名" v-decorator="['legalPerson', {rules: [{required: true, message: '请输入法人姓名'}]}]" />
