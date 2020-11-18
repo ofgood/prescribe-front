@@ -46,7 +46,8 @@ const fields = [
   'id',
   'city',
   'responsible',
-  'responsibleTel'
+  'responsibleTel',
+  'remark'
 ]
 export default {
   name: 'CreateAreaForm',
