@@ -34,3 +34,12 @@ export const validateIdCard = (rule, value, callback) => {
   }
   callback()
 }
+
+// 价格(正整数,或小数点后一位或两位)
+export const validatePrice = (rule, value, callback) => {
+  const regex = /(?:^[1-9]([0-9]+)?(?:\.[0-9]{1,2})?$)|(?:^(?:0){1}$)|(?:^[0-9]\.[0-9](?:[0-9])?$)/
+  if (value && !regex.test(value)) {
+    callback(new Error('请输入正确的价格格式'))
+  }
+  callback()
+}
