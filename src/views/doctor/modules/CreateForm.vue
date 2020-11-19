@@ -14,10 +14,10 @@
           <a-input v-decorator="['id', { initialValue: 0 }]" disabled />
         </a-form-item>
         <a-form-item label="姓名">
-          <a-input v-decorator="['doctorName', {rules: [{required: true, message: '请输入医生姓名'}]}]" placeholder="请输入医生姓名"/>
+          <a-input :maxLength="10" v-decorator="['doctorName', {rules: [{required: true, message: '请输入医生姓名'}]}]" placeholder="请输入医生姓名"/>
         </a-form-item>
         <a-form-item label="联系电话">
-          <a-input placeholder="请输入联系电话" v-decorator="['doctorTel', {rules: [{required: true, message: '请输入联系电话'}]}]" />
+          <a-input placeholder="请输入联系电话" v-decorator="['doctorTel', {trigger:'blur',rules: [{required: true, message: '请输入联系电话'},{validator: validateCellPhone}]}]" />
         </a-form-item>
         <a-form-item label="医生类别">
           <a-select placeholder="请选择医生类别" v-decorator="['doctorType', {rules: [{required: true, message: '请选择医生类别'}]}]">
@@ -34,16 +34,16 @@
           </a-select>
         </a-form-item>
         <a-form-item label="工号">
-          <a-input v-decorator="['jobNum', {rules: [{required: true, message: '请输入医生工号'}]}]" placeholder="请输入医生工号"/>
+          <a-input :maxLength="10" v-decorator="['jobNum', {rules: [{required: true, message: '请输入医生工号'}]}]" placeholder="请输入医生工号"/>
         </a-form-item>
         <a-form-item label="联系地址">
-          <a-input placeholder="请输入联系地址" v-decorator="['address', {rules: [{required: true, message: '请输入联系地址'}]}]" />
+          <a-input :maxLength="30" placeholder="请输入联系地址" v-decorator="['address', {rules: [{required: true, message: '请输入联系地址'}]}]" />
         </a-form-item>
         <a-form-item label="出生日期">
           <a-date-picker style="width:100%" placeholder="请选择出生日期" valueFormat="YYYY-MM-DD" v-decorator="['birthday', {rules: [{message: '请选择出生日期'}]}]" />
         </a-form-item>
         <a-form-item label="身份证号">
-          <a-input placeholder="请输入" v-decorator="['idCard', {rules: [{required: false, message: ''}]}]" />
+          <a-input placeholder="请输入身份证号" v-decorator="['idCard', {trigger: 'blur',rules: [{required: false, message: ''}, {validator: validateIdCard}]}]" />
         </a-form-item>
       </a-form>
     </a-spin>
@@ -54,6 +54,7 @@
 import pick from 'lodash.pick'
 import { mapGetters, mapActions } from 'vuex'
 import { filterOption } from '@/utils/util'
+import { validateCellPhone, validateIdCard } from '@/utils/validates'
 // 表单字段
 const fields = ['doctorName', 'id', 'doctorTel', 'doctorType', 'clinicIds', 'jobNum', 'address', 'birthday', 'idCard']
 export default {
@@ -84,6 +85,8 @@ export default {
       }
     }
     return {
+      validateIdCard,
+      validateCellPhone,
       form: this.$form.createForm(this)
     }
   },

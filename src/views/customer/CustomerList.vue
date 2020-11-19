@@ -54,7 +54,7 @@
           <template>
             <a @click="handleEdit(record)">编辑</a>
             <a-divider type="vertical" />
-            <a @click="handleDel(record)">删除</a>
+            <a class="danger-color" @click="handleDel(record)">删除</a>
           </template>
         </span>
       </s-table>

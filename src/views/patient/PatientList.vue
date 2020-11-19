@@ -185,7 +185,7 @@ export default {
       advanced: false,
       // 查询参数
       queryParam: {
-        sex: ''
+        // sex: ''
       },
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {

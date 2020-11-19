@@ -27,7 +27,7 @@
 
       <div class="table-operator">
         <a-button type="primary" icon="plus" @click="handleAdd">新建</a-button>
-        <a-button type="danger" icon="delete" :disabled="batchBtnDisabled" @click="handleDelBatch">删除</a-button>
+        <a-button type="danger" icon="user-delete" :disabled="batchBtnDisabled" @click="handleDelBatch">离职</a-button>
       </div>
 
       <s-table
@@ -46,7 +46,7 @@
           <template>
             <a @click="handleEdit(record)">编辑</a>
             <a-divider type="vertical" />
-            <a @click="handleDel(record)">删除</a>
+            <a @click="handleDel(record)">离职</a>
           </template>
         </span>
       </s-table>
@@ -207,7 +207,7 @@ export default {
       const { $message, $refs } = this
       this.$confirm({
         title: '提示',
-        content: '确定要删除?',
+        content: '确定离职?',
         onOk () {
           return new Promise((resolve, reject) => {
             doctorDelete({ ids }).then((res) => {

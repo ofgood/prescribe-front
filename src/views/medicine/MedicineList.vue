@@ -21,6 +21,7 @@
 
       <div class="table-operator">
         <a-button type="primary" icon="plus" @click="handleAdd">新建</a-button>
+        <a-button type="danger" icon="delete" :disabled="batchBtnDisabled" @click="handleDelBatch">删除</a-button>
         <a-upload
           v-if="isManager"
           :headers="headers"
@@ -31,22 +32,12 @@
         >
           <a-button :loading="importLoading"> <a-icon type="upload" /> 导入药品</a-button>
         </a-upload>
-        <a-dropdown v-action:edit v-if="selectedRowKeys.length > 0">
-          <a-menu slot="overlay">
-            <a-menu-item key="1"><a-icon type="delete" />删除</a-menu-item>
-            <!-- lock | unlock -->
-            <a-menu-item key="2"><a-icon type="lock" />锁定</a-menu-item>
-          </a-menu>
-          <a-button style="margin-left: 8px">
-            批量操作 <a-icon type="down" />
-          </a-button>
-        </a-dropdown>
       </div>
 
       <s-table
         ref="table"
         size="default"
-        :row-selection="rowSelection"
+        :row-selection="{ onChange: onSelectChange }"
         :rowKey="record => record.id"
         :columns="columns"
         :data="loadData"
@@ -54,6 +45,13 @@
       >
         <span class="main-color" slot="medicinalName" slot-scope="text">
           {{ text }}
+        </span>
+        <span slot="action" slot-scope="text, record">
+          <template>
+            <a @click="handleEdit(record)">编辑</a>
+            <a-divider type="vertical" />
+            <a class="danger-color" @click="handleDel(record)">删除</a>
+          </template>
         </span>
       </s-table>
 
@@ -72,7 +70,7 @@
 <script>
 import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
-import { medicinalList, medicinalInfoSaveOrUpdate } from '@/api/medicinal'
+import { medicinalList, medicinalInfoSaveOrUpdate, medicinalInfoDelete } from '@/api/medicinal'
 import { mapGetters } from 'vuex'
 import CreateForm from './modules/CreateForm'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
@@ -108,16 +106,16 @@ const columns = [
   {
     title: '单位',
     dataIndex: 'unit'
+  },
+  {
+    title: '操作',
+    dataIndex: 'action',
+    width: '150px',
+    scopedSlots: { customRender: 'action' }
   }
-  // {
-  //   title: '操作',
-  //   dataIndex: 'action',
-  //   width: '150px',
-  //   scopedSlots: { customRender: 'action' }
-  // }
 ]
 export default {
-  name: 'DoctorList',
+  name: 'MedicineList',
   components: {
     STable,
     Ellipsis,
@@ -127,6 +125,7 @@ export default {
   data () {
     this.columns = columns
     return {
+      batchBtnDisabled: true,
       importLoading: false,
       headers: {
         token: storage.get(ACCESS_TOKEN)
@@ -152,7 +151,8 @@ export default {
           })
       },
       selectedRowKeys: [],
-      selectedRows: []
+      selectedRows: [],
+      selectedIds: ''
     }
   },
   computed: {
@@ -161,7 +161,16 @@ export default {
        return process.env.VUE_APP_API_BASE_URL + '/medicinalInfo/importMedicinal'
      }
   },
+   watch: {
+    selectedRowKeys (keys) {
+      this.batchBtnDisabled = !keys.length
+    }
+  },
   methods: {
+    onSelectChange (selectedRowKeys) {
+      this.selectedRowKeys = selectedRowKeys
+      this.selectedIds = selectedRowKeys.join(',')
+    },
     uploadMedicine (info) {
       this.importLoading = true
       if (info.file.status === 'done') {
@@ -179,6 +188,33 @@ export default {
     handleEdit (record) {
       this.visible = true
       this.mdl = { ...record }
+    },
+    handleDel (record) {
+      this.deleteClinic(record.id)
+    },
+    handleDelBatch () {
+      this.deleteClinic(this.selectedIds)
+    },
+    deleteClinic (ids) {
+      const { $message, $refs } = this
+      this.$confirm({
+        title: '提示',
+        content: '确定删除?',
+        onOk () {
+          return new Promise((resolve, reject) => {
+            medicinalInfoDelete({ ids }).then((res) => {
+              if (res.success) {
+                $message.success(res.message)
+                $refs.table.refresh(true)
+                resolve(true)
+              } else {
+                $message.info(res.message)
+                reject(new Error('删除失败'))
+              }
+            })
+          }).catch(() => console.log('Oops errors!'))
+        }
+      })
     },
     handleOk () {
       const form = this.$refs.createModal.form
@@ -230,16 +266,8 @@ export default {
     },
     handleCancel () {
       this.visible = false
-
       const form = this.$refs.createModal.form
       form.resetFields() // 清理表单数据（可不做）
-    },
-    handleSub (record) {
-      if (record.status !== 0) {
-        this.$message.info(`${record.no} 订阅成功`)
-      } else {
-        this.$message.error(`${record.no} 订阅失败，规则已关闭`)
-      }
     },
     resetSearchForm () {
       this.queryParam = {

@@ -25,3 +25,12 @@ export const validatePhone = (rule, value, callback) => {
   }
   callback()
 }
+
+// 身份证
+export const validateIdCard = (rule, value, callback) => {
+  const regex = /^[1-9]\d{5}(?:18|19|20)\d{2}(?:0[1-9]|10|11|12)(?:0[1-9]|[1-2]\d|30|31)\d{3}[\dXx]$/
+  if (value && !regex.test(value)) {
+    callback(new Error('身份证号码格式不正确'))
+  }
+  callback()
+}
