@@ -10,7 +10,7 @@
     <a-spin :spinning="loading">
       <a-form :form="form" v-bind="formLayout">
         <!-- 检查是否有 id 并且大于0，大于0是修改。其他是新增，新增不显示主键ID -->
-        <a-form-item v-if="model && model.id > 0" label="主键ID">
+        <a-form-item v-show="false" v-if="model && model.id > 0" label="主键ID">
           <a-input v-decorator="['id', { initialValue: 0 }]" disabled />
         </a-form-item>
         <a-form-item label="药品名称">
@@ -83,7 +83,7 @@ import { mapGetters, mapActions } from 'vuex'
 import { filterOption } from '@/utils/util'
 import { medicinalSelect } from '@/api/medicinal'
 // 表单字段
-const fields = ['description', 'id']
+const fields = ['medicinalName', 'id', 'conflictMedicinalName', 'conflictType', 'remark']
 export default {
   name: 'CreateDoctorForm',
   props: {
