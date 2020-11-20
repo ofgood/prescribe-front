@@ -21,22 +21,13 @@
 
       <div class="table-operator">
         <a-button type="primary" icon="plus" @click="handleAdd">新建</a-button>
-        <a-dropdown v-action:edit v-if="selectedRowKeys.length > 0">
-          <a-menu slot="overlay">
-            <a-menu-item key="1"><a-icon type="delete" />删除</a-menu-item>
-            <!-- lock | unlock -->
-            <a-menu-item key="2"><a-icon type="lock" />锁定</a-menu-item>
-          </a-menu>
-          <a-button style="margin-left: 8px">
-            批量操作 <a-icon type="down" />
-          </a-button>
-        </a-dropdown>
+        <a-button type="danger" icon="delete" :disabled="batchBtnDisabled" @click="handleDelBatch">删除</a-button>
       </div>
 
       <s-table
         ref="table"
         size="default"
-        :row-selection="rowSelection"
+        :row-selection="{ onChange: onSelectChange }"
         :rowKey="record => record.id"
         :columns="columns"
         :data="loadData"
@@ -69,7 +60,7 @@
 <script>
 import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
-import { areaList, areaSaveOrUpdate } from '@/api/area'
+import { areaList, areaSaveOrUpdate, areaDelete } from '@/api/area'
 import { mapGetters } from 'vuex'
 import CreateForm from './modules/CreateForm'
 
@@ -140,6 +131,7 @@ export default {
     this.columns = columns
     return {
       // create model
+      batchBtnDisabled: true,
       visible: false,
       confirmLoading: false,
       mdl: null,
@@ -159,7 +151,8 @@ export default {
           })
       },
       selectedRowKeys: [],
-      selectedRows: []
+      selectedRows: [],
+      selectedIds: ''
     }
   },
   filters: {
@@ -170,13 +163,19 @@ export default {
       return statusMap[type].status
     }
   },
-  created () {
-
-  },
   computed: {
      ...mapGetters(['genderAll'])
   },
+  watch: {
+    selectedRowKeys (keys) {
+      this.batchBtnDisabled = !keys.length
+    }
+  },
   methods: {
+    onSelectChange (selectedRowKeys) {
+      this.selectedRowKeys = selectedRowKeys
+      this.selectedIds = selectedRowKeys.join(',')
+    },
     handleAdd () {
       this.mdl = null
       this.visible = true
@@ -186,7 +185,31 @@ export default {
       this.mdl = { ...record }
     },
     handleDel (record) {
-      console.log(record)
+      this.deleteItem(record.id)
+    },
+    handleDelBatch () {
+      this.deleteItem(this.selectedIds)
+    },
+    deleteItem (ids) {
+      const { $message, $refs } = this
+      this.$confirm({
+        title: '提示',
+        content: '确定要删除?',
+        onOk () {
+          return new Promise((resolve, reject) => {
+            areaDelete({ ids }).then((res) => {
+              if (res.success) {
+                 $message.success(res.message)
+                $refs.table.refresh(true)
+                return resolve(true)
+              } else {
+                 $message.info(res.message)
+                 return resolve(true)
+              }
+            })
+          }).catch(() => console.log('Oops errors!'))
+        }
+      })
     },
     handleOk () {
       const form = this.$refs.createModal.form

@@ -219,12 +219,12 @@ export default {
       this.mdl = { ...record }
     },
     handleDel (record) {
-      this.deleteClinic(record.id)
+      this.deleteItem(record.id)
     },
     handleDelBatch () {
-      this.deleteClinic(this.selectedIds)
+      this.deleteItem(this.selectedIds)
     },
-    deleteClinic (ids) {
+    deleteItem (ids) {
       const { $message, $refs } = this
       this.$confirm({
         title: '提示',
@@ -235,10 +235,10 @@ export default {
               if (res.success) {
                  $message.success(res.message)
                 $refs.table.refresh(true)
-                return resolve
+                return resolve(true)
               } else {
-                 $message.info(res.message)
-                return reject
+              $message.info(res.message)
+               return resolve(true)
               }
             })
           }).catch(() => console.log('Oops errors!'))
