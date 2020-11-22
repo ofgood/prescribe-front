@@ -24,22 +24,6 @@ export const asyncRouterMap = [
         meta: { title: '总览', keepAlive: true, icon: 'home', permission: [ 'dashboard' ] }
       },
       {
-        path: '/clinic',
-        name: 'clinic',
-        component: RouteView,
-        redirect: '/clinic/clinic-list',
-        meta: { title: '诊所管理', icon: 'bank', permission: [ 'clinic' ] },
-        children: [
-          {
-            path: '/clinic/clinic-list',
-            name: 'clinic-list',
-            hideChildrenInMenu: true,
-            component: () => import('@/views/clinic/ClinicList'),
-            meta: { title: '诊所列表', keepAlive: true, permission: [ 'clinic' ] }
-          }
-        ]
-      },
-      {
         path: '/area',
         name: 'area',
         component: RouteView,
@@ -52,6 +36,22 @@ export const asyncRouterMap = [
             hideChildrenInMenu: true,
             component: () => import('@/views/area/AreaList'),
             meta: { title: '区域列表', keepAlive: true, permission: [ 'area' ] }
+          }
+        ]
+      },
+      {
+        path: '/clinic',
+        name: 'clinic',
+        component: RouteView,
+        redirect: '/clinic/clinic-list',
+        meta: { title: '诊所管理', icon: 'bank', permission: [ 'clinic' ] },
+        children: [
+          {
+            path: '/clinic/clinic-list',
+            name: 'clinic-list',
+            hideChildrenInMenu: true,
+            component: () => import('@/views/clinic/ClinicList'),
+            meta: { title: '诊所列表', keepAlive: true, permission: [ 'clinic' ] }
           }
         ]
       },

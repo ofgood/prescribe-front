@@ -190,13 +190,19 @@ export default {
       }
     },
     requestFailed (err) {
-      console.log(err)
-      this.isLoginError = true
-      this.$notification['error']({
-        message: '错误',
-        description: ((err.response || {}).data || {}).message || '请求出现错误，请稍后再试',
-        duration: 4
-      })
+      if (err.code === 'ECONNABORTED' && err.message.indexOf('timeout') !== -1) {
+          this.$notification['error']({
+          message: '错误',
+          description: '网络连接超时,请重试',
+          duration: 4
+        })
+      } else {
+          this.$notification['error']({
+          message: '错误',
+          description: ((err.response || {}).data || {}).message || '请求出现错误，请稍后再试',
+          duration: 4
+       })
+      }
     },
     forgotPassword () {
       this.$message.info('请联系管理员')

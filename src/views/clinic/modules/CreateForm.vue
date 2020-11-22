@@ -16,6 +16,25 @@
         <a-form-item label="诊所名称">
           <a-input :maxLength="50" v-decorator="['clinicName', {rules: [{required: true, message: '请输入诊所名称'}]}]" placeholder="请输入诊所名称"/>
         </a-form-item>
+        <a-form-item label="区域">
+          <a-select
+            style="width: 100%"
+            show-search
+            key="medicinalName"
+            placeholder="选择区域"
+            :show-arrow="false"
+            :default-active-first-option="false"
+            :not-found-content="fetching ? undefined : null"
+            :filter-option="false"
+            @search="handleSearch"
+            v-decorator="['areaId', {rules: [{required: true, message: '请输选择区域'}]}]"
+          >
+            <a-spin v-if="fetching" slot="notFoundContent" size="small" />
+            <a-select-option v-for="d in selects" :key="d.value" :itemData="d">
+              {{ d.text }}
+            </a-select-option>
+          </a-select>
+        </a-form-item>
         <a-form-item label="诊所地址">
           <a-input :maxLength="50" v-decorator="['address', {rules: [{required: true, message: '请输入诊所地址'}]}]" placeholder="请输入诊所地址"/>
         </a-form-item>
@@ -37,6 +56,7 @@
 import pick from 'lodash.pick'
 import { mapGetters } from 'vuex'
 import { validateCellPhone, validatePhone } from '@/utils/validates'
+import { medicinalSelect } from '@/api/medicinal'
 // 表单字段
 const fields = ['clinicName', 'id', 'responsible', 'responsibleTel', 'clinicTel', 'address']
 export default {
@@ -66,6 +86,8 @@ export default {
       }
     }
     return {
+      fetching: false,
+      selects: [],
       validateCellPhone,
       validatePhone,
       form: this.$form.createForm(this)
@@ -85,6 +107,43 @@ export default {
       console.log(this.model)
       this.model && this.form.setFieldsValue(pick(this.model, fields))
     })
+  },
+  methods: {
+     fetch (value, callback) {
+      if (this.timeout) {
+        clearTimeout(this.timeout)
+        this.timeout = null
+      }
+      this.fetching = true
+      this.currentValue = value
+      const fake = () => {
+        const params = {
+          key: value
+        }
+        medicinalSelect(params)
+          .then((d) => {
+            if (this.currentValue === value) {
+              const result = d.data || []
+              const data = []
+              result.forEach((r) => {
+                data.push({
+                  value: r['medicinalCode'],
+                  text: r['medicinalName'],
+                  ...r
+                })
+              })
+              callback(data)
+            }
+          })
+          .finally(() => {
+            this.fetching = false
+          })
+      }
+      this.timeout = setTimeout(fake, 300)
+    },
+    handleSearch (value) {
+      this.fetch(value, (data) => (this.selects = data))
+    }
   }
 }
 </script>
