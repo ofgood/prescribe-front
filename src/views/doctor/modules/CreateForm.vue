@@ -119,7 +119,7 @@ export default {
       this.model && this.form.setFieldsValue(pick(this.model, fields))
       })
     })
-    this.GetClinicList()
+    // this.GetClinicList()
   },
   methods: {
     ...mapActions(['GetClinicList']),

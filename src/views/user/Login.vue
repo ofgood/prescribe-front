@@ -190,10 +190,18 @@ export default {
       }
     },
     requestFailed (err) {
+      console.log('code', err.code)
+      console.log('message', err.message)
       if (err.code === 'ECONNABORTED' && err.message.indexOf('timeout') !== -1) {
           this.$notification['error']({
           message: '错误',
           description: '网络连接超时,请重试',
+          duration: 4
+        })
+      } else if (err.message.indexOf('Network Error') !== -1) {
+         this.$notification['error']({
+          message: '错误',
+          description: '网络连接错误',
           duration: 4
         })
       } else {

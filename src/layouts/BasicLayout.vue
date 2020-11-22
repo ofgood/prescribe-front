@@ -18,7 +18,7 @@
     <ads v-if="isProPreviewSite && !collapsed"/>
     <!-- Ads end -->
 
-    <!-- <setting-drawer :settings="settings" @change="handleSettingChange" /> -->
+    <setting-drawer :settings="settings" @change="handleSettingChange" />
     <template v-slot:rightContentRender>
       <right-content :top-menu="settings.layout === 'topmenu'" :is-mobile="isMobile" :theme="settings.theme" />
     </template>
@@ -40,11 +40,11 @@ import RightContent from '@/components/GlobalHeader/RightContent'
 import GlobalFooter from '@/components/GlobalFooter'
 import Ads from '@/components/Other/CarbonAds'
 import LogoSvg from '../assets/logo.svg?inline'
-
+import { SettingDrawer } from '@/components/SettingDrawer'
 export default {
   name: 'BasicLayout',
   components: {
-    // SettingDrawer,
+    SettingDrawer,
     RightContent,
     GlobalFooter,
     Ads

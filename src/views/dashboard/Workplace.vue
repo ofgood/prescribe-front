@@ -23,6 +23,9 @@
         </div>
       </div>
     </template>
+    <div v-if="isManager">
+      <analysis :recipeToday="recipeToday" :recipeTotal="recipeTotal"></analysis>
+    </div>
   </page-header-wrapper>
 </template>
 
@@ -35,6 +38,7 @@ import doctorAvatar from '@/assets/doctor.png'
 import managerAvatar from '@/assets/user.png'
 import { roleMixin } from '@/store/role-mixin'
 import { findDoctorRecipeCount, findDoctorRecipeToday } from '@/api/recepeInfo'
+import Analysis from '@/views/dashboard/Analysis'
 // import { getRoleList, getServiceList } from '@/api/manage'
 
 const DataSet = require('@antv/data-set')
@@ -43,6 +47,7 @@ export default {
   name: 'Workplace',
   components: {
     PageHeaderWrapper,
+    Analysis,
     Radar
   },
   mixins: [roleMixin],

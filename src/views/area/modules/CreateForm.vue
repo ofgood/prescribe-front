@@ -1,6 +1,6 @@
 <template>
   <a-modal
-    title="新建区域"
+    :title="model && model.id > 0 ? '编辑区域': '新建区域'"
     :width="640"
     :visible="visible"
     :confirmLoading="loading"
@@ -82,6 +82,7 @@
 
 <script>
 import { validateCellPhone } from '@/utils/validates'
+// import { clinicFindById } from '@/api/clinic'
 import pick from 'lodash.pick'
 // 表单字段
 const fields = ['area', 'province', 'id', 'city', 'responsible', 'responsibleTel', 'remark']
