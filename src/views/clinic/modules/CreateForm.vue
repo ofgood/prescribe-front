@@ -20,7 +20,7 @@
           <a-select
             style="width: 100%"
             show-search
-            key="medicinalName"
+            key="id"
             placeholder="选择区域"
             :show-arrow="false"
             :default-active-first-option="false"
@@ -56,9 +56,9 @@
 import pick from 'lodash.pick'
 import { mapGetters } from 'vuex'
 import { validateCellPhone, validatePhone } from '@/utils/validates'
-import { medicinalSelect } from '@/api/medicinal'
+import { selectArea } from '@/api/area'
 // 表单字段
-const fields = ['clinicName', 'id', 'responsible', 'responsibleTel', 'clinicTel', 'address']
+const fields = ['clinicName', 'id', 'responsible', 'responsibleTel', 'clinicTel', 'address', 'areaId']
 export default {
   props: {
     visible: {
@@ -105,7 +105,9 @@ export default {
     // 当 model 发生改变时，为表单设置值
     this.$watch('model', () => {
       console.log(this.model)
+      this.$nextTick(() => {
       this.model && this.form.setFieldsValue(pick(this.model, fields))
+      })
     })
   },
   methods: {
@@ -120,15 +122,15 @@ export default {
         const params = {
           key: value
         }
-        medicinalSelect(params)
+        selectArea(params)
           .then((d) => {
             if (this.currentValue === value) {
               const result = d.data || []
               const data = []
               result.forEach((r) => {
                 data.push({
-                  value: r['medicinalCode'],
-                  text: r['medicinalName'],
+                  value: r['id'],
+                  text: r['province'] + '/' + r['city'] + '/' + r['area'],
                   ...r
                 })
               })

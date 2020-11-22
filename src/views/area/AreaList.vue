@@ -182,6 +182,7 @@ export default {
     },
     handleEdit (record) {
       this.visible = true
+      console.log('record', record)
       this.mdl = { ...record }
     },
     handleDel (record) {

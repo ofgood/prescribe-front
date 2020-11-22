@@ -6,19 +6,25 @@
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
               <a-form-item label="姓名">
-                <a-input v-model="queryParam.doctorName" placeholder="请输入医生姓名"/>
+                <a-input v-model="queryParam.doctorName" placeholder="请输入医生姓名" />
               </a-form-item>
             </a-col>
 
             <a-col :md="8" :sm="24">
               <a-form-item label="联系电话">
-                <a-input v-model="queryParam.tel" placeholder="请输入联系电话"/>
+                <a-input v-model="queryParam.tel" placeholder="请输入联系电话" />
               </a-form-item>
             </a-col>
             <a-col :md="24" :sm="24">
-              <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' } || {} ">
-                <a-button icon="redo" @click="() => this.queryParam = {}">重置</a-button>
-                <a-button icon="search" style="margin-left: 8px" type="primary" @click="$refs.table.refresh(true)">查询</a-button>
+              <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' } || {}">
+                <a-button icon="redo" @click="() => (this.queryParam = {})">重置</a-button>
+                <a-button
+                  icon="search"
+                  style="margin-left: 8px"
+                  type="primary"
+                  @click="$refs.table.refresh(true)"
+                >查询</a-button
+                >
               </span>
             </a-col>
           </a-row>
@@ -34,7 +40,7 @@
         ref="table"
         size="default"
         :row-selection="{ onChange: onSelectChange }"
-        :rowKey="record => record.id"
+        :rowKey="(record) => record.id"
         :columns="columns"
         :data="loadData"
         showPagination="auto"
@@ -232,19 +238,22 @@ export default {
           console.log('values', values)
           if (values.id > 0) {
             // 修改 e.g.
-            new Promise((resolve, reject) => {
-              setTimeout(() => {
-                resolve()
-              }, 1000)
-            }).then(res => {
-              this.visible = false
-              this.confirmLoading = false
-              // 重置表单数据
-              form.resetFields()
-              // 刷新表格
-              this.$refs.table.refresh()
+           // 新增
+            // values.clinicIds = values.clinicIds.join(',')
+            doctorSaveOrUpdate({ ...values }).then(res => {
+              if (res.success) {
+                this.visible = false
+                this.confirmLoading = false
+                // 重置表单数据
+                form.resetFields()
+                // 刷新表格
+                this.$refs.table.refresh()
 
-              this.$message.info('修改成功')
+                this.$message.info('修改成功')
+              } else {
+                this.$message.info(res.message)
+                this.confirmLoading = false
+              }
             })
           } else {
             // 新增

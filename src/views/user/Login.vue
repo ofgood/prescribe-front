@@ -39,16 +39,16 @@
           <a-alert v-if="isLoginError" type="error" showIcon style="margin-bottom: 24px" :message="errMessage" />
           <a-form-item>
             <a-input-group style="display: inline-block; vertical-align: middle" :compact="true">
-              <a-select size="large" v-model="doctorType" style="width: 100px">
+              <!-- <a-select size="large" v-model="doctorType" style="width: 100px">
                 <a-select-option value="DOCTOR">医生</a-select-option>
                 <a-select-option value="DOCTOR_STAR">名医</a-select-option>
-              </a-select>
+              </a-select> -->
               <a-input
                 size="large"
                 type="text"
                 placeholder="请输入帐号"
                 @blur="changeUserName"
-                :style="{ width: 'calc(100% - 100px)' }"
+                :style="{ width: '100%' }"
                 v-decorator="[
                   'username',
                   { rules: [{ required: true, message: '请输入帐号' }], validateTrigger: 'change' },

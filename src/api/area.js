@@ -4,7 +4,8 @@ const api = {
     areaDelete: '/area/delete',
     getAreaById: '/area/findById',
     areaSaveOrUpdate: '/area/saveOrUpdate',
-    areaList: '/area/selectList'
+    areaList: '/area/selectList',
+    selectArea: '/area/selectArea'
 }
 
 export function areaDelete (parameter) {
@@ -34,6 +35,14 @@ export function areaSaveOrUpdate (parameter) {
 export function areaList (parameter) {
     return request({
         url: api.areaList,
+        method: 'post',
+        data: parameter
+    })
+}
+
+export function selectArea (parameter) {
+    return request({
+        url: api.selectArea,
         method: 'post',
         data: parameter
     })

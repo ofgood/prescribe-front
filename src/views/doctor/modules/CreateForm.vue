@@ -27,9 +27,22 @@
           </a-select>
         </a-form-item>
         <a-form-item label="诊所">
-          <a-select mode="multiple" placeholder="请选择诊所" :filterOption="filterOption" v-decorator="['clinicIds', {rules: [{required: true, message: '请选择诊所'}]}]">
-            <a-select-option v-for="item in clinics" :key="item.id">
-              {{ item.clinicName }}
+          <a-select
+            style="width: 100%"
+            show-search
+            key="id"
+            mode="multiple"
+            placeholder="选择诊所"
+            :show-arrow="false"
+            :default-active-first-option="false"
+            :not-found-content="fetching ? undefined : null"
+            :filter-option="false"
+            @search="handleSearch"
+            v-decorator="['clinicIds', {rules: [{required: true, message: '请输选择诊所'}]}]"
+          >
+            <a-spin v-if="fetching" slot="notFoundContent" size="small" />
+            <a-select-option v-for="d in selects" :key="d.value" :itemData="d">
+              {{ d.text }}
             </a-select-option>
           </a-select>
         </a-form-item>
@@ -55,6 +68,7 @@ import pick from 'lodash.pick'
 import { mapGetters, mapActions } from 'vuex'
 import { filterOption } from '@/utils/util'
 import { validateCellPhone, validateIdCard } from '@/utils/validates'
+import { clinicSelect } from '@/api/clinic'
 // 表单字段
 const fields = ['doctorName', 'id', 'doctorTel', 'doctorType', 'clinicIds', 'jobNum', 'address', 'birthday', 'idCard']
 export default {
@@ -85,9 +99,11 @@ export default {
       }
     }
     return {
+      fetching: false,
       validateIdCard,
       validateCellPhone,
-      form: this.$form.createForm(this)
+      form: this.$form.createForm(this),
+      selects: []
     }
   },
   computed: {
@@ -99,13 +115,50 @@ export default {
 
     // 当 model 发生改变时，为表单设置值
     this.$watch('model', () => {
+      this.$nextTick(() => {
       this.model && this.form.setFieldsValue(pick(this.model, fields))
+      })
     })
     this.GetClinicList()
   },
   methods: {
     ...mapActions(['GetClinicList']),
-    filterOption
+    filterOption,
+     handleSearch (value) {
+      this.fetch(value, (data) => (this.selects = data))
+    },
+    fetch (value, callback) {
+      if (this.timeout) {
+        clearTimeout(this.timeout)
+        this.timeout = null
+      }
+      this.fetching = true
+      this.currentValue = value
+      const fake = () => {
+        const params = {
+          key: value
+        }
+        clinicSelect(params)
+          .then((d) => {
+            if (this.currentValue === value) {
+              const result = d.data || []
+              const data = []
+              result.forEach((r) => {
+                data.push({
+                  value: r['id'],
+                  text: r['clinicName'],
+                  ...r
+                })
+              })
+              callback(data)
+            }
+          })
+          .finally(() => {
+            this.fetching = false
+          })
+      }
+      this.timeout = setTimeout(fake, 300)
+    }
   }
 }
 </script>

@@ -65,7 +65,9 @@ export default {
 
     // 当 model 发生改变时，为表单设置值
     this.$watch('model', () => {
+      this.$nextTick(() => {
       this.model && this.form.setFieldsValue(pick(this.model, fields))
+      })
     })
   }
 }
