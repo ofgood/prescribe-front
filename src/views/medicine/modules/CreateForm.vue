@@ -1,6 +1,6 @@
 <template>
   <a-modal
-    title="新建药品"
+    :title="model && model.id > 0 ? '编辑药品': '新建药品'"
     :width="640"
     :visible="visible"
     :confirmLoading="loading"

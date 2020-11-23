@@ -1,6 +1,6 @@
 <template>
   <a-modal
-    title="新建患者"
+    :title="model && model.id > 0 ? '编辑患者': '新建患者'"
     :width="640"
     :visible="visible"
     :confirmLoading="loading"

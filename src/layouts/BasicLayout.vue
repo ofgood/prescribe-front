@@ -18,7 +18,7 @@
     <ads v-if="isProPreviewSite && !collapsed"/>
     <!-- Ads end -->
 
-    <setting-drawer :settings="settings" @change="handleSettingChange" />
+    <!-- <setting-drawer :settings="settings" @change="handleSettingChange" /> -->
     <template v-slot:rightContentRender>
       <right-content :top-menu="settings.layout === 'topmenu'" :is-mobile="isMobile" :theme="settings.theme" />
     </template>
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { updateTheme } from '@ant-design-vue/pro-layout'
+import { SettingDrawer, updateTheme } from '@ant-design-vue/pro-layout'
 import { i18nRender } from '@/locales'
 import { mapState } from 'vuex'
 import { CONTENT_WIDTH_TYPE, SIDEBAR_TYPE, TOGGLE_MOBILE_TYPE } from '@/store/mutation-types'
@@ -40,7 +40,6 @@ import RightContent from '@/components/GlobalHeader/RightContent'
 import GlobalFooter from '@/components/GlobalFooter'
 import Ads from '@/components/Other/CarbonAds'
 import LogoSvg from '../assets/logo.svg?inline'
-import { SettingDrawer } from '@/components/SettingDrawer'
 export default {
   name: 'BasicLayout',
   components: {

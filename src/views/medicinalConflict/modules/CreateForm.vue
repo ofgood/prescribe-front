@@ -1,6 +1,6 @@
 <template>
   <a-modal
-    title="新建药品冲突"
+    :title="model && model.id > 0 ? '编辑药品冲突': '新建药品冲突'"
     :width="640"
     :visible="visible"
     :confirmLoading="loading"
