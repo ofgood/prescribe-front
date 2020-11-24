@@ -16,7 +16,6 @@
         <a-form-item label="药品名称">
           <a-select
             show-search
-            label-in-value
             key="medicinalName"
             placeholder="药品名称"
             :show-arrow="false"
@@ -38,7 +37,6 @@
         <a-form-item label="冲突药品名称">
           <a-select
             show-search
-            label-in-value
             key="medicinalName"
             placeholder="请输入冲突药品名称"
             :show-arrow="false"
@@ -136,6 +134,9 @@ export default {
     ...mapActions(['GetClinicList']),
     filterOption,
      fetch (value, callback) {
+       if (!value) {
+         return
+       }
       if (this.timeout) {
         clearTimeout(this.timeout)
         this.timeout = null
