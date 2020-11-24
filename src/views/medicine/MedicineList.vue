@@ -204,6 +204,7 @@ export default {
           return new Promise((resolve, reject) => {
             medicinalInfoDelete({ ids }).then((res) => {
               if (res.success) {
+                this.selectedRowKeys = []
                 $message.success(res.message)
                 $refs.table.refresh(true)
                 resolve(true)

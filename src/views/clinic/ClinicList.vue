@@ -232,6 +232,7 @@ export default {
           return new Promise((resolve, reject) => {
             clinicDelete({ ids }).then((res) => {
               if (res.success) {
+                this.selectedRowKeys = []
                  $message.success(res.message)
                 $refs.table.refresh(true)
                 return resolve(true)

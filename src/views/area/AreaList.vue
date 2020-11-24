@@ -200,7 +200,8 @@ export default {
           return new Promise((resolve, reject) => {
             areaDelete({ ids }).then((res) => {
               if (res.success) {
-                 $message.success(res.message)
+                $message.success(res.message)
+                this.selectedRowKeys = []
                 $refs.table.refresh(true)
                 return resolve(true)
               } else {
