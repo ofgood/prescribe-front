@@ -1,5 +1,6 @@
 <template>
   <div class="main">
+    <div class="background"></div>
     <a-form id="formLogin" class="user-layout-login" ref="formLogin" :form="form" @submit="handleSubmit">
       <a-tabs
         :activeKey="customActiveKey"
@@ -230,7 +231,16 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.background{
+  position: fixed;   //设置absolute,其他DIV设置为relative，这样这个例子效果就作为背景
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  // background: url("../../assets/medicine-bg.jpg") no-repeat center/cover;
+}
 .user-layout-login {
+  // background-color: #fff;
   label {
     font-size: 14px;
   }

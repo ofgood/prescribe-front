@@ -17,7 +17,7 @@
 
       <div class="footer">
         <div class="copyright">
-          Copyright &copy; 2020 admin
+          <!-- Copyright &copy; 2020 admin -->
         </div>
       </div>
     </div>

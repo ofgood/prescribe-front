@@ -21,11 +21,14 @@ import './permission' // permission control
 import './utils/filter' // global filter
 import './global.less'
 import Print from '@/plugs/print'
+import VueParticles from 'vue-particles'
 Vue.config.productionTip = false
 
 // mount axios to `Vue.$http` and `this.$http`
 Vue.use(VueAxios)
 Vue.use(Print)
+Vue.use(VueParticles)
+
 Vue.component('pro-layout', ProLayout)
 Vue.component('page-header-wrapper', PageHeaderWrapper)
 

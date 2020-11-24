@@ -30,7 +30,6 @@
           </a-row>
         </a-form>
       </div>
-
       <div class="table-operator">
         <a-button type="primary" icon="plus" @click="handleAdd">新建</a-button>
         <a-button type="danger" icon="delete" :disabled="batchBtnDisabled" @click="handleDelBatch">删除</a-button>
@@ -211,7 +210,7 @@ export default {
       this.selectedIds = selectedRowKeys.join(',')
     },
     handleAdd () {
-      this.mdl = null
+      this.mdl = {}
       this.visible = true
     },
     handleEdit (record) {
