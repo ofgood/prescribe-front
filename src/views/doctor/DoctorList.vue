@@ -193,7 +193,7 @@ export default {
   methods: {
      onSelectChange (selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
-      this.selectedIds = selectedRowKeys.join(',')
+      this.selectedIds = selectedRowKeys
     },
     handleAdd () {
       this.mdl = null
@@ -201,6 +201,7 @@ export default {
     },
     handleEdit (record) {
       this.visible = true
+      record.clinicIds = record.clinicIds.split(',')
       this.mdl = { ...record }
     },
     handleDel (record) {
@@ -257,7 +258,7 @@ export default {
             })
           } else {
             // 新增
-            values.clinicIds = values.clinicIds.join(',')
+            // values.clinicIds = values.clinicIds.join(',')
             doctorSaveOrUpdate({ ...values }).then(res => {
               if (res.success) {
                 this.visible = false

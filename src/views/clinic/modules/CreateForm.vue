@@ -32,18 +32,18 @@
           <a-select
             style="width: 100%"
             show-search
-            key="id"
             placeholder="请输入关键字查找区域"
             :show-arrow="false"
             :default-active-first-option="false"
-
             :filter-option="false"
+            :not-found-content="fetching ? undefined : null"
+            optionLabelProp="label"
             @search="fetcharea"
             @focus="fetcharea"
             v-decorator="['areaId', { rules: [{ required: true, message: '请输选择区域' }] }]"
           >
             <a-spin v-if="fetching" slot="notFoundContent" size="small" />
-            <a-select-option v-for="d in selects" :key="d.value" :itemData="d">
+            <a-select-option v-for="d in selects" :key="d.value" :label="d.text">
               {{ d.text }}
             </a-select-option>
           </a-select>
@@ -146,18 +146,21 @@ export default {
     this.$watch('model', () => {
       console.log(this.model)
       this.$nextTick(() => {
-        this.fetcharea()
-        // if (this.model && this.model.id) {
-        //   this.getAreaList(this.model.areaId)
-        // } else {
+        // this.fetcharea()
+        if (this.model && this.model.id) {
+          this.getAreaList(this.model.areaId)
+        } else {
 
-        // }
+        }
         this.model && this.form.setFieldsValue(pick(this.model, fields))
       })
     })
   },
   methods: {
     fetcharea (value = '') {
+      if (!value) {
+        return
+      }
       this.lastFetchId += 1
       const fetchId = this.lastFetchId
       console.log('fetchId', fetchId)
