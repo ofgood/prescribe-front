@@ -16,20 +16,21 @@
         <a-form-item label="药品名称">
           <a-select
             show-search
-            key="medicinalName"
             placeholder="药品名称"
             :show-arrow="false"
+            labelInValue
             :default-active-first-option="false"
             :not-found-content="fetching ? undefined : null"
             :filter-option="false"
-            @search="handleSearch"
+            optionLabelProp="label"
+            @search="fetchMedicineConflict"
             v-decorator="[
               'medicinalName',
               {rules: [{ required: true, message: '请输入药品名称'}]}
             ]"
           >
             <a-spin v-if="fetching" slot="notFoundContent" size="small" />
-            <a-select-option v-for="d in selects" :key="d.value" :itemData="d">
+            <a-select-option v-for="d in selects" :key="d.id" :label="d.text">
               {{ d.text }}
             </a-select-option>
           </a-select>
@@ -37,20 +38,20 @@
         <a-form-item label="冲突药品名称">
           <a-select
             show-search
-            key="medicinalName"
             placeholder="请输入冲突药品名称"
             :show-arrow="false"
+            labelInValue
             :default-active-first-option="false"
             :not-found-content="fetching ? undefined : null"
             :filter-option="false"
-            @search="handleSearch"
+            @search="fetchMedicineConflict"
             v-decorator="[
               'conflictMedicinalName',
               {rules: [{ required: true, message: '请输入冲突药品名称'}]}
             ]"
           >
             <a-spin v-if="fetching" slot="notFoundContent" size="small" />
-            <a-select-option v-for="d in selects" :key="d.value" :itemData="d">
+            <a-select-option v-for="d in selects" :key="d.id">
               {{ d.text }}
             </a-select-option>
           </a-select>
@@ -80,6 +81,7 @@ import pick from 'lodash.pick'
 import { mapGetters, mapActions } from 'vuex'
 import { filterOption } from '@/utils/util'
 import { medicinalSelect } from '@/api/medicinal'
+import debounce from 'lodash/debounce'
 // 表单字段
 const fields = ['medicinalName', 'id', 'conflictMedicinalName', 'conflictType', 'remark']
 export default {
@@ -99,6 +101,8 @@ export default {
     }
   },
   data () {
+    this.lastFetchId = 0
+    this.fetchMedicineConflict = debounce(this.fetchMedicineConflict, 500)
     this.formLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -125,6 +129,16 @@ export default {
     // 当 model 发生改变时，为表单设置值
     this.$watch('model', () => {
       this.$nextTick(() => {
+        if (this.model && this.model.id) {
+            this.model.conflictMedicinalName = {
+              key: this.model.conflictMedicinalCode,
+              label: this.model.conflictMedicinalName
+            }
+            this.model.medicinalName = {
+              key: this.model.medicinalCode,
+              label: this.model.medicinalName
+            }
+        }
       this.model && this.form.setFieldsValue(pick(this.model, fields))
       })
     })
@@ -133,43 +147,37 @@ export default {
   methods: {
     ...mapActions(['GetClinicList']),
     filterOption,
-     fetch (value, callback) {
-       if (!value) {
-         return
-       }
-      if (this.timeout) {
-        clearTimeout(this.timeout)
-        this.timeout = null
+     fetchMedicineConflict (value = '', type) {
+      if (!value) {
+        return
       }
+      this.lastFetchId += 1
+      const fetchId = this.lastFetchId
+      console.log('fetchId', fetchId)
+      console.log('this.lastFetchId', this.lastFetchId)
+      this.data = []
       this.fetching = true
-      this.currentValue = value
-      const fake = () => {
-        const params = {
-          key: value
-        }
-        medicinalSelect(params)
-          .then((d) => {
-            if (this.currentValue === value) {
-              const result = d.data || []
-              const data = []
-              result.forEach((r) => {
+
+      medicinalSelect({ key: value })
+        .then((d) => {
+          if (fetchId !== this.lastFetchId) {
+            // for fetch callback order
+            return
+          }
+          const result = d.data || []
+          const data = []
+          result.forEach((r) => {
                 data.push({
                   value: r['medicinalCode'],
                   text: r['medicinalName'],
                   ...r
                 })
-              })
-              callback(data)
-            }
           })
-          .finally(() => {
-            this.fetching = false
-          })
-      }
-      this.timeout = setTimeout(fake, 300)
-    },
-     handleSearch (value) {
-      this.fetch(value, (data) => (this.selects = data))
+          this.selects = data
+        })
+        .finally(() => {
+          this.fetching = false
+        })
     }
   }
 }

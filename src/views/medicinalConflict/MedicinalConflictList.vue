@@ -196,7 +196,6 @@ export default {
           return new Promise((resolve, reject) => {
             medicinalConflictInfoDelete({ ids }).then((res) => {
               if (res.success) {
-                this.selectedRowKeys = []
                 $message.success(res.message)
                 $refs.table.refresh(true)
                 resolve(true)
