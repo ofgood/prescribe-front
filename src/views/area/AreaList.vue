@@ -193,6 +193,7 @@ export default {
     },
     deleteItem (ids) {
       const { $message, $refs } = this
+      const that = this
       this.$confirm({
         title: '提示',
         content: '确定要删除?',
@@ -201,7 +202,7 @@ export default {
             areaDelete({ ids }).then((res) => {
               if (res.success) {
                 $message.success(res.message)
-                this.selectedRowKeys = []
+                that.selectedRowKeys = []
                 $refs.table.refresh(true)
                 return resolve(true)
               } else {

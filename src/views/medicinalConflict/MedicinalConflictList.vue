@@ -189,6 +189,7 @@ export default {
     },
     deleteItem (ids) {
       const { $message, $refs } = this
+       const that = this
       this.$confirm({
         title: '提示',
         content: '确定删除?',
@@ -196,6 +197,7 @@ export default {
           return new Promise((resolve, reject) => {
             medicinalConflictInfoDelete({ ids }).then((res) => {
               if (res.success) {
+                that.selectedRowKeys = []
                 $message.success(res.message)
                 $refs.table.refresh(true)
                 resolve(true)
@@ -215,20 +217,26 @@ export default {
         if (!errors) {
           console.log('values', values)
           if (values.id > 0) {
-            // 修改 e.g.
-            new Promise((resolve, reject) => {
-              setTimeout(() => {
-                resolve()
-              }, 1000)
-            }).then((res) => {
-              this.visible = false
-              this.confirmLoading = false
-              // 重置表单数据
-              form.resetFields()
-              // 刷新表格
-              this.$refs.table.refresh()
+             // 修改
+            const params = { ...values }
+            params.conflictMedicinalName = values.conflictMedicinalName.label
+            params.medicinalName = values.medicinalName.label
+            params.conflictMedicinalCode = values.conflictMedicinalName.key
+            params.medicinalCode = values.medicinalName.key
+            medicinalConflictSaveOrUpdate({ ...params }).then((res) => {
+              if (res.success) {
+                this.visible = false
+                this.confirmLoading = false
+                // 重置表单数据
+                form.resetFields()
+                // 刷新表格
+                this.$refs.table.refresh()
 
-              this.$message.info('修改成功')
+                this.$message.info('修改成功')
+              } else {
+                this.$message.info(res.message)
+                this.confirmLoading = false
+              }
             })
           } else {
             // 新增

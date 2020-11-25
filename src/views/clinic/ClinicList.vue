@@ -225,6 +225,7 @@ export default {
     },
     deleteItem (ids) {
       const { $message, $refs } = this
+      const that = this
       this.$confirm({
         title: '提示',
         content: '确定要删除?',
@@ -232,7 +233,7 @@ export default {
           return new Promise((resolve, reject) => {
             clinicDelete({ ids }).then((res) => {
               if (res.success) {
-                this.selectedRowKeys = []
+                that.selectedRowKeys = []
                  $message.success(res.message)
                 $refs.table.refresh(true)
                 return resolve(true)
