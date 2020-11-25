@@ -27,7 +27,10 @@
           <div>
             <mini-area />
           </div>
-          <template slot="footer">当天处方量<span> {{ recipeToday | NumberFormat }}</span></template>
+          <template
+            slot="footer"
+          >当天处方量<span> {{ recipeToday | NumberFormat }}</span></template
+          >
         </chart-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
@@ -50,7 +53,7 @@
             <mini-progress color="rgb(19, 194, 194)" :target="80" :percentage="78" height="8px" />
           </div>
           <template slot="footer">
-            <trend flag="down" style="margin-right: 16px;">
+            <trend flag="down" style="margin-right: 16px">
               <span slot="term">同周比</span>
               12%
             </trend>
@@ -63,9 +66,9 @@
       </a-col>
     </a-row>
 
-    <a-card :loading="loading" :bordered="false" :body-style="{padding: '0'}">
+    <a-card :loading="loading" :bordered="false" :body-style="{ padding: '0' }">
       <div class="salesCard">
-        <a-tabs default-active-key="1" size="large" :tab-bar-style="{marginBottom: '24px', paddingLeft: '16px'}">
+        <a-tabs default-active-key="1" size="large" :tab-bar-style="{ marginBottom: '24px', paddingLeft: '16px' }">
           <div class="extra-wrapper" slot="tabBarExtraContent">
             <div class="extra-item">
               <a>今日</a>
@@ -73,19 +76,31 @@
               <a>本月</a>
               <a>本年</a>
             </div>
-            <a-range-picker :style="{width: '256px'}" />
+            <a-range-picker :style="{ width: '256px' }" />
           </div>
-          <a-tab-pane loading="true" tab="处方量统计" key="1">
+          <a-tab-pane loading="true" tab="药品使用量统计" key="1">
             <a-row>
-              <a-col :xl="16" :lg="12" :md="12" :sm="24" :xs="24">
-                <bar :data="barData" />
+              <a-col :xl="12" :lg="12" :md="12" :sm="24" :xs="24">
+                <div class="ant-table-wrapper">
+                  <s-table
+                    row-key="id"
+                    size="small"
+                    :columns="medicineTableColumns"
+                    showPagination="auto"
+                    :data="loadData"
+                  >
+                    <span slot="range" slot-scope="text, record">
+                      <trend :flag="record.status === 0 ? 'up' : 'down'"> {{ text }}% </trend>
+                    </span>
+                  </s-table>
+                </div>
               </a-col>
-              <a-col :xl="8" :lg="12" :md="12" :sm="24" :xs="24">
-                <rank-list title="门店销售排行榜" :list="rankList"/>
+              <a-col :xl="12" :lg="12" :md="12" :sm="24" :xs="24">
+                <bar :data="medicineBarData" />
               </a-col>
             </a-row>
           </a-tab-pane>
-          <a-tab-pane tab="访问量" key="2">
+          <!-- <a-tab-pane tab="访问量" key="2">
             <a-row>
               <a-col :xl="16" :lg="12" :md="12" :sm="24" :xs="24">
                 <bar :data="barData2" title="销售额趋势" />
@@ -94,7 +109,7 @@
                 <rank-list title="门店销售排行榜" :list="rankList"/>
               </a-col>
             </a-row>
-          </a-tab-pane>
+          </a-tab-pane> -->
         </a-tabs>
       </div>
     </a-card>
@@ -112,10 +127,11 @@ import {
   Bar,
   Trend,
   NumberInfo,
-  MiniSmoothArea
+  MiniSmoothArea,
+  STable
 } from '@/components'
 import { baseMixin } from '@/store/app-mixin'
-
+import { getMedicinalUsed } from '@/api/medicinal'
 const barData = []
 const barData2 = []
 for (let i = 0; i < 12; i += 1) {
@@ -154,40 +170,18 @@ const searchUserScale = [
     alias: '用户数',
     min: 0,
     max: 10
-  }]
-
-const searchTableColumns = [
-  {
-    dataIndex: 'index',
-    title: '排名',
-    width: 90
-  },
-  {
-    dataIndex: 'keyword',
-    title: '搜索关键词'
-  },
-  {
-    dataIndex: 'count',
-    title: '用户数'
-  },
-  {
-    dataIndex: 'range',
-    title: '周涨幅',
-    align: 'right',
-    sorter: (a, b) => a.range - b.range,
-    scopedSlots: { customRender: 'range' }
   }
 ]
-const searchData = []
-for (let i = 0; i < 50; i += 1) {
-  searchData.push({
-    index: i + 1,
-    keyword: `搜索关键词-${i}`,
-    count: Math.floor(Math.random() * 1000),
-    range: Math.floor(Math.random() * 100),
-    status: Math.floor((Math.random() * 10) % 2)
-  })
-}
+// const searchData = []
+// for (let i = 0; i < 50; i += 1) {
+//   searchData.push({
+//     index: i + 1,
+//     keyword: `搜索关键词-${i}`,
+//     count: Math.floor(Math.random() * 1000),
+//     range: Math.floor(Math.random() * 100),
+//     status: Math.floor((Math.random() * 10) % 2)
+//   })
+// }
 
 const DataSet = require('@antv/data-set')
 
@@ -200,11 +194,13 @@ const sourceData = [
   { item: '其他', count: 7.8 }
 ]
 
-const pieScale = [{
-  dataKey: 'percent',
-  min: 0,
-  formatter: '.0%'
-}]
+const pieScale = [
+  {
+    dataKey: 'percent',
+    min: 0,
+    formatter: '.0%'
+  }
+]
 
 const dv = new DataSet.View().source(sourceData)
 dv.transform({
@@ -227,9 +223,19 @@ export default {
     Bar,
     Trend,
     NumberInfo,
-    MiniSmoothArea
+    MiniSmoothArea,
+    STable
   },
-  props: ['recipeToday', 'recipeTotal'],
+  props: {
+    recipeToday: {
+      default: 0,
+      type: Number
+    },
+    recipeTotal: {
+      default: 0,
+      type: Number
+    }
+  },
   data () {
     return {
       loading: true,
@@ -238,10 +244,28 @@ export default {
       // 搜索用户数
       searchUserData,
       searchUserScale,
-      searchTableColumns,
-      searchData,
-
+      queryParam: {},
+      medicineTableColumns: [
+        {
+          dataIndex: 'medicinalName',
+          title: '药品名称'
+        },
+        {
+          dataIndex: 'useTotal',
+          title: '用量',
+          width: 90
+        },
+        {
+          dataIndex: 'range',
+          title: '周涨幅',
+          align: 'right',
+          sorter: (a, b) => a.range - b.range,
+          scopedSlots: { customRender: 'range' }
+        }
+      ],
+      medicineData: [],
       barData,
+      medicineBarData: [],
       barData2,
 
       //
@@ -257,52 +281,69 @@ export default {
   created () {
     setTimeout(() => {
       this.loading = !this.loading
-    }, 1000)
+    }, 500)
+  },
+  methods: {
+    loadData (parameter) {
+        const requestParameters = Object.assign({}, parameter, this.queryParam)
+        console.log('loadData request parameters:', requestParameters)
+        return getMedicinalUsed(requestParameters).then((res) => {
+        const data = []
+        res.data.data.forEach(el => {
+         data.push({
+            x: el.medicinalName,
+            y: el.useTotal
+         })
+        })
+        this.medicineBarData = data
+        return res.data
+      })
+    }
   }
 }
 </script>
 
 <style lang="less" scoped>
-  .extra-wrapper {
-    line-height: 55px;
-    padding-right: 24px;
+.extra-wrapper {
+  line-height: 55px;
+  padding-right: 24px;
 
-    .extra-item {
-      display: inline-block;
-      margin-right: 24px;
+  .extra-item {
+    display: inline-block;
+    margin-right: 24px;
 
-      a {
-        margin-left: 24px;
-      }
+    a {
+      margin-left: 24px;
     }
   }
+}
 
-  .antd-pro-pages-dashboard-analysis-twoColLayout {
+.antd-pro-pages-dashboard-analysis-twoColLayout {
+  position: relative;
+  display: flex;
+  display: block;
+  flex-flow: row wrap;
+}
+
+.antd-pro-pages-dashboard-analysis-salesCard {
+  height: calc(100% - 24px);
+  /deep/ .ant-card-head {
     position: relative;
-    display: flex;
-    display: block;
-    flex-flow: row wrap;
   }
+}
 
-  .antd-pro-pages-dashboard-analysis-salesCard {
-    height: calc(100% - 24px);
-    /deep/ .ant-card-head {
-      position: relative;
-    }
+.dashboard-analysis-iconGroup {
+  i {
+    margin-left: 16px;
+    color: rgba(0, 0, 0, 0.45);
+    cursor: pointer;
+    transition: color 0.32s;
+    color: black;
   }
-
-  .dashboard-analysis-iconGroup {
-    i {
-      margin-left: 16px;
-      color: rgba(0,0,0,.45);
-      cursor: pointer;
-      transition: color .32s;
-      color: black;
-    }
-  }
-  .analysis-salesTypeRadio {
-    position: absolute;
-    right: 54px;
-    bottom: 12px;
-  }
+}
+.analysis-salesTypeRadio {
+  position: absolute;
+  right: 54px;
+  bottom: 12px;
+}
 </style>

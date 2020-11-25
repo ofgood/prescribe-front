@@ -63,8 +63,8 @@ export default {
       radarLoading: true,
       activities: [],
       teams: [],
-      recipeTotal: '',
-      recipeToday: '',
+      recipeTotal: 0,
+      recipeToday: 0,
       // data
       axis1Opts: {
         dataKey: 'item',

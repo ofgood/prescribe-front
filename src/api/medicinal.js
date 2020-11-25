@@ -6,7 +6,8 @@ const api = {
   importMedicinal: '/medicinalInfo/importMedicinal', // 导入药品信息
   medicinalList: '/medicinalInfo/medicinalList', // 查询药品列表
   medicinalSelect: '/medicinalInfo/medicinalSelect', // 根据关键字查询
-  medicinalInfoSaveOrUpdate: '/medicinalInfo/saveOrUpdate'// 新增|编辑
+  medicinalInfoSaveOrUpdate: '/medicinalInfo/saveOrUpdate', // 新增|编辑
+  getMedicinalUsed: '/medicinalInfo/getMedicinalUsed'
 }
 
 export function medicinalInfoDelete (parameter) {
@@ -55,4 +56,12 @@ export function medicinalInfoSaveOrUpdate (parameter) {
       method: 'post',
       data: parameter
     })
+}
+
+export function getMedicinalUsed (parameter) {
+  return request({
+    url: api.getMedicinalUsed,
+    method: 'post',
+    data: parameter
+  })
 }
