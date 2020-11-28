@@ -21,6 +21,14 @@
         <a-form-item v-show="false" v-if="model && model.id > 0" label="主键ID">
           <a-input v-decorator="['id', { initialValue: 0 }]" disabled />
         </a-form-item>
+        <a-form-item label="工号">
+          <a-input
+            :disabled="model && model.id > 0"
+            :maxLength="30"
+            v-decorator="['jobNum', { rules: [{ required: true, whitespace: true, message: '请输入工号' }] }]"
+            placeholder="请输入工号"
+          />
+        </a-form-item>
         <a-form-item label="区域名称">
           <a-input
             :maxLength="30"
@@ -85,7 +93,7 @@ import { validateCellPhone } from '@/utils/validates'
 // import { clinicFindById } from '@/api/clinic'
 import pick from 'lodash.pick'
 // 表单字段
-const fields = ['area', 'province', 'id', 'city', 'responsible', 'responsibleTel', 'remark']
+const fields = ['jobNum', 'area', 'province', 'id', 'city', 'responsible', 'responsibleTel', 'remark']
 export default {
   name: 'CreateAreaForm',
   props: {

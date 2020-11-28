@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <a-row :gutter="24">
-      <!-- <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
+  <div class="analysis-warp">
+    <!-- <a-row :gutter="24">
+      <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
         <chart-card :loading="loading" title="总销售额" total="￥126,560">
           <a-tooltip title="指标说明" slot="action">
             <a-icon type="info-circle-o" />
@@ -18,12 +18,12 @@
           </div>
           <template slot="footer">日均销售额<span>￥ 234.56</span></template>
         </chart-card>
-      </a-col> -->
+      </a-col>
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
         <chart-card :loading="loading" title="总处方量" :total="recipeTotal | NumberFormat">
-          <!-- <a-tooltip title="指标说明" slot="action">
+          <a-tooltip title="指标说明" slot="action">
             <a-icon type="info-circle-o" />
-          </a-tooltip> -->
+          </a-tooltip>
           <div>
             <mini-area />
           </div>
@@ -64,41 +64,47 @@
           </template>
         </chart-card>
       </a-col>
-    </a-row>
+    </a-row> -->
 
     <a-card :loading="loading" :bordered="false" :body-style="{ padding: '0' }">
       <div class="salesCard">
         <a-tabs default-active-key="1" size="large" :tab-bar-style="{ marginBottom: '24px', paddingLeft: '16px' }">
           <div class="extra-wrapper" slot="tabBarExtraContent">
-            <div class="extra-item">
+            <!-- <div class="extra-item">
               <a>今日</a>
               <a>本周</a>
               <a>本月</a>
               <a>本年</a>
             </div>
-            <a-range-picker :style="{ width: '256px' }" />
+            <a-range-picker :style="{ width: '256px' }" /> -->
           </div>
           <a-tab-pane loading="true" tab="药品使用量统计" key="1">
-            <a-row>
-              <a-col :xl="12" :lg="12" :md="12" :sm="24" :xs="24">
-                <div class="ant-table-wrapper">
-                  <s-table
-                    row-key="id"
-                    size="small"
-                    :columns="medicineTableColumns"
-                    showPagination="auto"
-                    :data="loadData"
-                  >
-                    <span slot="range" slot-scope="text, record">
+            <div style="padding:20px">
+              <a-row>
+                <a-col :xl="16" :lg="12" :md="12" :sm="24" :xs="24">
+                  <bar :data="medicineBarData" />
+                </a-col>
+                <a-col :xl="8" :lg="12" :md="12" :sm="24" :xs="24">
+                  <div class="ant-table-wrapper">
+                    <s-table
+                      :showSizeChanger="false"
+                      style="height:400px"
+                      :scroll="{y:400}"
+                      row-key="id"
+                      size="small"
+                      :columns="medicineTableColumns"
+                      showPagination="auto"
+                      :data="loadData"
+                    >
+                    <!-- <span slot="range" slot-scope="text, record">
                       <trend :flag="record.status === 0 ? 'up' : 'down'"> {{ text }}% </trend>
-                    </span>
-                  </s-table>
-                </div>
-              </a-col>
-              <a-col :xl="12" :lg="12" :md="12" :sm="24" :xs="24">
-                <bar :data="medicineBarData" />
-              </a-col>
-            </a-row>
+                    </span> -->
+                    </s-table>
+                  </div>
+                </a-col>
+              </a-row>
+            </div>
+
           </a-tab-pane>
           <!-- <a-tab-pane tab="访问量" key="2">
             <a-row>
@@ -252,16 +258,16 @@ export default {
         },
         {
           dataIndex: 'useTotal',
-          title: '用量',
+          title: '使用量',
           width: 90
-        },
-        {
-          dataIndex: 'range',
-          title: '周涨幅',
-          align: 'right',
-          sorter: (a, b) => a.range - b.range,
-          scopedSlots: { customRender: 'range' }
         }
+        // {
+        //   dataIndex: 'range',
+        //   title: '周涨幅',
+        //   align: 'right',
+        //   sorter: (a, b) => a.range - b.range,
+        //   scopedSlots: { customRender: 'range' }
+        // }
       ],
       medicineData: [],
       barData,
@@ -346,4 +352,14 @@ export default {
   right: 54px;
   bottom: 12px;
 }
+</style>
+<style lang="less">
+  .analysis-warp {
+    .ant-table-content{
+      height: 417px;
+    }
+    .ant-table-body{
+      border-bottom: 1px solid #e8e8e8;
+    }
+  }
 </style>

@@ -21,6 +21,14 @@
         <a-form-item v-show="false" v-if="model && model.id > 0" label="主键ID">
           <a-input v-decorator="['id', { initialValue: 0 }]" disabled />
         </a-form-item>
+        <a-form-item label="工号">
+          <a-input
+            :disabled="model && model.id > 0"
+            :maxLength="30"
+            v-decorator="['jobNum', { rules: [{ required: true, whitespace: true, message: '请输入工号' }] }]"
+            placeholder="请输入工号"
+          />
+        </a-form-item>
         <a-form-item label="诊所名称">
           <a-input
             :maxLength="50"
@@ -96,7 +104,7 @@ import { validateCellPhone, validatePhone } from '@/utils/validates'
 import { selectArea, getAreaById } from '@/api/area'
 import debounce from 'lodash/debounce'
 // 表单字段
-const fields = ['clinicName', 'id', 'responsible', 'responsibleTel', 'clinicTel', 'address', 'areaId']
+const fields = ['jobNum', 'clinicName', 'id', 'responsible', 'responsibleTel', 'clinicTel', 'address', 'areaId']
 export default {
   props: {
     visible: {
