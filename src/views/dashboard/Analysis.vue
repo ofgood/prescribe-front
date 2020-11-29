@@ -89,7 +89,6 @@
                     <s-table
                       :showSizeChanger="false"
                       style="height:400px"
-                      :scroll="{y:400}"
                       row-key="id"
                       size="small"
                       :columns="medicineTableColumns"
@@ -106,16 +105,32 @@
             </div>
 
           </a-tab-pane>
-          <!-- <a-tab-pane tab="访问量" key="2">
-            <a-row>
-              <a-col :xl="16" :lg="12" :md="12" :sm="24" :xs="24">
-                <bar :data="barData2" title="销售额趋势" />
-              </a-col>
-              <a-col :xl="8" :lg="12" :md="12" :sm="24" :xs="24">
-                <rank-list title="门店销售排行榜" :list="rankList"/>
-              </a-col>
-            </a-row>
-          </a-tab-pane> -->
+          <a-tab-pane tab="诊所药品使用排行" key="2" v-if="isManager">
+            <div style="padding:20px">
+              <a-row>
+                <a-col :xl="16" :lg="12" :md="12" :sm="24" :xs="24">
+                  <bar :data="clinicData" title="" />
+                </a-col>
+                <a-col :xl="8" :lg="12" :md="12" :sm="24" :xs="24">
+                  <div class="ant-table-wrapper">
+                    <s-table
+                      :showSizeChanger="false"
+                      style="height:400px"
+                      row-key="id"
+                      size="small"
+                      :columns="clinicColumns"
+                      showPagination="auto"
+                      :data="loadClinicData"
+                    >
+                    <!-- <span slot="range" slot-scope="text, record">
+                      <trend :flag="record.status === 0 ? 'up' : 'down'"> {{ text }}% </trend>
+                    </span> -->
+                    </s-table>
+                  </div>
+                </a-col>
+              </a-row>
+            </div>
+          </a-tab-pane>
         </a-tabs>
       </div>
     </a-card>
@@ -124,6 +139,7 @@
 
 <script>
 import moment from 'moment'
+import { roleMixin } from '@/store/role-mixin'
 import {
   ChartCard,
   MiniArea,
@@ -138,6 +154,7 @@ import {
 } from '@/components'
 import { baseMixin } from '@/store/app-mixin'
 import { getMedicinalUsed } from '@/api/medicinal'
+import { getClinicSaleReport } from '@/api/clinic'
 const barData = []
 const barData2 = []
 for (let i = 0; i < 12; i += 1) {
@@ -219,7 +236,7 @@ const pieData = dv.rows
 
 export default {
   name: 'Analysis',
-  mixins: [baseMixin],
+  mixins: [baseMixin, roleMixin],
   components: {
     ChartCard,
     MiniArea,
@@ -261,15 +278,20 @@ export default {
           title: '使用量',
           width: 90
         }
-        // {
-        //   dataIndex: 'range',
-        //   title: '周涨幅',
-        //   align: 'right',
-        //   sorter: (a, b) => a.range - b.range,
-        //   scopedSlots: { customRender: 'range' }
-        // }
       ],
       medicineData: [],
+      clinicColumns: [
+        {
+          dataIndex: 'clinicName',
+          title: '诊所名称'
+        },
+        {
+          dataIndex: 'useTotal',
+          title: '使用量',
+          width: 90
+        }
+      ],
+      clinicData: [],
       barData,
       medicineBarData: [],
       barData2,
@@ -291,8 +313,7 @@ export default {
   },
   methods: {
     loadData (parameter) {
-        const requestParameters = Object.assign({}, parameter, this.queryParam)
-        console.log('loadData request parameters:', requestParameters)
+        const requestParameters = Object.assign({}, parameter)
         return getMedicinalUsed(requestParameters).then((res) => {
         const data = []
         res.data.data.forEach(el => {
@@ -302,6 +323,21 @@ export default {
          })
         })
         this.medicineBarData = data
+        return res.data
+      })
+    },
+    loadClinicData (parameter) {
+        const requestParameters = Object.assign({}, parameter, this.queryParam)
+        console.log('loadData request parameters:', requestParameters)
+        return getClinicSaleReport(requestParameters).then((res) => {
+        const data = []
+        res.data.data.forEach(el => {
+         data.push({
+            x: el.clinicName,
+            y: el.useTotal
+         })
+        })
+        this.clinicData = data
         return res.data
       })
     }

@@ -98,7 +98,7 @@
     <!-- fixed footer toolbar -->
     <footer-tool-bar :is-mobile="isMobile" :collapsed="sideCollapsed">
       <a-space>
-        <a-button type="danger" icon="redo" @click="clearData" :loading="loading">清空</a-button>
+        <!-- <a-button type="danger" icon="redo" @click="clearData" :loading="loading">清空</a-button> -->
         <a-button type="primary" icon="save" @click="save" :loading="loading">{{ '保存' }}</a-button>
         <a-button type="primary" icon="cloud-upload" @click="submit" :loading="loading">提交</a-button>
         <a-button type="primary" icon="printer" @click="printRecipe" :loading="loading">打印药方</a-button>
@@ -116,8 +116,8 @@
           <img id="barcode" />
         </div>
         <div class="recipe-title">
-          {{ clinicInfoVo.clinicName }}
-          <span class="recipe-name">处方笺</span>
+          处方笺
+          <span class="recipe-name">{{ clinicInfoVo.clinicName }}</span>
         </div>
         <div class="recipe-num">
           <div><span class="recipe-label">开具日期:</span> {{ recipeInfoListVo.sickTime }}</div>
@@ -584,8 +584,7 @@ export default {
   vertical-align: sub;
 }
 .divide-line {
-  height: 1px;
-  background-color: #666;
+  border-bottom: 1px solid #666;
   width: 100%;
   margin: 5px 0;
 }

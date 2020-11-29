@@ -23,7 +23,7 @@
         </div>
       </div>
     </template>
-    <div v-if="isManager">
+    <div>
       <analysis :recipeToday="recipeToday" :recipeTotal="recipeTotal"></analysis>
     </div>
   </page-header-wrapper>

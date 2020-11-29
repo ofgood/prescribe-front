@@ -6,7 +6,8 @@ const api = {
   clinicFindById: '/clinic/findById', // 根据编号查询诊所信息
   importClinic: '/clinic/importClinic', // 导入诊所列表
   clinicSaveOrUpdate: '/clinic/saveOrUpdate', // 新增|编辑,
-  clinicSelect: '/clinic/clinicSelect'// 新增|编辑,
+  clinicSelect: '/clinic/clinicSelect', // 新增|编辑,
+  clinicSaleReport: '/clinic/clinicSaleReport'
 }
 
 export function clinicList (parameter) {
@@ -52,6 +53,14 @@ export function clinicSaveOrUpdate (parameter) {
 export function clinicSelect (parameter) {
   return request({
     url: api.clinicSelect,
+    method: 'post',
+    data: parameter
+  })
+}
+
+export function getClinicSaleReport (parameter) {
+  return request({
+    url: api.clinicSaleReport,
     method: 'post',
     data: parameter
   })

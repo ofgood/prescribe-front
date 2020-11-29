@@ -102,6 +102,7 @@ import pick from 'lodash.pick'
 import { mapGetters } from 'vuex'
 import { validateCellPhone, validatePhone } from '@/utils/validates'
 import { selectArea, getAreaById } from '@/api/area'
+import { clinicFindById } from '@/api/clinic'
 import debounce from 'lodash/debounce'
 // 表单字段
 const fields = ['jobNum', 'clinicName', 'id', 'responsible', 'responsibleTel', 'clinicTel', 'address', 'areaId']
@@ -156,11 +157,24 @@ export default {
       this.$nextTick(() => {
         // this.fetcharea()
         if (this.model && this.model.id) {
-          this.getAreaList(this.model.areaId)
-        } else {
-
+          // this.getAreaList(this.model.areaId)
+          this.getClinicById(this.model.id).then((res) => {
+            if (res) {
+              const data = []
+              res.areaInfoSelectListVos.forEach((r) => {
+                data.push({
+                  value: r['id'],
+                  text: r['areaPath'],
+                  ...r
+                })
+              })
+              this.selects = data
+              // res.clinicIds = res.clinicIds.split(',')
+              res.id = this.model.id
+              this.form.setFieldsValue(pick(res, fields))
+            }
+          })
         }
-        this.model && this.form.setFieldsValue(pick(this.model, fields))
       })
     })
   },
@@ -214,6 +228,21 @@ export default {
     },
     handleSearch (value) {
       this.fetch(value, (data) => (this.selects = data))
+    },
+    getClinicById (id) {
+      return new Promise((resolve, reject) => {
+        clinicFindById({ id })
+          .then((res) => {
+            if (res.data) {
+              resolve(res.data)
+            } else {
+              reject(res)
+            }
+          })
+          .catch((err) => {
+            reject(err)
+          })
+      })
     }
   }
 }

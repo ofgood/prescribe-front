@@ -90,7 +90,7 @@
 
 <script>
 import { validateCellPhone } from '@/utils/validates'
-// import { clinicFindById } from '@/api/clinic'
+import { getAreaById } from '@/api/area'
 import pick from 'lodash.pick'
 // 表单字段
 const fields = ['jobNum', 'area', 'province', 'id', 'city', 'responsible', 'responsibleTel', 'remark']
@@ -133,9 +133,34 @@ export default {
     // 当 model 发生改变时，为表单设置值
     this.$watch('model', () => {
       this.$nextTick(() => {
-        this.model && this.form.setFieldsValue(pick(this.model, fields))
+        // this.model && this.form.setFieldsValue(pick(this.model, fields))
+        if (this.model && this.model.id) {
+          this.getAreaById(this.model.id).then((res) => {
+            if (res) {
+              res.id = this.model.id
+              this.form.setFieldsValue(pick(res, fields))
+            }
+          })
+        }
       })
     })
+  },
+  methods: {
+    getAreaById (id) {
+      return new Promise((resolve, reject) => {
+        getAreaById({ id })
+          .then((res) => {
+            if (res.data) {
+              resolve(res.data)
+            } else {
+              reject(res)
+            }
+          })
+          .catch((err) => {
+            reject(err)
+          })
+      })
+    }
   }
 }
 </script>
