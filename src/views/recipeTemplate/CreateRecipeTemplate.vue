@@ -53,7 +53,7 @@
               @change="(value, option) => handleChange(value, record.orderNum, 'medicinalName', option)"
             >
               <a-spin v-if="fetching" slot="notFoundContent" size="small" />
-              <a-select-option v-for="d in selects" :key="d.value" :itemData="d">
+              <a-select-option v-for="d in selects" :key="d.id" :itemData="d">
                 {{ d.text }}
               </a-select-option>
             </a-select>

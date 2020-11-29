@@ -129,3 +129,25 @@ export function accDivCoupon (arg1, arg2) {
     r2 = Number(arg2.toString().replace('.', ''))
     return (r1 / r2) * Math.pow(10, t2 - t1)
 }
+
+/**
+ * hasClass
+ * @param {*} elem 元素
+ * @param {*} cls class名称
+ */
+export function hasClass (elem, cls) {
+  cls = cls || ''
+  if (cls.replace(/\s/g, '').length === 0) return false // 当cls没有参数时，返回false
+  return new RegExp(' ' + cls + ' ').test(' ' + elem.className + ' ')
+}
+/**
+ * addClass
+ * @param {*} elem 元素
+ * @param {*} cls class名称
+ */
+export function addClass (ele, cls) {
+  if (!hasClass(ele, cls)) {
+    console.log(ele)
+    ele.className = ele.className === '' ? cls : ele.className + ' ' + cls
+  }
+}

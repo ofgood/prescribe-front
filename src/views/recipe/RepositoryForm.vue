@@ -36,7 +36,7 @@
       <a-col :lg="5" :md="12" :sm="24">
         <a-form-item
           label="患者性别">
-          <a-select disabled :show-arrow="false" placeholder="请选择患者性别" v-model="patientGender">
+          <a-select :show-arrow="true" placeholder="请选择患者性别" v-decorator="['sex', {rules: [{required: true, message: '请选择性别'}]}]">
             <a-select-option v-for="item in gender" :key="item.value">
               {{ item.label }}
             </a-select-option>
@@ -57,7 +57,7 @@
       <a-col :lg="5" :md="12" :sm="24">
         <a-form-item
           label="出生年月">
-          <a-date-picker v-model="birthday" disabled style="width:100%" placeholder="请选择出生日期" valueFormat="YYYY-MM-DD" />
+          <a-date-picker v-model="birthday" style="width:100%" placeholder="请选择出生日期" valueFormat="YYYY-MM-DD" />
         </a-form-item>
       </a-col>
 
@@ -200,6 +200,7 @@ export default {
       setFieldsValue({
         hyperSusceptibility,
         tel,
+        sex,
         address,
         shippingAddress
       })

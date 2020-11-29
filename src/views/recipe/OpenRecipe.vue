@@ -57,7 +57,7 @@
             @change="(value, option) => handleChange(value, record.orderNum, 'medicinalName', option)"
           >
             <a-spin v-if="fetching" slot="notFoundContent" size="small" />
-            <a-select-option v-for="d in selects" :key="d.value" :itemData="d">
+            <a-select-option v-for="d in selects" :key="d.id" :itemData="d">
               {{ d.text }}
             </a-select-option>
           </a-select>
@@ -105,6 +105,7 @@
       </a-space>
     </footer-tool-bar>
     <a-modal
+      wrapClassName="print-modal"
       title="打印处方"
       :visible="visible"
       :confirm-loading="confirmLoading"
@@ -189,7 +190,7 @@ import storage from 'store'
 import { DOCTOR_ID, CLINIC_ID } from '@/config/storageTypes'
 import { mapGetters } from 'vuex'
 import JsBarcode from 'jsbarcode'
-import { accAdd } from '@/utils/util'
+import { accAdd, addClass } from '@/utils/util'
 export default {
   name: 'OpenRecipe',
   mixins: [baseMixin],
@@ -474,11 +475,6 @@ export default {
               $notification['success']({
                 message: res.message
               })
-              // setTimeout(() => {
-              //   this.$router.push({
-              //     name: 'recipe-template-list'
-              //   })
-              // }, 1500)
             } else {
               $notification['error']({
                 message: res.message
@@ -510,7 +506,7 @@ export default {
             this.medicinalListVoList = medicinalListVoList
             this.patientInfoVo = patientInfoVo
             this.recipeInfoListVo = recipeInfoListVo
-            medicinalListVoList.forEach(item => {
+            medicinalListVoList.forEach((item) => {
               totalPrice = accAdd(totalPrice, item.price)
             })
             this.medicinalPriceTotal = totalPrice
@@ -530,7 +526,17 @@ export default {
       this.visible = true
     },
     handleOk () {
-      this.$print(this.$refs.printSection) //
+      this.$nextTick(() => {
+       const antModalHeader = document.querySelector('.print-modal').querySelector('.ant-modal-header')
+       const antModalFooter = document.querySelector('.print-modal').querySelector('.ant-modal-footer')
+       const antModalClose = document.querySelector('.print-modal').querySelector('.ant-modal-close')
+       const antNotification = document.querySelector('.ant-notification')
+       addClass(antModalHeader, 'no-print')
+       addClass(antModalFooter, 'no-print')
+       addClass(antModalClose, 'no-print')
+       addClass(antNotification, 'no-print')
+       this.$print(this.$refs.printSection)
+      })
     },
     handleCancel () {
       this.visible = false
@@ -562,7 +568,7 @@ export default {
   ul {
     li {
       display: inline-block;
-      width: 30%;
+      width: 50%;
       margin-bottom: 5px;
     }
   }
