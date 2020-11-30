@@ -66,7 +66,7 @@
       </a-col>
     </a-row> -->
 
-    <a-card :loading="loading" :bordered="false" :body-style="{ padding: '0' }">
+    <a-card v-if="role !== 'CLINIC_MANAGER'" :loading="loading" :bordered="false" :body-style="{ padding: '0' }">
       <div class="salesCard">
         <a-tabs default-active-key="1" size="large" :tab-bar-style="{ marginBottom: '24px', paddingLeft: '16px' }">
           <div class="extra-wrapper" slot="tabBarExtraContent">
@@ -155,6 +155,7 @@ import {
 import { baseMixin } from '@/store/app-mixin'
 import { getMedicinalUsed } from '@/api/medicinal'
 import { getClinicSaleReport } from '@/api/clinic'
+import { mapState } from 'vuex'
 const barData = []
 const barData2 = []
 for (let i = 0; i < 12; i += 1) {
@@ -248,6 +249,12 @@ export default {
     NumberInfo,
     MiniSmoothArea,
     STable
+  },
+  computed: {
+    ...mapState({
+      // 角色类型
+      role: state => state.user.role
+    })
   },
   props: {
     recipeToday: {
