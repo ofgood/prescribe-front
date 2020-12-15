@@ -75,7 +75,7 @@ import { STable, Ellipsis } from '@/components'
 import { doctorList, doctorSaveOrUpdate, doctorDelete } from '@/api/doctor'
 import { mapGetters } from 'vuex'
 import CreateForm from './modules/CreateForm'
-
+import { deepClone } from '@/utils/util'
 const columns = [
   {
     title: '姓名',
@@ -201,8 +201,9 @@ export default {
     },
     handleEdit (record) {
       this.visible = true
-      record.clinicIds = record.clinicIds.split(',')
-      this.mdl = { ...record }
+      const recordData = deepClone(record)
+      recordData.clinicIds = recordData.clinicIds.split(',')
+      this.mdl = { ...recordData }
     },
     handleDel (record) {
       this.deleteItem(record.id)

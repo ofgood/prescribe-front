@@ -164,6 +164,7 @@ export default {
     this.$watch('model', () => {
       this.$nextTick(() => {
         // this.fetchclinics()
+        console.log(this.model)
         if (this.model && this.model.id) {
           this.getDoctorById(this.model.id).then((res) => {
             if (res) {

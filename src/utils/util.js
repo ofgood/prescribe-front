@@ -140,6 +140,7 @@ export function hasClass (elem, cls) {
   if (cls.replace(/\s/g, '').length === 0) return false // 当cls没有参数时，返回false
   return new RegExp(' ' + cls + ' ').test(' ' + elem.className + ' ')
 }
+
 /**
  * addClass
  * @param {*} elem 元素
@@ -150,4 +151,12 @@ export function addClass (ele, cls) {
     console.log(ele)
     ele.className = ele.className === '' ? cls : ele.className + ' ' + cls
   }
+}
+
+/**
+ * deepClone
+ * @param {*} obj 要克隆的对象
+ */
+export function deepClone (obj) {
+  return JSON.parse(JSON.stringify(obj))
 }
