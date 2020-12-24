@@ -9,7 +9,6 @@
                 <a-input v-model="queryParam.recipeTemplateName	" placeholder="请输入模板名称"/>
               </a-form-item>
             </a-col>
-
             <a-col :md="8" :sm="24">
               <a-form-item label="处方类型">
                 <!-- <a-input v-model="queryParam.recipeType" placeholder="请输入处方类型"/> -->
