@@ -37,6 +37,9 @@
         <a-form-item label="地址">
           <a-textarea :auto-size="{ minRows: 2, maxRows: 3 }" :maxLength="30" placeholder="请输入地址" v-decorator="['address', {rules: [{required: true, message: '请输入地址'}]}]" />
         </a-form-item>
+        <a-form-item label="禁用">
+          <a-switch default-checked />
+        </a-form-item>
       </a-form>
     </a-spin>
   </a-modal>
