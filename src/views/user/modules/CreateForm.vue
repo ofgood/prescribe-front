@@ -82,7 +82,9 @@ const fields = [
   'realName',
   'id',
   'birthday',
-  'tel'
+  'tel',
+  'idCard',
+  'address'
 ]
 export default {
   name: 'CreateUserForm',
