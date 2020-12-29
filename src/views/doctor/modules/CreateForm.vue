@@ -77,13 +77,6 @@
             placeholder="请输入医生工号"
           />
         </a-form-item>
-        <a-form-item label="联系地址">
-          <a-input
-            :maxLength="30"
-            placeholder="请输入联系地址"
-            v-decorator="['address', { rules: [{ required: true, message: '请输入联系地址' }] }]"
-          />
-        </a-form-item>
         <a-form-item label="出生日期">
           <a-date-picker
             style="width: 100%"
@@ -99,6 +92,13 @@
               'idCard',
               { trigger: 'blur', rules: [{ required: false, message: '' }, { validator: validateIdCard }] },
             ]"
+          />
+        </a-form-item>
+        <a-form-item label="联系地址">
+          <a-input
+            :maxLength="30"
+            placeholder="请输入联系地址"
+            v-decorator="['address', { rules: [{ required: true, message: '请输入联系地址' }] }]"
           />
         </a-form-item>
       </a-form>

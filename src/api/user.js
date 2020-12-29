@@ -6,7 +6,10 @@ const userApi = {
   ForgePassword: '/userInfo/forge-password',
   ResetPasssord: '/userInfo/resetPasssord',
   UserInfo: '/userInfo/getUserInfo',
-  getClinicListByUseName: '/userInfo/getClinicList'
+  getClinicListByUseName: '/userInfo/getClinicList',
+  findUserList: '/userInfo/findUserList',
+  userInfoSaveOrUpdate: '/userInfo/saveOrUpdate',
+  findUserListByKey: '/userInfo/findListByKey'
 }
 
 /**
@@ -61,6 +64,38 @@ export function getClinicListByUseName (parameter) {
 export function resetPasssord (parameter) {
   return request({
     url: userApi.ResetPasssord,
+    method: 'post',
+    data: parameter,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8'
+    }
+  })
+}
+export function findUserList (parameter) {
+  return request({
+    url: userApi.findUserList,
+    method: 'post',
+    data: parameter,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8'
+    }
+  })
+}
+
+export function userInfoSaveOrUpdate (parameter) {
+  return request({
+    url: userApi.userInfoSaveOrUpdate,
+    method: 'post',
+    data: parameter,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8'
+    }
+  })
+}
+
+export function findUserListByKey (parameter) {
+  return request({
+    url: userApi.findUserListByKey,
     method: 'post',
     data: parameter,
     headers: {

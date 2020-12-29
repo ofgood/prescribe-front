@@ -4,11 +4,7 @@
     :width="640"
     :visible="visible"
     :confirmLoading="loading"
-    @ok="
-      () => {
-        $emit('ok')
-      }
-    "
+    @ok="confirm"
     @cancel="
       () => {
         $emit('cancel')
@@ -21,20 +17,33 @@
         <a-form-item v-show="false" v-if="model && model.id > 0" label="主键ID">
           <a-input v-decorator="['id', { initialValue: 0 }]" disabled />
         </a-form-item>
-        <a-form-item label="工号">
-          <a-input
-            :disabled="model && model.id > 0"
-            :maxLength="30"
-            v-decorator="['jobNum', { rules: [{ required: true, whitespace: true, message: '请输入工号' }] }]"
-            placeholder="请输入工号"
-          />
-        </a-form-item>
         <a-form-item label="区域名称">
           <a-input
             :maxLength="30"
             v-decorator="['area', { rules: [{ required: true, whitespace: true, message: '请输入区域名称' }] }]"
             placeholder="请输入区域名称"
           />
+        </a-form-item>
+        <a-form-item label="负责人姓名">
+          <a-select
+            ref="responsibleList"
+            style="width: 100%"
+            show-search
+            key="id"
+            mode="multiple"
+            placeholder="选择负责人"
+            :show-arrow="false"
+            :default-active-first-option="false"
+            :not-found-content="fetching ? undefined : null"
+            :filter-option="false"
+            @search="fetchclinics"
+            v-decorator="['responsibleList', { rules: [{ required: true, message: '请输选择选择负责人' }] }]"
+          >
+            <a-spin v-if="fetching" slot="notFoundContent" size="small" />
+            <a-select-option v-for="d in selects" :key="d.value">
+              {{ d.text }}
+            </a-select-option>
+          </a-select>
         </a-form-item>
         <a-form-item label="所在省份">
           <a-input
@@ -50,29 +59,11 @@
             v-decorator="['city', { rules: [{ required: true, whitespace: true, message: '请输入所在城市' }] }]"
           />
         </a-form-item>
-        <a-form-item label="负责人姓名">
+        <a-form-item label="所在区(县)">
           <a-input
-            placeholder="请输入负责人姓名"
             :maxLength="10"
-            v-decorator="[
-              'responsible',
-              { rules: [{ required: true, whitespace: true, message: '请输入负责人姓名' }] },
-            ]"
-          />
-        </a-form-item>
-        <a-form-item label="负责人电话">
-          <a-input
-            placeholder="请输入负责人电话"
-            v-decorator="[
-              'responsibleTel',
-              {
-                trigger: 'blur',
-                rules: [
-                  { required: true, whitespace: true, message: '请输入手机号' },
-                  { validator: validateCellPhone },
-                ],
-              },
-            ]"
+            placeholder="所在区(县)"
+            v-decorator="['areaName', { rules: [{ required: true, whitespace: true, message: '所在区(县)' }] }]"
           />
         </a-form-item>
         <a-form-item label="备注">
@@ -92,8 +83,9 @@
 import { validateCellPhone } from '@/utils/validates'
 import { getAreaById } from '@/api/area'
 import pick from 'lodash.pick'
+import { findUserListByKey } from '@/api/user'
 // 表单字段
-const fields = ['jobNum', 'area', 'province', 'id', 'city', 'responsible', 'responsibleTel', 'remark']
+const fields = ['area', 'province', 'id', 'city', 'responsibleList', 'remark', 'areaName']
 export default {
   name: 'CreateAreaForm',
   props: {
@@ -111,6 +103,7 @@ export default {
     }
   },
   data () {
+    this.lastFetchId = 0
     this.formLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -122,8 +115,11 @@ export default {
       }
     }
     return {
+      fetching: false,
       form: this.$form.createForm(this),
-      validateCellPhone
+      validateCellPhone,
+      selects: [],
+      responsibleList: []
     }
   },
   created () {
@@ -138,6 +134,18 @@ export default {
           this.getAreaById(this.model.id).then((res) => {
             if (res) {
               res.id = this.model.id
+              const data = []
+              this.responsibleList = []
+              res.responsibles.forEach((r) => {
+                data.push({
+                  value: r['id'],
+                  text: r['realName'],
+                  ...r
+                })
+                this.responsibleList.push(r['id'])
+              })
+              this.selects = data
+              res.responsibleList = this.responsibleList
               this.form.setFieldsValue(pick(res, fields))
             }
           })
@@ -146,6 +154,42 @@ export default {
     })
   },
   methods: {
+    confirm () {
+      this.$emit('ok', this.selects)
+    },
+     fetchclinics (value = '') {
+      if (!value) return
+      this.lastFetchId += 1
+      const fetchId = this.lastFetchId
+      this.data = []
+      this.fetching = true
+      findUserListByKey({ key: value })
+        .then((d) => {
+          console.log(d)
+          if (fetchId !== this.lastFetchId) {
+            // for fetch callback order
+            console.log(111)
+            return
+          }
+          const result = d.data || []
+          console.log(result)
+          const data = []
+          result.forEach((r) => {
+            data.push({
+              value: r['id'],
+              text: r['realName'],
+              ...r
+            })
+          })
+          this.selects = data
+          // this.form.setFieldsValue({
+          //   responsibles: this.selects.length && this.selects
+          // })
+        })
+        .finally(() => {
+          this.fetching = false
+        })
+    },
     getAreaById (id) {
       return new Promise((resolve, reject) => {
         getAreaById({ id })

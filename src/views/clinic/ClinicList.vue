@@ -252,6 +252,7 @@ export default {
       form.validateFields((errors, values) => {
         if (!errors) {
           console.log('values', values)
+          values.userType = 'CLINIC_MANAGER'
           if (values.id > 0) {
             // 修改
             clinicSaveOrUpdate({ ...values }).then((res) => {

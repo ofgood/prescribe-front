@@ -13,8 +13,11 @@
         <a-form-item v-show="false" v-if="model && model.id > 0" label="主键ID">
           <a-input v-decorator="['id', { initialValue: 0 }]" disabled />
         </a-form-item>
-        <a-form-item label="客户姓名">
-          <a-input :maxLength="20" v-decorator="['customerName', {rules: [{required: true, message: '请输入客户姓名'}]}]" placeholder="请输入客户姓名"/>
+        <a-form-item label="客户名称">
+          <a-input :maxLength="20" v-decorator="['customerName', {rules: [{required: true, message: '请输入客户名称'}]}]" placeholder="请输入客户名称"/>
+        </a-form-item>
+        <a-form-item label="工号">
+          <a-input :disabled="model && model.id > 0" :maxLength="20" v-decorator="['jobNumber', {rules: [{required: true, message: '请输入工号'}]}]" placeholder="请输入工号"/>
         </a-form-item>
         <a-form-item label="客户电话">
           <a-input :maxLength="20" v-decorator="['customerPhone',{rules: [{validator: validatePhone}],trigger: 'blur'}]" placeholder="请输入客户电话"/>
@@ -37,8 +40,15 @@
         <a-form-item label="地址">
           <a-textarea :auto-size="{ minRows: 2, maxRows: 3 }" :maxLength="30" placeholder="请输入地址" v-decorator="['address', {rules: [{required: true, message: '请输入地址'}]}]" />
         </a-form-item>
-        <a-form-item label="禁用">
-          <a-switch default-checked />
+        <a-form-item label="是否禁用">
+          <a-select
+            placeholder="是否禁用"
+            v-decorator="['disableStatus', { initialValue:false }, { rules: [{ required: true, message: '请选择是否禁用' }] }]"
+          >
+            <a-select-option v-for="item in disableStatusList" :key="item.value">
+              {{ item.label }}
+            </a-select-option>
+          </a-select>
         </a-form-item>
       </a-form>
     </a-spin>
@@ -50,8 +60,10 @@ import pick from 'lodash.pick'
 import { validatePhone, validateCellPhone } from '@/utils/validates'
 // 表单字段
 const fields = [
+  'jobNumber',
   'customerName',
   'customerPhone',
+  'disableStatus',
   'id',
   'linkMen',
   'linkTel',
@@ -88,6 +100,16 @@ export default {
       }
     }
     return {
+      disableStatusList: [
+        {
+          label: '否',
+          value: false
+        },
+        {
+          label: '是',
+          value: true
+        }
+      ],
       validatePhone,
       validateCellPhone,
       form: this.$form.createForm(this)

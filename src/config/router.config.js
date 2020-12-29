@@ -24,6 +24,38 @@ export const asyncRouterMap = [
         meta: { title: '总览', keepAlive: true, icon: 'home', permission: [ 'dashboard' ] }
       },
       {
+        path: '/customer',
+        name: 'customer',
+        component: RouteView,
+        redirect: '/customer/customer-list',
+        meta: { title: '客户管理', icon: 'team', permission: [ 'customer' ] },
+        children: [
+          {
+            path: '/customer/customer-list/:pageNo([1-9]\\d*)?',
+            name: 'customer-list',
+            hideChildrenInMenu: true,
+            component: () => import('@/views/customer/CustomerList'),
+            meta: { title: '客户列表', keepAlive: true, permission: [ 'customer' ] }
+          }
+        ]
+      },
+      {
+        path: '/user',
+        name: 'user',
+        component: RouteView,
+        redirect: '/user/user-list',
+        meta: { title: '用户管理', icon: 'team', permission: [ 'customer' ] },
+        children: [
+          {
+            path: '/user/user-list/:pageNo([1-9]\\d*)?',
+            name: 'user-list',
+            hideChildrenInMenu: true,
+            component: () => import('@/views/user/UserList'),
+            meta: { title: '用户列表', keepAlive: true, permission: [ 'customer' ] }
+          }
+        ]
+      },
+      {
         path: '/area',
         name: 'area',
         component: RouteView,
@@ -55,38 +87,22 @@ export const asyncRouterMap = [
           }
         ]
       },
-      {
-        path: '/customer',
-        name: 'customer',
-        component: RouteView,
-        redirect: '/customer/customer-list',
-        meta: { title: '客户管理', icon: 'team', permission: [ 'customer' ] },
-        children: [
-          {
-            path: '/customer/customer-list/:pageNo([1-9]\\d*)?',
-            name: 'customer-list',
-            hideChildrenInMenu: true,
-            component: () => import('@/views/customer/CustomerList'),
-            meta: { title: '客户列表', keepAlive: true, permission: [ 'customer' ] }
-          }
-        ]
-      },
-      {
-        path: '/doctor',
-        name: 'doctor',
-        component: RouteView,
-        redirect: '/doctor/doctor-list',
-        meta: { title: '医生管理', icon: 'fork', permission: [ 'doctor' ] },
-        children: [
-          {
-            path: '/doctor/doctor-list/:pageNo([1-9]\\d*)?',
-            name: 'doctor-list',
-            hideChildrenInMenu: true,
-            component: () => import('@/views/doctor/DoctorList'),
-            meta: { title: '医生列表', keepAlive: true, permission: [ 'doctor' ] }
-          }
-        ]
-      },
+      // {
+      //   path: '/doctor',
+      //   name: 'doctor',
+      //   component: RouteView,
+      //   redirect: '/doctor/doctor-list',
+      //   meta: { title: '医生管理', icon: 'fork', permission: [ 'doctor' ] },
+      //   children: [
+      //     {
+      //       path: '/doctor/doctor-list/:pageNo([1-9]\\d*)?',
+      //       name: 'doctor-list',
+      //       hideChildrenInMenu: true,
+      //       component: () => import('@/views/doctor/DoctorList'),
+      //       meta: { title: '医生列表', keepAlive: true, permission: [ 'doctor' ] }
+      //     }
+      //   ]
+      // },
       {
         path: '/patient',
         name: 'patient',

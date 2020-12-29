@@ -160,3 +160,19 @@ export function addClass (ele, cls) {
 export function deepClone (obj) {
   return JSON.parse(JSON.stringify(obj))
 }
+
+/**
+ * 下载
+ * @param {*} data
+ */
+export function downloadFile (data) {
+  const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8' })
+  let aElement = document.createElement('a')
+  let downloadUrl = null
+  const URL = window.URL || window.webkitURL
+  downloadUrl && URL.revokeObjectURL(downloadUrl)
+  downloadUrl = URL.createObjectURL(blob)
+  aElement.href = downloadUrl
+  aElement.click()
+  aElement = null
+}

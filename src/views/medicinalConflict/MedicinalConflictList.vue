@@ -22,6 +22,7 @@
       <div class="table-operator">
         <a-button type="primary" icon="plus" @click="handleAdd">新建</a-button>
         <a-button type="danger" icon="delete" :disabled="batchBtnDisabled" @click="handleDelBatch">删除</a-button>
+        <a-button @click="downloadTemplate"> <a-icon type="download" /> 药品冲突导入模板下载</a-button>
         <a-upload
           v-if="isManager"
           :headers="headers"
@@ -159,6 +160,13 @@ export default {
     }
   },
   methods: {
+    downloadTemplate () {
+      const downloadUrl = process.env.VUE_APP_API_BASE_URL + '/common/downTemplates/MEDICINAL_CONFLICT_TEMPLATE'
+      let aElement = document.createElement('a')
+          aElement.href = downloadUrl
+          aElement.click()
+          aElement = null
+    },
      onSelectChange (selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedIds = selectedRowKeys.join(',')

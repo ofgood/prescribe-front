@@ -19,30 +19,23 @@
         <a-form-item label="药品编码">
           <a-input :maxLength="20" v-decorator="['medicinalCode', {rules: [{required: true, message: '请输入药品编码'}]}]" placeholder="请输入药品编码"/>
         </a-form-item>
-        <a-form-item label="药品规格">
-          <a-select placeholder="请选择药品规格" v-decorator="['medicinalStand', {rules: [{required: true, message: '请选择药品规格'}]}]">
-            <a-select-option v-for="item in medicinalStands" :key="item.value">
-              {{ item.label }}
-            </a-select-option>
-          </a-select>
-        </a-form-item>
         <a-form-item label="单位">
-          <a-input :maxLength="10" v-decorator="['unit', {rules: [{required: true, message: '请输入单位'}]}]" placeholder="请输入单位"/>
+          <a-input :maxLength="10" v-decorator="['unit', {initialValue: 'g'} , {rules: [{required: true, message: '请输入单位'}]}]" placeholder="请输入单位"/>
         </a-form-item>
         <a-form-item label="药品价格">
           <a-input placeholder="请输入药品价格" prefix="￥" v-decorator="['price', { initialValue: '0.00', trigger:'blur', rules: [{required: true, message: '请输入药品价格'},{validator: validatePrice}] }]"/>
         </a-form-item>
         <a-form-item label="药品来源">
-          <a-input :maxLength="30" v-decorator="['origin', {rules: [{required: true, message: '请输入药品来源'}]}]" placeholder="请输入药品来源"/>
+          <a-input :maxLength="30" v-decorator="['origin', {rules: [{required: false, message: '请输入药品来源'}]}]" placeholder="请输入药品来源"/>
         </a-form-item>
         <a-form-item label="药品剂量">
           <a-input :maxLength="10" v-decorator="['dosage']" placeholder="请输入药品剂量"/>
         </a-form-item>
-        <a-form-item label="药品最大剂量">
+        <a-form-item label="药品单贴最大允许剂量">
           <a-input :maxLength="10" v-decorator="['maxDosage']" placeholder="请输入药品最大剂量"/>
         </a-form-item>
-        <a-form-item label="药品煎煮顺序">
-          <a-select placeholder="请输入药品煎煮顺序" v-decorator="['druggingOrder', {rules: [{required: true, message: '请输入药品煎煮顺序'}]}]">
+        <a-form-item label="药品处理方式">
+          <a-select placeholder="请输入药品处理方式" v-decorator="['druggingOrder', {rules: [{required: false, message: '请输入药品煎煮顺序'}]}]">
             <a-select-option v-for="item in druggingOrders" :key="item.value">
               {{ item.label }}
             </a-select-option>
@@ -59,7 +52,7 @@ import { mapGetters } from 'vuex'
 import { filterOption } from '@/utils/util'
 import { validatePrice } from '@/utils/validates'
 // 表单字段
-const fields = ['medicinalName', 'id', 'medicinalCode', 'medicinalStand', 'unit', 'price', 'origin', 'dosage', 'maxDosage', 'druggingOrder']
+const fields = ['medicinalName', 'id', 'medicinalCode', 'unit', 'price', 'origin', 'dosage', 'maxDosage', 'druggingOrder']
 export default {
   name: 'CreateDoctorForm',
   props: {

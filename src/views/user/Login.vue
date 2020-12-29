@@ -15,7 +15,7 @@
               type="text"
               placeholder="请输入帐号"
               v-decorator="[
-                'username',
+                'userName',
                 { rules: [{ required: true, message: '请输入帐号' }], validateTrigger: 'blur' },
               ]"
             >
@@ -51,7 +51,7 @@
                 @blur="changeUserName"
                 :style="{ width: '100%' }"
                 v-decorator="[
-                  'username',
+                  'userName',
                   { rules: [{ required: true, message: '请输入帐号' }], validateTrigger: 'change' },
                 ]"
               >
@@ -109,7 +109,7 @@
 import md5 from 'md5'
 import { mapActions } from 'vuex'
 import { timeFix } from '@/utils/util'
-import { getClinicListByUseName } from '@/api/login'
+import { getClinicListByUseName } from '@/api/user'
 import storage from 'store'
 import { CLINIC_ID } from '@/config/storageTypes'
 export default {
@@ -142,14 +142,13 @@ export default {
         form: { validateFields },
         state,
         customActiveKey,
-        doctorType,
         Login
       } = this
 
       state.loginBtn = true
 
       const validateFieldsKey =
-        customActiveKey === 'tab1' ? ['username', 'password'] : ['username', 'password', 'clinic']
+        customActiveKey === 'tab1' ? ['userName', 'password'] : ['userName', 'password', 'clinic']
 
       validateFields(validateFieldsKey, { force: true }, (err, values) => {
         if (!err) {
@@ -157,8 +156,10 @@ export default {
           const loginParams = { ...values }
           loginParams.password = md5(values.password)
           if (customActiveKey === 'tab2') {
-            loginParams.userType = doctorType
+            loginParams.userType = 'doctor'
             storage.set(CLINIC_ID, loginParams.clinic)
+          } else {
+             loginParams.userType = 'admin'
           }
           Login(loginParams)
             .then((res) => this.loginSuccess(res))
@@ -217,9 +218,9 @@ export default {
       this.$message.info('请联系管理员')
     },
     changeUserName () {
-      console.log(this.form.getFieldValue('username'))
+      console.log(this.form.getFieldValue('userName'))
       getClinicListByUseName({
-        username: this.form.getFieldValue('username')
+        userName: this.form.getFieldValue('userName')
       }).then((res) => {
         if (res.success) {
           this.clinics = res.data || []

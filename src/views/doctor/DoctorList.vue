@@ -48,11 +48,15 @@
         <span class="main-color" slot="doctorName" slot-scope="text">
           {{ text }}
         </span>
+        <span slot="status" slot-scope="text, record">
+          <span style="color:green" v-if="record.status === '是'">是</span>
+          <span v-else style="color:red">否</span>
+        </span>
         <span slot="action" slot-scope="text, record">
           <template>
             <a @click="handleEdit(record)">编辑</a>
             <a-divider type="vertical" />
-            <a @click="handleDel(record)">离职</a>
+            <a style="color:red" @click="handleDel(record)">离职</a>
           </template>
         </span>
       </s-table>
@@ -100,7 +104,8 @@ const columns = [
   },
    {
     title: '是否在职',
-    dataIndex: 'status'
+    dataIndex: 'status',
+    scopedSlots: { customRender: 'status' }
   },
   {
     title: '创建时间',

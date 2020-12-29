@@ -25,7 +25,8 @@ const getters = {
   recipeAllTypes: state => state.dicData.recipeAllTypes,
   recipeTypes: state => state.dicData.recipeTypes,
   druggingOrders: state => state.dicData.druggingOrders,
-  grabMedicineTypes: state => state.dicData.grabMedicineTypes
+  grabMedicineTypes: state => state.dicData.grabMedicineTypes,
+  userTypes: state => state.dicData.userTypes
 }
 
 export default getters

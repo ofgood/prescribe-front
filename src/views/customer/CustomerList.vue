@@ -50,6 +50,10 @@
         <span class="main-color" slot="customerName" slot-scope="text">
           {{ text }}
         </span>
+        <span slot="customerStatus" slot-scope="text, record">
+          <span style="color: red" v-if="record.disableStatus">是</span>
+          <span style="color: green" v-else>否</span>
+        </span>
         <span slot="action" slot-scope="text, record">
           <template>
             <a @click="handleEdit(record)">编辑</a>
@@ -109,6 +113,10 @@ const columns = [
   {
     title: '创建时间',
     dataIndex: 'createTime'
+  },
+   {
+    title: '是否禁用',
+    scopedSlots: { customRender: 'customerStatus' }
   },
   {
     title: '操作',

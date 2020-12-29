@@ -165,6 +165,28 @@ const dicData = {
         label: '代配',
         value: 'SUBSTITUTE'
       }
+    ],
+    userTypes: [
+      {
+        label: '公司管理员',
+        value: 'COMPANY_MANAGER'
+      },
+      {
+        label: '区域管理员',
+        value: 'AREA_MANAGER'
+      },
+      {
+        label: '诊所管理员',
+        value: 'CLINIC_MANAGER'
+      },
+      {
+        label: '医生',
+        value: 'DOCTOR'
+      },
+      {
+        label: '名医',
+        value: 'DOCTOR_STAR'
+      }
     ]
   }
 

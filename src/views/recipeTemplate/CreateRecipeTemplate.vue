@@ -16,7 +16,7 @@
               style="width: 100%"
               :value="text"
               key="druggingOrder"
-              placeholder="选择下药顺序"
+              placeholder="选择处理方式"
               v-if="record.editable"
               @change="(value) => handleChange(value, record.orderNum, 'druggingOrder')"
             >
@@ -130,7 +130,7 @@ export default {
           dataIndex: 'orderNum',
           key: 'orderNum',
           align: 'center',
-          width: 50
+          width: 30
         },
         {
           title: '药材名称',
@@ -144,15 +144,15 @@ export default {
           title: '剂量',
           dataIndex: 'dosage',
           key: 'dosage',
-          width: '8%',
+          width: '11%',
           scopedSlots: { customRender: 'dosage' },
           align: 'center'
         },
         {
-          title: '下药顺序',
+          title: '处理方式',
           dataIndex: 'druggingOrder',
           key: 'druggingOrder',
-          width: '10%',
+          width: '12%',
           scopedSlots: { customRender: 'druggingOrder' },
           align: 'center'
         },
@@ -161,13 +161,6 @@ export default {
           dataIndex: 'toxic',
           key: 'toxic',
           width: '10%',
-          align: 'center'
-        },
-        {
-          title: '规格',
-          dataIndex: 'medicinalStand',
-          key: 'medicinalStand',
-          width: '8%',
           align: 'center'
         },
         {
@@ -273,7 +266,7 @@ export default {
         dosage: '',
         maxDosage: '',
         unit: '',
-        druggingOrder: '',
+        druggingOrder: undefined,
         toxic: '',
         editable: true,
         isNew: true
