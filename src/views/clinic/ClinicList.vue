@@ -102,14 +102,6 @@ const columns = [
     dataIndex: 'address'
   },
   {
-    title: '负责人',
-    dataIndex: 'responsible'
-  },
-  {
-    title: '负责人电话',
-    dataIndex: 'responsibleTel'
-  },
-  {
     title: '备注',
     dataIndex: 'remark'
   },
@@ -246,13 +238,25 @@ export default {
         }
       })
     },
-    handleOk () {
+    handleOk (respSelects) {
       const form = this.$refs.createModal.form
       this.confirmLoading = true
       form.validateFields((errors, values) => {
+        console.log(respSelects)
+        console.log(values)
         if (!errors) {
-          console.log('values', values)
-          values.userType = 'CLINIC_MANAGER'
+          const responsibles = []
+          const { responsibleList } = values
+          respSelects.forEach(item => {
+            responsibleList.forEach(el => {
+              if (item.id === el) {
+                responsibles.push(
+                  item
+                )
+              }
+            })
+          })
+          values.responsibles = responsibles
           if (values.id > 0) {
             // 修改
             clinicSaveOrUpdate({ ...values }).then((res) => {

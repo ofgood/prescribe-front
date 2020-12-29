@@ -56,7 +56,20 @@
         </span>
         <span slot="action" slot-scope="text, record">
           <template>
-            <a @click="handleEdit(record)">编辑</a>
+            <a @click="handleEdit(record)" style="margin-right: 10px">编辑</a>
+          </template>
+          <template v-if="currentUserRole === 'COMPANY_MANAGER' && currentUserId !== record.id">
+            <a-popconfirm
+              ok-text="是"
+              cancel-text="否"
+              @confirm="confirmResetPassword(record)"
+              @cancel="cancelResetPassword"
+            >
+              <span slot="title">
+                确定要重置 <span class="main-color">{{ record.realName }}</span> 的密码?
+              </span>
+              <a>重置密码</a>
+            </a-popconfirm>
           </template>
         </span>
       </s-table>
@@ -76,10 +89,10 @@
 <script>
 import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
-import { findUserList, userInfoSaveOrUpdate } from '@/api/user'
+import { findUserList, userInfoSaveOrUpdate, adminSettingPassword } from '@/api/user'
 import { mapGetters } from 'vuex'
 import CreateForm from './modules/CreateForm'
-
+import { roleMixin } from '@/store/role-mixin'
 const columns = [
   {
     title: '用户名',
@@ -138,6 +151,7 @@ const statusMap = {
 }
 export default {
   name: 'DoctorList',
+  mixins: [roleMixin],
   components: {
     STable,
     Ellipsis,
@@ -191,6 +205,17 @@ export default {
     handleEdit (record) {
       this.visible = true
       this.mdl = { ...record }
+    },
+   async confirmResetPassword (record) {
+      const res = await adminSettingPassword({ id: record['id'] })
+      if (res.success) {
+        this.$message.success('重置密码成功!')
+      } else {
+        this.$message.success('重置密码失败!')
+      }
+    },
+    cancelResetPassword () {
+
     },
     handleDel (record) {
       console.log(record)

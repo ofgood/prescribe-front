@@ -215,15 +215,12 @@ export default {
       })
     },
     handleOk (selects) {
-      console.log(selects)
       const form = this.$refs.createModal.form
       this.confirmLoading = true
       form.validateFields((errors, values) => {
         if (!errors) {
-          console.log('values', values)
           const responsibles = []
           const { responsibleList } = values
-          console.log(responsibleList)
           selects.forEach(item => {
             responsibleList.forEach(el => {
               if (item.id === el) {

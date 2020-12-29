@@ -9,7 +9,8 @@ const userApi = {
   getClinicListByUseName: '/userInfo/getClinicList',
   findUserList: '/userInfo/findUserList',
   userInfoSaveOrUpdate: '/userInfo/saveOrUpdate',
-  findUserListByKey: '/userInfo/findListByKey'
+  findUserListByKey: '/userInfo/findListByKey',
+  adminSettingPassword: '/userInfo/adminSettingPassword'
 }
 
 /**
@@ -96,6 +97,17 @@ export function userInfoSaveOrUpdate (parameter) {
 export function findUserListByKey (parameter) {
   return request({
     url: userApi.findUserListByKey,
+    method: 'post',
+    data: parameter,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8'
+    }
+  })
+}
+
+export function adminSettingPassword (parameter) {
+  return request({
+    url: userApi.adminSettingPassword,
     method: 'post',
     data: parameter,
     headers: {
