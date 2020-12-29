@@ -51,8 +51,8 @@
           {{ text }}
         </span>
         <span slot="customerStatus" slot-scope="text, record">
-          <span style="color: red" v-if="record.disableStatus">是</span>
-          <span style="color: green" v-else>否</span>
+          <span style="color: green" v-if="record.status === 'Y'">启用</span>
+          <span style="color: red" v-else>禁用</span>
         </span>
         <span slot="action" slot-scope="text, record">
           <template>
@@ -87,31 +87,27 @@ const columns = [
     scopedSlots: { customRender: 'customerName' }
   },
   {
-    title: '联系人',
-    dataIndex: 'linkMen'
+    title: '真实姓名',
+    dataIndex: 'realName'
   },
   {
-    title: '联系人电话',
-    dataIndex: 'linkTel'
+    title: '用户类型',
+    dataIndex: 'userTypeStr'
   },
   {
-    title: '法人',
-    dataIndex: 'legalPerson'
+    title: '联系电话',
+    dataIndex: 'tel'
   },
   {
-    title: '合作开始时间',
-    dataIndex: 'cooperationStartTime'
-  },
-  {
-    title: '合作结束时间',
-    dataIndex: 'cooperationEndTime'
+    title: '联系地址',
+    dataIndex: 'address'
   },
   {
     title: '创建时间',
     dataIndex: 'createTime'
   },
    {
-    title: '是否禁用',
+    title: '状态',
     scopedSlots: { customRender: 'customerStatus' }
   },
   {

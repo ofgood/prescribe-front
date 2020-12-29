@@ -44,14 +44,14 @@ export const asyncRouterMap = [
         name: 'user',
         component: RouteView,
         redirect: '/user/user-list',
-        meta: { title: '用户管理', icon: 'team', permission: [ 'customer' ] },
+        meta: { title: '用户管理', icon: 'team', permission: [ 'user' ] },
         children: [
           {
             path: '/user/user-list/:pageNo([1-9]\\d*)?',
             name: 'user-list',
             hideChildrenInMenu: true,
             component: () => import('@/views/user/UserList'),
-            meta: { title: '用户列表', keepAlive: true, permission: [ 'customer' ] }
+            meta: { title: '用户列表', keepAlive: true, permission: [ 'user' ] }
           }
         ]
       },

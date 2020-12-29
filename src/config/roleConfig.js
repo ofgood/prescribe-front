@@ -34,7 +34,8 @@ const SUPER_USER_ROUTE = [
     'recipeAdmin',
     'recipeList',
     'area',
-    'recipeTemplate'
+    'recipeTemplate',
+    'user'
 ]
 const COMPANY_MANAGER_ROUTE = [
     'dashboard',
@@ -50,7 +51,8 @@ const COMPANY_MANAGER_ROUTE = [
     'exception',
     'recipeAdmin',
     'recipeList',
-    'recipeTemplate'
+    'recipeTemplate',
+    'user'
 ]
 const AREA_MANAGER_ROUTE = [
     'dashboard',
@@ -68,7 +70,8 @@ const AREA_MANAGER_ROUTE = [
     'exception',
     'recipeAdmin',
     'recipeList',
-    'recipeTemplate'
+    'recipeTemplate',
+    'user'
 ]
 const CLINIC_MANAGER_ROUTE = [
     'dashboard',
@@ -85,7 +88,8 @@ const CLINIC_MANAGER_ROUTE = [
     'exception',
     'recipeAdmin',
     'recipeList',
-    'recipeTemplate'
+    'recipeTemplate',
+    'user'
 ]
 const DOCTOR_ROUTE = [
     'recipeAdmin', 'recipe', 'recipeList', 'recipeTemplate', 'dashboard', 'createRecipeTemplate'
