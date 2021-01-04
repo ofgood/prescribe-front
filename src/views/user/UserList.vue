@@ -6,18 +6,43 @@
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
               <a-form-item label="用户名">
-                <a-input :maxLength="20" v-model="queryParam.customerName" placeholder="请输入用户名"/>
+                <a-input
+                  @pressEnter="$refs.table.refresh(true)"
+                  :maxLength="20"
+                  v-model="queryParam.userName"
+                  placeholder="请输入用户名"
+                />
               </a-form-item>
             </a-col>
-            <!-- <a-col :md="8" :sm="24">
-              <a-form-item label="联系人">
-                <a-input :maxLength="10" v-model="queryParam.linkMen" placeholder="请输入联系人姓名"/>
-              </a-form-item> -->
-            <!-- </a-col> -->
+            <a-col :md="8" :sm="24">
+              <a-form-item label="真实姓名">
+                <a-input
+                  @pressEnter="$refs.table.refresh(true)"
+                  :maxLength="10"
+                  v-model="queryParam.realName"
+                  placeholder="请输入联系人姓名"
+                />
+              </a-form-item>
+            </a-col>
+            <a-col :md="8" :sm="24">
+              <a-form-item label="状态">
+                <a-select placeholder="请选择用户状态" v-model="queryParam.status">
+                  <a-select-option v-for="item in userStatus" :key="item.value">
+                    {{ item.label }}
+                  </a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
             <a-col :md="24" :sm="24">
-              <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' } || {} ">
-                <a-button icon="redo" @click="() => this.queryParam = {}">重置</a-button>
-                <a-button icon="search" style="margin-left: 8px" type="primary" @click="$refs.table.refresh(true)">查询</a-button>
+              <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' } || {}">
+                <a-button icon="redo" @click="() => (this.queryParam = {})">重置</a-button>
+                <a-button
+                  icon="search"
+                  style="margin-left: 8px"
+                  type="primary"
+                  @click="$refs.table.refresh(true)"
+                >查询</a-button
+                >
               </span>
             </a-col>
           </a-row>
@@ -32,9 +57,7 @@
             <!-- lock | unlock -->
             <a-menu-item key="2"><a-icon type="lock" />锁定</a-menu-item>
           </a-menu>
-          <a-button style="margin-left: 8px">
-            批量操作 <a-icon type="down" />
-          </a-button>
+          <a-button style="margin-left: 8px"> 批量操作 <a-icon type="down" /> </a-button>
         </a-dropdown>
       </div>
 
@@ -42,7 +65,7 @@
         ref="table"
         size="default"
         :row-selection="rowSelection"
-        :rowKey="record => record.id"
+        :rowKey="(record) => record.id"
         :columns="columns"
         :data="loadData"
         showPagination="auto"
@@ -119,7 +142,7 @@ const columns = [
     title: '创建时间',
     dataIndex: 'createTime'
   },
-   {
+  {
     title: '状态',
     scopedSlots: { customRender: 'customerStatus' }
   },
@@ -149,6 +172,20 @@ const statusMap = {
     text: '异常'
   }
 }
+const userStatus = [
+  {
+    label: '全部',
+    value: ''
+  },
+  {
+    label: '启用',
+    value: 'Y'
+  },
+  {
+    label: '禁用',
+    value: 'N'
+  }
+]
 export default {
   name: 'DoctorList',
   mixins: [roleMixin],
@@ -165,19 +202,18 @@ export default {
       confirmLoading: false,
       mdl: null,
       rowSelection: {},
+      userStatus,
       // 高级搜索 展开/关闭
       advanced: false,
       // 查询参数
-      queryParam: {
-      },
+      queryParam: {},
       // 加载数据方法 必须为 Promise 对象
-      loadData: parameter => {
+      loadData: (parameter) => {
         const requestParameters = Object.assign({}, parameter, this.queryParam)
         console.log('loadData request parameters:', requestParameters)
-        return findUserList(requestParameters)
-          .then(res => {
-            return res.data
-          })
+        return findUserList(requestParameters).then((res) => {
+          return res.data
+        })
       },
       selectedRowKeys: [],
       selectedRows: []
@@ -191,11 +227,9 @@ export default {
       return statusMap[type].status
     }
   },
-  created () {
-
-  },
+  created () {},
   computed: {
-     ...mapGetters(['genderAll'])
+    ...mapGetters(['genderAll'])
   },
   methods: {
     handleAdd () {
@@ -206,7 +240,7 @@ export default {
       this.visible = true
       this.mdl = { ...record }
     },
-   async confirmResetPassword (record) {
+    async confirmResetPassword (record) {
       const res = await adminSettingPassword({ id: record['id'] })
       if (res.success) {
         this.$message.success('重置密码成功!')
@@ -214,9 +248,7 @@ export default {
         this.$message.success('重置密码失败!')
       }
     },
-    cancelResetPassword () {
-
-    },
+    cancelResetPassword () {},
     handleDel (record) {
       console.log(record)
     },
@@ -227,7 +259,7 @@ export default {
         if (!errors) {
           console.log('values', values)
           if (values.id > 0) {
-              userInfoSaveOrUpdate({ ...values }).then(res => {
+            userInfoSaveOrUpdate({ ...values }).then((res) => {
               if (res.success) {
                 this.visible = false
                 this.confirmLoading = false
@@ -244,7 +276,7 @@ export default {
             })
           } else {
             // 新增
-            userInfoSaveOrUpdate({ ...values }).then(res => {
+            userInfoSaveOrUpdate({ ...values }).then((res) => {
               if (res.success) {
                 this.visible = false
                 this.confirmLoading = false

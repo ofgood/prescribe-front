@@ -193,6 +193,27 @@ export const asyncRouterMap = [
           }
         ]
       },
+      {
+        path: '/reportStatistics',
+        name: 'reportStatistics',
+        component: RouteView,
+        redirect: '/reportStatistics/recipe-chart',
+        meta: { title: '报表分析', icon: 'bar-chart', permission: [ 'chart' ] },
+        children: [
+          {
+            path: '/reportStatistics/recipe-chart',
+            name: 'recipeChart',
+            component: () => import('@/views/reportStatistics/RecipeChart'),
+            meta: { title: '处方报表', keepAlive: true, permission: [ 'chart' ] }
+          },
+          {
+            path: '/reportStatistics/recipe-chart',
+            name: 'recipeChart',
+            component: () => import('@/views/reportStatistics/MedicinalChart'),
+            meta: { title: '药品报表', keepAlive: true, permission: [ 'chart' ] }
+          }
+        ]
+      },
 
       // profile
       {
