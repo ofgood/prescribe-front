@@ -6,12 +6,7 @@
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
               <a-form-item label="诊所名称">
-                <a-input v-model="queryParam.clinicName" placeholder="请输入诊所名称" />
-              </a-form-item>
-            </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item label="负责人姓名">
-                <a-input v-model="queryParam.responsible" placeholder="请输入联系电话" />
+                <a-input @pressEnter="$refs.table.refresh(true)" v-model="queryParam.clinicName" placeholder="请输入诊所名称" />
               </a-form-item>
             </a-col>
 
