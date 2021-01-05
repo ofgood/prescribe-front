@@ -21,11 +21,32 @@
         </a-form-item>
         <a-form-item label="用户类型">
           <a-select
+            @change="changeUserType"
             placeholder="请选择用户类型"
             v-decorator="['userType', { rules: [{ required: true, message: '请选择用户类型' }] }]"
           >
             <a-select-option v-for="item in userTypes" :key="item.value">
               {{ item.label }}
+            </a-select-option>
+          </a-select>
+        </a-form-item>
+        <a-form-item v-if="isShowClinic" label="诊所">
+          <a-select
+            style="width: 100%"
+            show-search
+            key="id"
+            mode="multiple"
+            placeholder="选择诊所(输入关键字搜索)"
+            :show-arrow="false"
+            :default-active-first-option="false"
+            :not-found-content="fetching ? undefined : null"
+            :filter-option="false"
+            @search="fetchclinics"
+            v-decorator="['clinicIds', { rules: [{ required: true, message: '请输选择诊所' }] }]"
+          >
+            <a-spin v-if="fetching" slot="notFoundContent" size="small" />
+            <a-select-option v-for="d in selects" :key="d.value">
+              {{ d.text }}
             </a-select-option>
           </a-select>
         </a-form-item>
@@ -73,6 +94,8 @@
 import pick from 'lodash.pick'
 import { validatePhone, validateCellPhone, validateIdCard } from '@/utils/validates'
 import { mapGetters } from 'vuex'
+import { clinicSelect } from '@/api/clinic'
+import debounce from 'lodash/debounce'
 // 表单字段
 const fields = [
   'jobNum',
@@ -103,6 +126,8 @@ export default {
     }
   },
   data () {
+    this.lastFetchId = 0
+    this.fetchclinics = debounce(this.fetchclinics, 500)
     this.formLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -114,6 +139,7 @@ export default {
       }
     }
     return {
+      fetching: false,
       userStatus: [
         {
           label: '启用',
@@ -127,11 +153,16 @@ export default {
       validatePhone,
       validateCellPhone,
       validateIdCard,
-      form: this.$form.createForm(this)
+      form: this.$form.createForm(this),
+      selects: [],
+      userType: ''
     }
   },
   computed: {
-    ...mapGetters(['userTypes'])
+    ...mapGetters(['userTypes']),
+    isShowClinic () {
+      return this.userType === 'DOCTOR' || this.userType === 'DOCTOR_STAR'
+    }
   },
   created () {
     // 防止表单未注册
@@ -143,6 +174,39 @@ export default {
       this.model && this.form.setFieldsValue(pick(this.model, fields))
       })
     })
+  },
+  methods: {
+     fetchclinics (value = '') {
+      if (!value) return
+      this.lastFetchId += 1
+      const fetchId = this.lastFetchId
+      this.data = []
+      this.fetching = true
+      clinicSelect({ key: value })
+        .then((d) => {
+          if (fetchId !== this.lastFetchId) {
+            // for fetch callback order
+            return
+          }
+          const result = d.data || []
+          const data = []
+          result.forEach((r) => {
+            data.push({
+              value: r['id'],
+              text: r['clinicName'],
+              ...r
+            })
+          })
+          this.selects = data
+        })
+        .finally(() => {
+          this.fetching = false
+        })
+    },
+    changeUserType (data) {
+      console.log(data)
+      this.userType = data
+    }
   }
 }
 </script>

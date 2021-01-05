@@ -1,10 +1,10 @@
 <template>
-  <div>药品报表</div>
+  <div>开发中...</div>
 </template>
 
 <script>
 export default {
-    name: 'RecipeChart',
+    name: 'MedicinalChart',
     data () {
         return {
 

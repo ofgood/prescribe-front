@@ -207,8 +207,8 @@ export const asyncRouterMap = [
             meta: { title: '处方报表', keepAlive: true, permission: [ 'chart' ] }
           },
           {
-            path: '/reportStatistics/recipe-chart',
-            name: 'recipeChart',
+            path: '/reportStatistics/medicinal-chart',
+            name: 'medicinalChart',
             component: () => import('@/views/reportStatistics/MedicinalChart'),
             meta: { title: '药品报表', keepAlive: true, permission: [ 'chart' ] }
           }

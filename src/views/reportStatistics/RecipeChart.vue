@@ -1,5 +1,5 @@
 <template>
-  <div>处方报表</div>
+  <div>开发中...</div>
 </template>
 
 <script>

@@ -6,7 +6,7 @@
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
               <a-form-item label="药品名称">
-                <a-input v-model="queryParam.medicinalName" placeholder="请输入药品名称" />
+                <a-input @pressEnter="$refs.table.refresh(true)" v-model="queryParam.medicinalName" placeholder="请输入药品名称" />
               </a-form-item>
             </a-col>
             <a-col :md="24" :sm="24">

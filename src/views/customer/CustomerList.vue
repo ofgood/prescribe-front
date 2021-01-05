@@ -6,12 +6,12 @@
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
               <a-form-item label="客户名称">
-                <a-input :maxLength="20" v-model="queryParam.customerName" placeholder="请输入客户名称"/>
+                <a-input :maxLength="20" @pressEnter="$refs.table.refresh(true)" v-model="queryParam.customerName" placeholder="请输入客户名称"/>
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
               <a-form-item label="联系人">
-                <a-input :maxLength="10" v-model="queryParam.linkMen" placeholder="请输入联系人姓名"/>
+                <a-input :maxLength="10" @pressEnter="$refs.table.refresh(true)" v-model="queryParam.linkMen" placeholder="请输入联系人姓名"/>
               </a-form-item>
             </a-col>
             <a-col :md="24" :sm="24">
