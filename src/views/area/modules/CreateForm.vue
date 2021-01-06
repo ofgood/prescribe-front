@@ -30,6 +30,7 @@
             style="width: 100%"
             show-search
             key="id"
+            @change="changeResponsible"
             mode="multiple"
             placeholder="选择负责人"
             :show-arrow="false"
@@ -119,7 +120,9 @@ export default {
       form: this.$form.createForm(this),
       validateCellPhone,
       selects: [],
-      responsibleList: []
+      responsibles: [],
+      responsibleList: [],
+      selectResponsibleList: []
     }
   },
   created () {
@@ -136,6 +139,10 @@ export default {
               res.id = this.model.id
               const data = []
               this.responsibleList = []
+              this.responsibles = []
+              if (Array.isArray(res.responsibles)) {
+                this.responsibles = [...res.responsibles]
+              }
               res.responsibles.forEach((r) => {
                 data.push({
                   value: r['id'],
@@ -155,7 +162,7 @@ export default {
   },
   methods: {
     confirm () {
-      this.$emit('ok', this.selects)
+      this.$emit('ok', this.selectResponsibleList)
     },
      fetchclinics (value = '') {
       if (!value) return
@@ -167,8 +174,6 @@ export default {
         .then((d) => {
           console.log(d)
           if (fetchId !== this.lastFetchId) {
-            // for fetch callback order
-            console.log(111)
             return
           }
           const result = d.data || []
@@ -182,9 +187,7 @@ export default {
             })
           })
           this.selects = data
-          // this.form.setFieldsValue({
-          //   responsibles: this.selects.length && this.selects
-          // })
+          this.responsibles = [...this.responsibles, ...result]
         })
         .finally(() => {
           this.fetching = false
@@ -204,6 +207,19 @@ export default {
             reject(err)
           })
       })
+    },
+    changeResponsible (resIds, option) {
+      this.selectResponsibleList = []
+      if (resIds.length) {
+        for (let i = 0; i < resIds.length; i++) {
+          for (let j = 0; j < this.responsibles.length; j++) {
+            if (this.responsibles[j].id === resIds[i]) {
+              this.selectResponsibleList.push(this.responsibles[j])
+              break
+            }
+          }
+        }
+      }
     }
   }
 }

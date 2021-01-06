@@ -22,7 +22,7 @@
       <div class="table-operator">
         <a-button type="primary" icon="plus" @click="handleAdd">新建</a-button>
         <a-button type="danger" icon="delete" :disabled="batchBtnDisabled" @click="handleDelBatch">删除</a-button>
-        <a-button @click="downloadTemplate"> <a-icon type="download" /> 药品导入模板下载</a-button>
+        <a-button type="primary" @click="downloadTemplate"> <a-icon type="download" /> 模板下载</a-button>
         <a-upload
           v-if="isManager"
           :headers="headers"
@@ -30,7 +30,7 @@
           name="file"
           :showUploadList="false"
           :action="actionUrl"
-        >          <a-button :loading="importLoading"> <a-icon type="upload" /> 导入药品</a-button>
+        >          <a-button :loading="importLoading"> <a-icon type="upload" /> 导入</a-button>
         </a-upload>
       </div>
 
@@ -88,10 +88,6 @@ const columns = [
   {
     title: '拼音码',
     dataIndex: 'medicinalPyCode'
-  },
-  {
-    title: '规格',
-    dataIndex: 'medicinalStand'
   },
   {
     title: '来源',

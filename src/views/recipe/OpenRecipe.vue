@@ -257,13 +257,6 @@ export default {
           align: 'center'
         },
         {
-          title: '规格',
-          dataIndex: 'medicinalStand',
-          key: 'medicinalStand',
-          width: '10%',
-          align: 'center'
-        },
-        {
           title: '最大剂量',
           dataIndex: 'maxDosage',
           key: 'maxDosage',
@@ -296,7 +289,6 @@ export default {
           medicinalCode: '',
           orderNum: 1,
           medicinalName: undefined,
-          medicinalStand: '',
           dosage: '',
           maxDosage: '',
           unit: '',
@@ -358,7 +350,6 @@ export default {
       this.data.push({
         orderNum: length === 0 ? '1' : (parseInt(this.data[length - 1].orderNum) + 1).toString(),
         medicinalName: undefined,
-        medicinalStand: '',
         dosage: '',
         maxDosage: '',
         unit: '',
@@ -415,7 +406,6 @@ export default {
         target.dosage = itemData.dosage
         target.druggingOrder = itemData.druggingOrder
         target.medicinalCode = itemData.medicinalCode
-        target.medicinalStand = itemData.medicinalStand
         target.medicinalName = itemData.medicinalName
         target.toxic = itemData.toxic
         target.medicinalPyCode = itemData.medicinalPyCode

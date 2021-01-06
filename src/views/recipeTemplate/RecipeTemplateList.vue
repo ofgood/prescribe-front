@@ -64,21 +64,6 @@
           >
           </a-table>
         </div>
-        <!-- <a-table
-          slot="expandedRowRender"
-          slot-scope="text"
-          :columns="innerColumns"
-          :data-source="innerData(text)"
-          :pagination="false"
-        >
-        </a-table> -->
-        <!-- <span slot="action" slot-scope="text, record">
-          <template>
-            <a @click="handleEdit(record)">配置</a>
-            <a-divider type="vertical" />
-            <a @click="handleSub(record)">订阅报警</a>
-          </template>
-        </span> -->
       </s-table>
 
       <create-form
@@ -105,7 +90,6 @@ const innerColumns = [
   { title: '剂量', dataIndex: 'dosage', key: 'dosage' },
   { title: '下药顺序', dataIndex: 'druggingOrder', key: 'druggingOrder' },
   { title: '是否毒性', dataIndex: 'toxic', key: 'toxic' },
-  { title: '规格', dataIndex: 'medicinalStand', key: 'medicinalStand' },
   { title: '最大剂量', dataIndex: 'maxDosage', key: 'maxDosage' },
   { title: '单位', dataIndex: 'unit', key: 'unit' },
   { title: '价格', dataIndex: 'price', key: 'price' }

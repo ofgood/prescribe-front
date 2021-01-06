@@ -27,6 +27,8 @@
       <s-table
         ref="table"
         size="default"
+        @expand="expand"
+        @expandedRowsChange="expand"
         :row-selection="{ onChange: onSelectChange }"
         :rowKey="record => record.id"
         :columns="columns"
@@ -43,6 +45,15 @@
             <a class="danger-color" @click="handleDel(record)">删除</a>
           </template>
         </span>
+        <div slot="expandedRowRender" slot-scope="text">
+          <a-table
+            :rowKey="record => record.medicinalCode"
+            :columns="innerColumns"
+            :data-source="innerDataMap[text.id].responsibles"
+            :pagination="false"
+          >
+          </a-table>
+        </div>
       </s-table>
 
       <create-form
@@ -60,10 +71,27 @@
 <script>
 import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
-import { areaList, areaSaveOrUpdate, areaDelete } from '@/api/area'
+import { areaList, areaSaveOrUpdate, areaDelete, getAreaById } from '@/api/area'
 import { mapGetters } from 'vuex'
 import CreateForm from './modules/CreateForm'
-
+const innerColumns = [
+  {
+    title: '负责人姓名',
+    dataIndex: 'realName'
+  },
+  {
+    title: '负责人电话',
+    dataIndex: 'tel'
+  },
+  {
+    title: '负责人地址',
+    dataIndex: 'address'
+  },
+  {
+    title: '负责人出生日期',
+    dataIndex: 'birthday'
+  }
+]
 const columns = [
   {
     title: '名称',
@@ -78,14 +106,6 @@ const columns = [
     title: '所在城市',
     dataIndex: 'city'
   },
-  // {
-  //   title: '负责人姓名',
-  //   dataIndex: 'responsible'
-  // },
-  // {
-  //   title: '负责人电话',
-  //   dataIndex: 'responsibleTel'
-  // },
   {
     title: '备注',
     dataIndex: 'remark'
@@ -130,6 +150,9 @@ export default {
   data () {
     this.columns = columns
     return {
+      innerData: [],
+      innerDataMap: {},
+      innerColumns,
       // create model
       batchBtnDisabled: true,
       visible: false,
@@ -215,6 +238,7 @@ export default {
       })
     },
     handleOk (selects) {
+      console.log('selects', selects)
       const form = this.$refs.createModal.form
       this.confirmLoading = true
       form.validateFields((errors, values) => {
@@ -287,6 +311,21 @@ export default {
     resetSearchForm () {
       this.queryParam = {
         date: moment(new Date())
+      }
+    },
+     expand (expanded, record) {
+      if (expanded) {
+        const { id } = record
+        getAreaById({
+          id
+        }).then((res) => {
+          this.$nextTick(() => {
+            this.innerDataMap[id] = res.data || []
+            this.$forceUpdate()
+          })
+        })
+      } else {
+        this.innerData = []
       }
     }
   }
