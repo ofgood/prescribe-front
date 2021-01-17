@@ -36,7 +36,8 @@ const SUPER_USER_ROUTE = [
     'area',
     'recipeTemplate',
     'userList',
-    'chart'
+    'chart',
+    'recipeLogInfo'
 ]
 const COMPANY_MANAGER_ROUTE = [
     'dashboard',
@@ -54,7 +55,8 @@ const COMPANY_MANAGER_ROUTE = [
     'recipeList',
     'recipeTemplate',
     'userList',
-    'chart'
+    'chart',
+    'recipeLogInfo'
 ]
 const AREA_MANAGER_ROUTE = [
     'dashboard',

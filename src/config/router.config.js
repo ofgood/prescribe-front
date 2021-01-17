@@ -214,6 +214,21 @@ export const asyncRouterMap = [
           }
         ]
       },
+      {
+        path: '/recipeLogInfo',
+        name: 'recipeLogInfo',
+        component: RouteView,
+        redirect: '/recipeLogInfo/log-info-list',
+        meta: { title: '审计', icon: 'history', permission: [ 'recipeLogInfo' ] },
+        children: [
+          {
+            path: '/recipeLogInfo/log-info-list',
+            name: 'recipeLogInfo',
+            component: () => import('@/views/recipeLogInfo/LogInfoList'),
+            meta: { title: '操作记录', keepAlive: true, permission: [ 'recipeLogInfo' ] }
+          }
+        ]
+      },
 
       // profile
       {
