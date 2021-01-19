@@ -21,17 +21,18 @@ import './permission' // permission control
 import './utils/filter' // global filter
 import './global.less'
 import Print from '@/plugs/print'
+import Echarts from '@/plugs/echarts'
 import VueParticles from 'vue-particles'
 Vue.config.productionTip = false
 
 // mount axios to `Vue.$http` and `this.$http`
 Vue.use(VueAxios)
 Vue.use(Print)
+Vue.use(Echarts)
 Vue.use(VueParticles)
 
 Vue.component('pro-layout', ProLayout)
 Vue.component('page-header-wrapper', PageHeaderWrapper)
-
 window.umi_plugin_ant_themeVar = themePluginConfig.theme
 
 new Vue({
