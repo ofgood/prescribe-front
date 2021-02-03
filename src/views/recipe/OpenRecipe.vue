@@ -539,6 +539,10 @@ export default {
       if (this.prescriptionNo) {
         submitRecipeInfo({
           prescriptionNo: this.prescriptionNo
+        }).then(res => {
+           $notification['success']({
+          message: res.message
+        })
         })
       } else {
         $notification['error']({
