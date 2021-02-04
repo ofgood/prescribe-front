@@ -28,6 +28,9 @@
         <a-form-item label="药品来源">
           <a-input :maxLength="30" v-decorator="['origin', {rules: [{required: false, message: '请输入药品来源'}]}]" placeholder="请输入药品来源"/>
         </a-form-item>
+        <a-form-item label="药品规格" v-show="false">
+          <a-input :maxLength="30" v-decorator="['medicinalStand',{ initialValue:'1' }]" placeholder="请输入药品来源"/>
+        </a-form-item>
         <a-form-item label="药品剂量">
           <a-input :maxLength="10" v-decorator="['dosage']" placeholder="请输入药品剂量"/>
         </a-form-item>
@@ -52,7 +55,7 @@ import { mapGetters } from 'vuex'
 import { filterOption } from '@/utils/util'
 import { validatePrice } from '@/utils/validates'
 // 表单字段
-const fields = ['medicinalName', 'id', 'medicinalCode', 'unit', 'price', 'origin', 'dosage', 'maxDosage', 'druggingOrder']
+const fields = ['medicinalName', 'id', 'medicinalCode', 'medicinalStand', 'unit', 'price', 'origin', 'dosage', 'maxDosage', 'druggingOrder']
 export default {
   name: 'CreateDoctorForm',
   props: {
