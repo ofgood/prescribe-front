@@ -172,6 +172,7 @@ export default {
     this.$watch('model', () => {
       this.$nextTick(() => {
       this.model && this.form.setFieldsValue(pick(this.model, fields))
+      this.userType = this.form.getFieldValue('userType')
       })
     })
   },
@@ -204,7 +205,7 @@ export default {
         })
     },
     changeUserType (data) {
-      console.log(data)
+      this.form.setFieldsValue({ userType: data })
       this.userType = data
     }
   }

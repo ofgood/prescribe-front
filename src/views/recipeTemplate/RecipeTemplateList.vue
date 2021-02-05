@@ -31,22 +31,13 @@
 
       <div class="table-operator">
         <a-button type="primary" icon="plus" @click="handleAdd">新建</a-button>
-        <a-dropdown v-action:edit v-if="selectedRowKeys.length > 0">
-          <a-menu slot="overlay">
-            <a-menu-item key="1"><a-icon type="delete" />删除</a-menu-item>
-            <!-- lock | unlock -->
-            <a-menu-item key="2"><a-icon type="lock" />锁定</a-menu-item>
-          </a-menu>
-          <a-button style="margin-left: 8px">
-            批量操作 <a-icon type="down" />
-          </a-button>
-        </a-dropdown>
+        <a-button type="danger" icon="delete" :disabled="batchBtnDisabled" @click="handleDelBatch">删除</a-button>
       </div>
 
       <s-table
         ref="table"
         size="default"
-        :row-selection="rowSelection"
+        :row-selection="{ onChange: onSelectChange }"
         :rowKey="record => record.id"
         :columns="columns"
         :data="loadData"
@@ -64,6 +55,13 @@
           >
           </a-table>
         </div>
+        <span slot="action" slot-scope="text, record">
+          <template>
+            <a @click="handleEdit(record)">编辑</a>
+            <a-divider type="vertical" />
+            <a class="danger-color" @click="handleDel(record)">删除</a>
+          </template>
+        </span>
       </s-table>
 
       <create-form
@@ -81,7 +79,7 @@
 <script>
 import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
-import { recipeTemplateList, recipeTemplateSaveOrUpdate } from '@/api/recipeTemplate'
+import { recipeTemplateList, recipeTemplateDelete } from '@/api/recipeTemplate'
 import { mapGetters } from 'vuex'
 import CreateForm from './modules/CreateForm'
 const innerColumns = [
@@ -123,13 +121,13 @@ const columns = [
   {
     title: '创建时间',
     dataIndex: 'createTime'
+  },
+  {
+    title: '操作',
+    dataIndex: 'action',
+    width: '150px',
+    scopedSlots: { customRender: 'action' }
   }
-  // {
-  //   title: '操作',
-  //   dataIndex: 'action',
-  //   width: '150px',
-  //   scopedSlots: { customRender: 'action' }
-  // }
 ]
 export default {
   name: 'DoctorList',
@@ -141,6 +139,7 @@ export default {
   data () {
     this.columns = columns
     return {
+      batchBtnDisabled: true,
       rowSelection: {},
       // create model
       visible: false,
@@ -161,74 +160,70 @@ export default {
           })
       },
       selectedRowKeys: [],
-      selectedRows: []
+      selectedRows: [],
+      selectedIds: ''
     }
   },
   computed: {
      ...mapGetters(['recipeTypeAll', 'druggingOrders'])
   },
+  watch: {
+    selectedRowKeys (keys) {
+      this.batchBtnDisabled = !keys.length
+    }
+  },
   methods: {
+    onSelectChange (selectedRowKeys) {
+      this.selectedRowKeys = selectedRowKeys
+      this.selectedIds = selectedRowKeys.join(',')
+    },
+    handleDel (record) {
+      this.deleteItem(record.id)
+    },
+    handleDelBatch () {
+      this.deleteItem(this.selectedIds)
+    },
     handleAdd () {
-      // this.mdl = null
-      // this.visible = true
-      this.$router.push({
-        name: 'create-recipe-template'
-      })
+      this.mdl = null
+      this.visible = true
+      // this.$router.push({
+      //   name: 'create-recipe-template'
+      // })
     },
     handleEdit (record) {
       this.visible = true
       this.mdl = { ...record }
     },
-    handleOk () {
-      const form = this.$refs.createModal.form
-      this.confirmLoading = true
-      form.validateFields((errors, values) => {
-        if (!errors) {
-          console.log('values', values)
-          if (values.id > 0) {
-            // 修改 e.g.
-            new Promise((resolve, reject) => {
-              setTimeout(() => {
-                resolve()
-              }, 1000)
-            }).then(res => {
-              this.visible = false
-              this.confirmLoading = false
-              // 重置表单数据
-              form.resetFields()
-              // 刷新表格
-              this.$refs.table.refresh()
-
-              this.$message.info('修改成功')
-            })
-          } else {
-            // 新增
-            recipeTemplateSaveOrUpdate({ ...values }).then(res => {
+     deleteItem (ids) {
+      const { $message, $refs } = this
+      const that = this
+      this.$confirm({
+        title: '提示',
+        content: '确定删除?',
+        onOk () {
+          return new Promise((resolve, reject) => {
+            recipeTemplateDelete({ ids }).then((res) => {
               if (res.success) {
-                this.visible = false
-                this.confirmLoading = false
-                // 重置表单数据
-                form.resetFields()
-                // 刷新表格
-                this.$refs.table.refresh()
-
-                this.$message.info('新增成功')
+                console.log(this)
+                that.selectedRowKeys = []
+                $message.success(res.message)
+                $refs.table.refresh(true)
+                resolve(true)
               } else {
-                this.$message.info(res.message)
-                this.confirmLoading = false
+                $message.info(res.message)
+                reject(new Error('删除失败'))
               }
             })
-          }
-        } else {
-          this.confirmLoading = false
+          }).catch(() => console.log('Oops errors!'))
         }
       })
     },
+    handleOk () {
+      this.visible = false
+      this.$refs.table.refresh(true)
+    },
     handleCancel () {
       this.visible = false
-
-      const form = this.$refs.createModal.form
-      form.resetFields() // 清理表单数据（可不做）
     },
     handleSub (record) {
       if (record.status !== 0) {

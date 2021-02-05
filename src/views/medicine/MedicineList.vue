@@ -159,7 +159,7 @@ export default {
        return process.env.VUE_APP_API_BASE_URL + '/medicinalInfo/importMedicinal'
      }
   },
-   watch: {
+  watch: {
     selectedRowKeys (keys) {
       this.batchBtnDisabled = !keys.length
     }

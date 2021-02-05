@@ -1,7 +1,7 @@
 <template>
   <a-form @submit="handleSubmit" :form="form" class="form">
     <a-row class="form-row" :gutter="16">
-      <a-col :lg="4" :md="12" :sm="24">
+      <a-col :lg="8" :md="12" :sm="24">
         <a-form-item label="模板名称">
           <a-input
             placeholder="请输入模板名称"
@@ -11,7 +11,7 @@
             ]" />
         </a-form-item>
       </a-col>
-      <a-col :lg="4" :md="12" :sm="24">
+      <a-col :lg="8" :md="12" :sm="24">
         <a-form-item label="处方模板类型">
           <a-select placeholder="请选择处方模板类型" v-decorator="[ 'recipeTemplateType', {rules: [{ required: true, message: '请选择处方模板类型'}]} ]">
             <a-select-option v-for="item in recipeTemplateType" :value="item.value" :key="item.value">
@@ -35,10 +35,10 @@
       <a-col :lg="8" :md="12" :sm="24">
         <a-form-item label="备注">
           <a-textarea
-            :maxLength="300"
-            style="resize: none;width: 97%"
+            :maxLength="310"
+            style="resize: none;width: 98%"
             placeholder="请输入备注"
-            v-decorator="['usage', { rules: [{ required: false, message: '请输入用法用量', whitespace: true }] }]"
+            v-decorator="['remark', { rules: [{ required: false, message: '请输入用法用量', whitespace: true }] }]"
           />
         </a-form-item>
       </a-col>
