@@ -153,14 +153,14 @@ export const asyncRouterMap = [
             component: () => import('@/views/recipeTemplate/RecipeTemplateList'),
             hideChildrenInMenu: true,
             meta: { title: '处方模板列表', keepAlive: true, permission: [ 'recipeTemplate' ] }
-          },
-          {
-            path: '/recipeTemplate/create-recipe-template',
-            name: 'create-recipe-template',
-            // hidden: true,
-            component: () => import('@/views/recipeTemplate/CreateRecipeTemplate'),
-            meta: { title: '创建处方模板', keepAlive: true, permission: [ 'createRecipeTemplate' ] }
           }
+          // {
+          //   path: '/recipeTemplate/create-recipe-template',
+          //   name: 'create-recipe-template',
+          //   // hidden: true,
+          //   component: () => import('@/views/recipeTemplate/CreateRecipeTemplate'),
+          //   meta: { title: '创建处方模板', keepAlive: true, permission: [ 'createRecipeTemplate' ] }
+          // }
         ]
       },
       {
