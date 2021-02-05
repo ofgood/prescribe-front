@@ -95,6 +95,7 @@ import pick from 'lodash.pick'
 import { validatePhone, validateCellPhone, validateIdCard } from '@/utils/validates'
 import { mapGetters } from 'vuex'
 import { clinicSelect } from '@/api/clinic'
+import { getClinicListByUseName } from '@/api/user'
 import debounce from 'lodash/debounce'
 // 表单字段
 const fields = [
@@ -171,12 +172,32 @@ export default {
     // 当 model 发生改变时，为表单设置值
     this.$watch('model', () => {
       this.$nextTick(() => {
-      this.model && this.form.setFieldsValue(pick(this.model, fields))
-      this.userType = this.form.getFieldValue('userType')
+        this.model && this.form.setFieldsValue(pick(this.model, fields))
+        this.userType = this.form.getFieldValue('userType')
+        this.model.userName && this.getClinics(this.model.jobNum)
       })
     })
   },
   methods: {
+    getClinics (userName) {
+      getClinicListByUseName({
+          userName
+        }).then((res) => {
+          if (res.success) {
+            this.selects = []
+            const result = res.data || []
+            result.forEach(item => {
+              this.selects.push({
+                value: item.id,
+                text: item.clinicName
+              })
+            })
+            this.form.setFieldsValue({
+              'clinicIds': this.selects.map(item => item.value)
+            })
+          }
+        })
+     },
      fetchclinics (value = '') {
       if (!value) return
       this.lastFetchId += 1
