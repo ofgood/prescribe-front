@@ -5,7 +5,7 @@
         <span class="time-type" :class="{active: type === item.value}" @click="selectTime(item.value)" v-for="item in timeTypeList" :key="item.value">
           {{ item.label }}
         </span>
-        <a-range-picker format="YYYY-MM-DD HH:mm:ss" v-model="rangeTime" show-time @ok="changePicker"> </a-range-picker>
+        <a-range-picker format="YYYY-MM-DD HH:mm:ss" @change="changeRange" v-model="rangeTime" show-time @ok="changePicker"> </a-range-picker>
       </div>
       <div>
         <div id="myChart" :style="{width: '100%', height: '400px'}"></div>
@@ -16,6 +16,7 @@
 
 <script>
 import { clinicRecipeReport } from '@/api/report'
+import isEmpty from 'lodash/isEmpty'
 import moment from 'moment'
  const timeTypeList = [
       {
@@ -40,8 +41,8 @@ export default {
   data () {
     return {
         timeTypeList,
-        startTime: '2020-01-01 00:00:00',
-        endTime: '2020-01-02 00:00:00',
+        startTime: '',
+        endTime: '',
         type: 'WEEK', // WEEK  MONTH YEAR
         xAxisData: [],
         seriesData: [],
@@ -61,6 +62,14 @@ export default {
       this.startTime = moment(new Date(start)).format('YYYY-MM-DD HH:mm:ss')
       this.endTime = moment(new Date(end)).format('YYYY-MM-DD HH:mm:ss')
       this.getClinicRecipeReport()
+    },
+     changeRange (dateTime) {
+      if (isEmpty(dateTime)) {
+         this.type = 'WEEK'
+         this.startTime = ''
+         this.endTime = ''
+         this.getClinicRecipeReport()
+      }
     },
     getClinicRecipeReport () {
       clinicRecipeReport({
