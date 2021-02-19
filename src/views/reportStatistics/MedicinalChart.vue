@@ -1,5 +1,5 @@
 <template>
-  <page-header-wrapper>
+  <div>
     <a-card title="药品报表分析">
       <div slot="extra">
         <span class="time-type" :class="{active: type === item.value}" @click="selectTime(item.value)" v-for="item in timeTypeList" :key="item.value">
@@ -11,7 +11,7 @@
         <div id="myChart" :style="{width: '100%', height: '400px'}"></div>
       </div>
     </a-card>
-  </page-header-wrapper>
+  </div>
 </template>
 
 <script>

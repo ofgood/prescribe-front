@@ -1,5 +1,5 @@
 <template>
-  <page-header-wrapper content="">
+  <div>
     <a-card size="small" class="card" title="患者信息" :bordered="false">
       <repository-form ref="repository" :showSubmit="false" />
     </a-card>
@@ -176,7 +176,7 @@
         </div>
       </div></a-modal
     >
-  </page-header-wrapper>
+  </div>
 </template>
 
 <script>
@@ -201,6 +201,7 @@ export default {
   },
   data () {
     return {
+      isEeditable: false,
       visible: false,
       confirmLoading: false,
       fetching: false,

@@ -1,5 +1,5 @@
 <template>
-  <page-header-wrapper>
+  <page-header-wrapper style="padding-top: 20px">
     <template v-slot:content>
       <div class="page-header-content">
         <div class="avatar">
@@ -121,22 +121,8 @@ export default {
   created () {
     this.user = this.userInfo
     this.avatar = this.userInfo.avatar
-
-    // getRoleList().then(res => {
-    //   // console.log('workplace -> call getRoleList()', res)
-    // })
-
-    // getServiceList().then(res => {
-    //   // console.log('workplace -> call getServiceList()', res)
-    // })
     this.getRecipeTotal()
     this.getRecipeToday()
-  },
-  mounted () {
-    // this.getProjects()
-    // this.getActivity()
-    // this.getTeams()
-    // this.initRadar()
   },
   methods: {
     getProjects () {

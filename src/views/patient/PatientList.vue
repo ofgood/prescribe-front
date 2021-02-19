@@ -1,5 +1,5 @@
 <template>
-  <page-header-wrapper>
+  <div>
     <a-card :bordered="false">
       <div class="table-page-search-wrapper">
         <a-form layout="inline">
@@ -79,7 +79,7 @@
         @ok="handleOk"
       />
     </a-card>
-  </page-header-wrapper>
+  </div>
 </template>
 
 <script>

@@ -31,6 +31,7 @@
               <a-button style="width: 20%" @click="showCreateModal"><a-icon type="plus" /></a-button>
             </a-tooltip>
           </a-input-group>
+          <a href="javascript:;" v-if="hasHistory" @click="reviewHistory">查看该患者历史处方</a>
         </a-form-item>
       </a-col>
       <a-col :lg="5" :md="12" :sm="24">
@@ -145,13 +146,17 @@ export default {
       fetching: false,
       visible: false,
       confirmLoading: false,
-      mdl: null
+      mdl: null,
+      hasHistory: true
     }
   },
   computed: {
     ...mapGetters(['gender'])
   },
   methods: {
+    reviewHistory () {
+
+    },
     handleSubmit (e) {
       e.preventDefault()
       this.form.validateFields((err, values) => {

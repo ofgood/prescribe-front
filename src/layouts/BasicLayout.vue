@@ -15,9 +15,11 @@
       广告代码 真实项目中请移除
       production remove this Ads
     -->
-    <ads v-if="isProPreviewSite && !collapsed"/>
+    <!-- <ads v-if="isProPreviewSite && !collapsed"/> -->
     <!-- Ads end -->
-
+    <!-- <div class="tabs-box"> -->
+    <multi-tab v-if="settings.multiTab"></multi-tab>
+    <!-- </div> -->
     <!-- <setting-drawer :settings="settings" @change="handleSettingChange" /> -->
     <template v-slot:rightContentRender>
       <right-content :top-menu="settings.layout === 'topmenu'" :is-mobile="isMobile" :theme="settings.theme" />
@@ -25,11 +27,14 @@
     <template v-slot:footerRender>
       <global-footer />
     </template>
-    <router-view />
+    <div style="padding-top: 20px">
+      <router-view v-if="isRouterAlive" />
+    </div>
   </pro-layout>
 </template>
 
 <script>
+import MultiTab from '@/components/MultiTab'
 import { SettingDrawer, updateTheme } from '@ant-design-vue/pro-layout'
 import { i18nRender } from '@/locales'
 import { mapState } from 'vuex'
@@ -43,13 +48,21 @@ import LogoSvg from '../assets/logo.svg?inline'
 export default {
   name: 'BasicLayout',
   components: {
+     MultiTab,
     SettingDrawer,
     RightContent,
     GlobalFooter,
     Ads
   },
+  provide () {
+    return {
+        reload: this.reload
+    }
+  },
   data () {
     return {
+
+      isRouterAlive: true,
       // preview.pro.antdv.com only use.
       isProPreviewSite: process.env.VUE_APP_PREVIEW === 'true' && process.env.NODE_ENV !== 'development',
       // end
@@ -71,13 +84,18 @@ export default {
         fixedHeader: defaultSettings.fixedHeader,
         fixSiderbar: defaultSettings.fixSiderbar,
         colorWeak: defaultSettings.colorWeak,
+        // 多页签
+        multiTab: defaultSettings.multiTab,
 
         hideHintAlert: false,
         hideCopyButton: false
       },
       // 媒体查询
       query: {},
-
+      // 面包屑
+      // breadcrumbRender () {
+      //   return ''
+      // },
       // 是否手机模式
       isMobile: false
     }
@@ -118,6 +136,12 @@ export default {
   },
   methods: {
     i18nRender,
+    reload () {
+          this.isRouterAlive = false
+          this.$nextTick(function () {
+             this.isRouterAlive = true
+          })
+    },
     handleMediaQuery (val) {
       this.query = val
       if (this.isMobile && !val['screen-xs']) {
@@ -160,4 +184,12 @@ export default {
 
 <style lang="less">
 @import "./BasicLayout.less";
+.tabs-box{
+  position: fixed;
+  padding: 0px;
+  z-index: 9;
+  left: 278px;
+  right: 0;
+  background: red;
+}
 </style>

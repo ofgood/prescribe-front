@@ -3,8 +3,10 @@ import events from './events'
 
 export default {
   name: 'MultiTab',
+  inject: ['reload'],
   data () {
     return {
+      showAnimate: true,
       fullPathList: [],
       pages: [],
       activeKey: '',
@@ -55,6 +57,16 @@ export default {
     },
 
     // content menu
+    reloadMenu () {
+      this.reload()
+      this.play()
+    },
+    reset () {
+      this.showAnimate = false
+    },
+    play () {
+      this.showAnimate = true
+    },
     closeThat (e) {
       // 判断是否为最后一个标签页，如果是最后一个，则无法被关闭
       if (this.fullPathList.length > 1) {
@@ -132,14 +144,25 @@ export default {
     }
   },
   render () {
-    const { onEdit, $data: { pages } } = this
+    const { onEdit, $data: { pages }, reloadMenu, reset, showAnimate } = this
     const panes = pages.map(page => {
       return (
         <a-tab-pane
           style={{ height: 0 }}
-          tab={this.renderTabPane(page.meta.customTitle || page.meta.title, page.fullPath)}
+          // tab={}
           key={page.fullPath} closable={pages.length > 1}
         >
+          <span slot="tab">
+            {this.renderTabPane(page.meta.customTitle || page.meta.title, page.fullPath)}
+              <a-tooltip>
+                <template slot="title">
+                  刷新当前页签
+                </template>
+                <span v-show={this.activeKey === page.fullPath} style={{ marginLeft: '4px' }}>
+                    <a-icon class={{ 'rotate360': showAnimate }} {...{ on: { click: reloadMenu, animationend: reset } }} type="reload" style={{ color: 'rgba(0, 0, 0, 0.65)' }}/>
+                </span>
+              </a-tooltip>
+          </span>
         </a-tab-pane>)
     })
 
@@ -150,7 +173,7 @@ export default {
             hideAdd
             type={'editable-card'}
             v-model={this.activeKey}
-            tabBarStyle={{ background: '#FFF', margin: 0, paddingLeft: '16px', paddingTop: '1px' }}
+            tabBarStyle={{ background: '#FFF', margin: '2px', paddingLeft: '2px', paddingTop: '1px' }}
             {...{ on: { edit: onEdit } }}>
             {panes}
           </a-tabs>
@@ -160,3 +183,13 @@ export default {
   }
 }
 </script>
+<style lang="less">
+    .rotate360 {
+        animation: rotate360 .5s ease-out 0s;
+    }
+    @keyframes rotate360 {
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+</style>
