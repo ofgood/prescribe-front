@@ -7,7 +7,8 @@ const api = {
   getPrintRecipeInfo: '/recipeInfo/getPrintRecipeInfo', //  获取打印信息
   recipeInfoList: '/recipeInfo/recipeInfoList', //  获取打印信息
   submitRecipeInfo: '/recipeInfo/submitRecipeInfo', //  处方提交
-  getRecipeMedicinalList: '/recipeInfo/getRecipeMedicinalList' //  获取处方药物列表
+  getRecipeMedicinalList: '/recipeInfo/getRecipeMedicinalList', //  获取处方药物列表
+  getPatientRecipeList: '/recipeInfo/getPatientRecipeList' //  获取处方药物列表
 }
 
 export function openRecipe (parameter) {
@@ -57,6 +58,13 @@ export function getRecipeMedicinalList (parameter) {
 export function submitRecipeInfo (parameter) {
   return request({
     url: api.submitRecipeInfo,
+    method: 'post',
+    data: parameter
+  })
+}
+export function getPatientRecipeList (parameter) {
+  return request({
+    url: api.getPatientRecipeList,
     method: 'post',
     data: parameter
   })

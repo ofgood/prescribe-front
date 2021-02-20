@@ -115,19 +115,104 @@
       @cancel="handleCancel"
       @ok="handleOk"
     />
+    <a-drawer
+      title="患者历史处方"
+      width="80%"
+      :visible="historyVisible"
+      @ok="() => { $emit('ok') }"
+      @close="() => { historyVisible = false }"
+    >
+      <a-table
+        ref="table"
+        size="small"
+        :rowKey="(record) => record.prescriptionNo"
+        :columns="columns"
+        :data-source="historyData"
+        tableLayout="fixed"
+        :pagination="false"
+      >
+        <div slot="expandedRowRender" slot-scope="text">
+          <a-card title="病症" size="small" style="margin-bottom: 10px">
+            <p>{{ text.disease }}</p>
+          </a-card>
+          <a-card title="药品" size="small">
+            <a-table size="middle" :columns="innerColumns" :rowKey="(record) => record.id" :data-source="formatMedicinalListVos(text.medicinalListVos)" :pagination="false"> </a-table>
+          </a-card>
+        </div>
+        <span class="main-color" slot="prescriptionNo" slot-scope="text">
+          {{ text }}
+        </span>
+        <span slot="action" slot-scope="text, record">
+          <a href="javascript:;" @click="useThisHistory(record)">使用该处方</a>
+        </span>
+      </a-table>
+    </a-drawer>
   </a-form>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import { STable } from '@/components'
 import debounce from 'lodash/debounce'
 import { findPatientSelect, saveOrUpdate } from '@/api/patientInfo​'
+import { getPatientRecipeList } from '@/api/recepeInfo'
 import CreateForm from '../patient/modules/CreateForm'
-
+const innerColumns = [
+  { title: '序号', dataIndex: 'orderNum', key: 'orderNum' },
+  { title: '药材名称', dataIndex: 'medicinalName', key: 'medicinalName' },
+  { title: '剂量', dataIndex: 'dosage', key: 'dosage' },
+  { title: '下药顺序', dataIndex: 'druggingOrder', key: 'druggingOrder' },
+  { title: '是否毒性', dataIndex: 'toxic', key: 'toxic' },
+  { title: '最大剂量', dataIndex: 'maxDosage', key: 'maxDosage' },
+  { title: '单位', dataIndex: 'unit', key: 'unit' },
+  { title: '价格', dataIndex: 'price', key: 'price' }
+]
+const columns = [
+  {
+    title: '处方号',
+    dataIndex: 'prescriptionNo',
+    scopedSlots: { customRender: 'prescriptionNo' }
+  },
+  {
+    title: '诊所',
+    dataIndex: 'clinicName'
+  },
+  {
+    title: '医生',
+    dataIndex: 'doctorName'
+  },
+  {
+    title: '处方类型',
+    dataIndex: 'recipeType'
+  },
+  {
+    title: '抓药方式',
+    dataIndex: 'grabMedicineType'
+  },
+  {
+    title: '贴数',
+    dataIndex: 'postNumbers'
+  },
+  {
+    title: '每贴包数',
+    dataIndex: 'postPackageNumbers'
+  },
+  {
+    title: '创建时间',
+    dataIndex: 'createTime'
+  },
+  {
+    title: '操作',
+    dataIndex: 'action',
+    width: '150px',
+    scopedSlots: { customRender: 'action' }
+  }
+]
 export default {
   name: 'RepositoryForm',
   components: {
-    CreateForm
+    CreateForm,
+    STable
   },
   props: {
     showSubmit: {
@@ -139,6 +224,10 @@ export default {
     this.lastFetchId = 0
     this.fetchUser = debounce(this.fetchUser, 800)
     return {
+      historyData: [],
+      innerColumns,
+      columns,
+      historyVisible: false,
       form: this.$form.createForm(this),
       patientGender: '',
       birthday: null,
@@ -147,15 +236,31 @@ export default {
       visible: false,
       confirmLoading: false,
       mdl: null,
-      hasHistory: true
+      hasHistory: false
     }
   },
   computed: {
     ...mapGetters(['gender'])
   },
   methods: {
+    useThisHistory (data) {
+      this.$emit('selectHistory', data)
+      this.historyVisible = false
+    },
+    loadHistoryData () {
+      const { key: patientId } = this.form.getFieldValue('patientId')
+      console.log(patientId)
+      getPatientRecipeList({
+        patientId
+      }).then(res => {
+        if (res.data.length) {
+          this.historyData = res.data
+        }
+      })
+    },
     reviewHistory () {
-
+      this.historyVisible = true
+      this.loadHistoryData()
     },
     handleSubmit (e) {
       e.preventDefault()
@@ -209,6 +314,12 @@ export default {
         address,
         shippingAddress
       })
+      // 判断有无历史记录
+      getPatientRecipeList({
+        patientId: patientInfo[0].value
+      }).then(res => {
+        this.hasHistory = !!res.data.length
+      })
       Object.assign(this, {
         fetching: false
       })
@@ -244,8 +355,7 @@ export default {
                 // 重置表单数据
                 form.resetFields()
                 // 刷新表格
-                this.$refs.table.refresh()
-
+                // this.$refs.table.refresh()
                 this.$message.info('新增成功')
               } else {
                 this.$message.info(res.message)
@@ -266,6 +376,12 @@ export default {
     },
     showCreateModal () {
       this.visible = true
+    },
+    formatMedicinalListVos (data) {
+      data.forEach((item, index) => {
+        item.orderNum = index + 1
+      })
+      return data
     }
   }
 }

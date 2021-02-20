@@ -10,9 +10,8 @@
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
-              <a-form-item label="处方类型">
-                <!-- <a-input v-model="queryParam.recipeType" placeholder="请输入处方类型"/> -->
-                <a-select v-model="queryParam.recipeType" placeholder="请选择处方类型">
+              <a-form-item label="处方模板类型">
+                <a-select v-model="queryParam.recipeTemplateType" placeholder="请选择处方模板类型">
                   <a-select-option v-for="item in recipeTypeAll" :value="item.value" :key="item.value">
                     {{ item.label }}
                   </a-select-option>
@@ -101,18 +100,6 @@ const columns = [
   {
     title: '处方模板类型',
     dataIndex: 'recipeTemplateType'
-  },
-  {
-    title: '抓药方式',
-    dataIndex: 'grabMedicineType'
-  },
-  {
-    title: '贴数',
-    dataIndex: 'postNumbers'
-  },
-  {
-    title: '每贴包数',
-    dataIndex: 'postPackageNumbers'
   },
   {
     title: '病症',

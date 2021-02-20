@@ -11,16 +11,7 @@
     :i18nRender="i18nRender"
     v-bind="settings"
   >
-    <!-- Ads begin
-      广告代码 真实项目中请移除
-      production remove this Ads
-    -->
-    <!-- <ads v-if="isProPreviewSite && !collapsed"/> -->
-    <!-- Ads end -->
-    <!-- <div class="tabs-box"> -->
     <multi-tab v-if="settings.multiTab"></multi-tab>
-    <!-- </div> -->
-    <!-- <setting-drawer :settings="settings" @change="handleSettingChange" /> -->
     <template v-slot:rightContentRender>
       <right-content :top-menu="settings.layout === 'topmenu'" :is-mobile="isMobile" :theme="settings.theme" />
     </template>
@@ -48,7 +39,7 @@ import LogoSvg from '../assets/logo.svg?inline'
 export default {
   name: 'BasicLayout',
   components: {
-     MultiTab,
+    MultiTab,
     SettingDrawer,
     RightContent,
     GlobalFooter,

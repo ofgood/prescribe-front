@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-card size="small" class="card" title="患者信息" :bordered="false">
-      <repository-form ref="repository" :showSubmit="false" />
+      <repository-form ref="repository" :showSubmit="false" @selectHistory="selectHistory" />
     </a-card>
     <a-card size="small" class="card" title="处方信息" :bordered="false">
       <task-form ref="task" :showSubmit="false" @selectTemplate="getTemplateData" />
@@ -398,7 +398,6 @@ export default {
       target._originalData = undefined
     },
     handleChange (value, orderNum, column, option) {
-      console.log('value', value)
       const newData = [...this.data]
       const target = newData.find((item) => orderNum === item.orderNum)
       if (column === 'medicinalName') {
@@ -422,6 +421,25 @@ export default {
     },
     getTemplateData (data) {
       this.data = data
+    },
+    selectHistory (data) {
+      data.medicinalListVos.forEach((item, index) => {
+        item.druggingOrder = item.druggingOrderCode
+        item.orderNum = index + 1
+      })
+      this.data = data.medicinalListVos
+      const { $refs: { task } } = this
+      const { setFieldsValue } = task.form
+      const { grabMedicineType, postPackageNumbers, recipeType, postNumbers, packageCap, disease, usage } = data
+      setFieldsValue({
+        postPackageNumbers,
+        grabMedicineType,
+        recipeType,
+        postNumbers,
+        packageCap,
+        disease,
+        usage
+      })
     },
     // 最终全页面提交
     validate () {
