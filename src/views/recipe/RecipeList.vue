@@ -29,22 +29,9 @@
           </a-row>
         </a-form>
       </div>
-
-      <div class="table-operator">
-        <!-- <a-button type="primary" icon="plus" @click="handleAdd">新建</a-button> -->
-        <a-dropdown v-action:edit v-if="selectedRowKeys.length > 0">
-          <a-menu slot="overlay">
-            <a-menu-item key="1"><a-icon type="delete" />删除</a-menu-item>
-            <!-- lock | unlock -->
-            <a-menu-item key="2"><a-icon type="lock" />锁定</a-menu-item>
-          </a-menu>
-          <a-button style="margin-left: 8px"> 批量操作 <a-icon type="down" /> </a-button>
-        </a-dropdown>
-      </div>
-
       <s-table
         ref="table"
-        size="default"
+        size="middle"
         :row-selection="rowSelection"
         @expand="expand"
         @expandedRowsChange="expand"
@@ -54,29 +41,69 @@
         showPagination="auto"
       >
         <div slot="expandedRowRender" slot-scope="text">
-          <a-table :columns="innerColumns" :rowKey="(record) => record.medicinalCode" :data-source="innerDataMap[text.id]" :pagination="false"> </a-table>
+          <a-card title="处方信息" size="small" style="margin-bottom: 10px">
+            <a-descriptions title="" :column="4">
+              <a-descriptions-item label="抓药方式">
+                {{ text.grabMedicineType }}
+              </a-descriptions-item>
+              <a-descriptions-item label="处方类型">
+                {{ text.recipeType }}
+              </a-descriptions-item>
+              <a-descriptions-item label="贴数">
+                {{ text.postNumbers }}
+              </a-descriptions-item>
+              <a-descriptions-item label="每贴包数">
+                {{ text.postPackageNumbers }}
+              </a-descriptions-item>
+              <a-descriptions-item label="每包容量(ml)">
+                {{ text.packageCap }}
+              </a-descriptions-item>
+              <a-descriptions-item :span="3" label="用法用量">
+                {{ text.usage }}
+              </a-descriptions-item>
+              <a-descriptions-item :span="5" label="病症">
+                {{ text.disease }}
+              </a-descriptions-item>
+            </a-descriptions>
+          </a-card>
+          <a-card title="药品列表" size="small">
+            <a-table :columns="innerColumns" :rowKey="(record) => record.medicinalCode" :data-source="innerDataMap[text.id]" :pagination="false"> </a-table>
+          </a-card>
         </div>
         <span class="main-color" slot="prescriptionNo" slot-scope="text">
           {{ text }}
         </span>
+        <!-- <div slot-scope="text,record" slot="action">
+          <a style="margin-right: 10px" @click="handleEdit(record)">编辑</a>
+          <a v-if="!record.hasSubmit" @click="submitRecipe(record.prescriptionNo)">提交</a>
+        </div> -->
       </s-table>
     </a-card>
+    <create-form
+      ref="createModal"
+      :visible="visible"
+      :loading="confirmLoading"
+      :model="mdl"
+      @cancel="handleCancel"
+      @ok="handleOk"
+    />
   </div>
 </template>
 
 <script>
 import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
-import { recipeInfoList, getRecipeMedicinalList } from '@/api/recepeInfo'
+import { recipeInfoList, getRecipeMedicinalList, submitRecipeInfo } from '@/api/recepeInfo'
 import { mapGetters } from 'vuex'
+import CreateForm from './modules/CreateForm'
 const innerColumns = [
   { title: '序号', dataIndex: 'orderNum', key: 'orderNum' },
   { title: '药材名称', dataIndex: 'medicinalName', key: 'medicinalName' },
   { title: '剂量', dataIndex: 'dosage', key: 'dosage' },
+   { title: '单位', dataIndex: 'unit', key: 'unit' },
   { title: '下药顺序', dataIndex: 'druggingOrder', key: 'druggingOrder' },
   { title: '是否毒性', dataIndex: 'toxic', key: 'toxic' },
   { title: '最大剂量', dataIndex: 'maxDosage', key: 'maxDosage' },
-  { title: '单位', dataIndex: 'unit', key: 'unit' },
   { title: '价格', dataIndex: 'price', key: 'price' }
 ]
 const columns = [
@@ -87,60 +114,46 @@ const columns = [
   },
   {
     title: '医生',
-    dataIndex: 'doctorName'
+    dataIndex: 'doctorName',
+    width: 100
   },
   {
     title: '患者姓名',
-    dataIndex: 'patientName'
+    dataIndex: 'patientName',
+    width: 100
   },
   {
     title: '诊所',
     dataIndex: 'clinicName'
   },
   {
-    title: '处方类型',
-    dataIndex: 'recipeType'
-  },
-  {
-    title: '抓药方式',
-    dataIndex: 'grabMedicineType'
-  },
-  {
-    title: '贴数',
-    dataIndex: 'postNumbers'
-  },
-  {
-    title: '每贴包数',
-    dataIndex: 'postPackageNumbers'
-  },
-  {
-    title: '病症',
-    dataIndex: 'disease'
-  },
-  {
     title: '支付状态',
-    dataIndex: 'payStatus'
+    dataIndex: 'payStatus',
+    width: 100
   },
   {
     title: '创建时间',
     dataIndex: 'createTime'
+  },
+  {
+    title: '操作',
+    dataIndex: 'action',
+    width: '100px',
+    scopedSlots: { customRender: 'action' }
   }
-  // {
-  //   title: '操作',
-  //   dataIndex: 'action',
-  //   width: '150px',
-  //   scopedSlots: { customRender: 'action' }
-  // }
 ]
 export default {
   name: 'RecipeList',
   components: {
     STable,
-    Ellipsis
+    Ellipsis,
+    CreateForm
   },
   data () {
     this.columns = columns
     return {
+      visible: false,
+      confirmLoading: false,
       rowSelection: {},
       innerData: [],
       innerDataMap: {},
@@ -166,16 +179,23 @@ export default {
     ...mapGetters(['recipeTypeAll', 'druggingOrders', 'recipeAllTypes'])
   },
   methods: {
+    handleEdit (record) {
+      console.log(record)
+      this.visible = true
+      this.mdl = { ...record }
+    },
+    handleCancel () {
+      this.visible = false
+    },
+    handleOk () {
+      this.visible = false
+    },
     handleAdd () {
       // this.mdl = null
       // this.visible = true
       this.$router.push({
         name: 'create-recipe-template'
       })
-    },
-    handleEdit (record) {
-      this.visible = true
-      this.mdl = { ...record }
     },
     handleSub (record) {
       if (record.status !== 0) {
@@ -207,6 +227,20 @@ export default {
         })
       } else {
         this.innerData = []
+      }
+    },
+    submitRecipe (prescriptionNo) {
+     const { $notification } = this
+      if (prescriptionNo) {
+        submitRecipeInfo({
+          prescriptionNo
+        }).then(res => {
+           $notification['success']({
+          message: res.message
+        })
+        }).catch(err => {
+          console.log(err)
+        })
       }
     }
   }

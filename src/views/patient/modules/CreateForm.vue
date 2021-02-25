@@ -10,7 +10,7 @@
     <a-spin :spinning="loading">
       <a-form :form="form" v-bind="formLayout">
         <!-- 检查是否有 id 并且大于0，大于0是修改。其他是新增，新增不显示主键ID -->
-        <a-form-item v-if="model && model.id > 0" label="主键ID">
+        <a-form-item v-show="false" v-if="model && model.id > 0" label="主键ID">
           <a-input v-decorator="['id', { initialValue: 0 }]" disabled />
         </a-form-item>
         <a-form-item label="姓名">
@@ -54,7 +54,7 @@ import pick from 'lodash.pick'
 import { mapGetters } from 'vuex'
 
 // 表单字段
-const fields = ['description', 'id']
+const fields = ['patientName', 'id', 'sex', 'birthday', 'tel', 'shippingAddress', 'hyperSusceptibility', 'zip', 'idCard', 'address']
 export default {
   props: {
     visible: {
@@ -113,6 +113,7 @@ export default {
     // 当 model 发生改变时，为表单设置值
     this.$watch('model', () => {
       this.$nextTick(() => {
+      console.log(this.model)
       this.model && this.form.setFieldsValue(pick(this.model, fields))
       })
     })

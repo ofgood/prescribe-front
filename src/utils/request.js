@@ -14,6 +14,7 @@ const request = axios.create({
 
 // 异常拦截处理器
 const errorHandler = (error) => {
+  console.log('error', error.response)
   if (error.response) {
     const data = error.response.data
     // 从 localstorage 获取 token
@@ -36,6 +37,13 @@ const errorHandler = (error) => {
           }, 1500)
         })
       }
+    }
+  } else {
+    if (error.code === 'ECONNABORTED') {
+      notification.error({
+        message: '提醒',
+        description: '请求超时'
+      })
     }
   }
   return Promise.reject(error)

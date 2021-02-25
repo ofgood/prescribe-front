@@ -35,23 +35,9 @@
         </a-form>
       </div>
 
-      <div class="table-operator">
-        <!-- <a-button type="primary" icon="plus" @click="handleAdd">新建</a-button> -->
-        <a-dropdown v-action:edit v-if="selectedRowKeys.length > 0">
-          <a-menu slot="overlay">
-            <a-menu-item key="1"><a-icon type="delete" />删除</a-menu-item>
-            <!-- lock | unlock -->
-            <a-menu-item key="2"><a-icon type="lock" />锁定</a-menu-item>
-          </a-menu>
-          <a-button style="margin-left: 8px">
-            批量操作 <a-icon type="down" />
-          </a-button>
-        </a-dropdown>
-      </div>
-
       <s-table
         ref="table"
-        size="default"
+        size="middle"
         :row-selection="rowSelection"
         :rowKey="record => record.id"
         :columns="columns"
@@ -61,13 +47,11 @@
         <span class="main-color" slot="patientName" slot-scope="text">
           {{ text }}
         </span>
-        <!-- <span slot="action" slot-scope="text, record">
+        <span slot="action" slot-scope="text, record">
           <template>
-            <a @click="handleEdit(record)">配置</a>
-            <a-divider type="vertical" />
-            <a @click="handleSub(record)">订阅报警</a>
+            <a @click="handleEdit(record)">编辑</a>
           </template>
-        </span> -->
+        </span>
       </s-table>
 
       <create-form
@@ -135,16 +119,12 @@ const columns = [
     title: '创建时间',
     dataIndex: 'createTime'
   },
-   {
-    title: '修改时间',
-    dataIndex: 'updateTime'
+  {
+    title: '操作',
+    dataIndex: 'action',
+    fixed: 'right',
+    scopedSlots: { customRender: 'action' }
   }
-  // {
-  //   title: '操作',
-  //   dataIndex: 'action',
-  //   width: '150px',
-  //   scopedSlots: { customRender: 'action' }
-  // }
 ]
 
 const statusMap = {
@@ -231,11 +211,7 @@ export default {
           console.log('values', values)
           if (values.id > 0) {
             // 修改 e.g.
-            new Promise((resolve, reject) => {
-              setTimeout(() => {
-                resolve()
-              }, 1000)
-            }).then(res => {
+           saveOrUpdate({ ...values }).then(res => {
               this.visible = false
               this.confirmLoading = false
               // 重置表单数据
