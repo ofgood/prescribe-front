@@ -6,7 +6,11 @@
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
               <a-form-item label="患者名称">
-                <a-input @pressEnter="$refs.table.refresh(true)" v-model="queryParam.patientName" placeholder="请输入患者名称" />
+                <a-input
+                  @pressEnter="$refs.table.refresh(true)"
+                  v-model="queryParam.patientName"
+                  placeholder="请输入患者名称"
+                />
               </a-form-item>
             </a-col>
 
@@ -22,17 +26,25 @@
             </a-col>
             <a-col :md="24" :sm="24">
               <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' } || {}">
-                <a-button icon="redo" @click="() => this.queryParam = {}">重置</a-button>
-                <a-button icon="search" style="margin-left: 8px" type="primary" @click="$refs.table.refresh(true)">查询</a-button>
+                <a-button icon="redo" @click="() => (this.queryParam = {})">重置</a-button>
+                <a-button
+                  icon="search"
+                  style="margin-left: 8px"
+                  type="primary"
+                  @click="$refs.table.refresh(true)"
+                >查询</a-button
+                >
               </span>
             </a-col>
           </a-row>
         </a-form>
       </div>
+      <!-- <div class="table-operator">
+        <a-button type="primary" icon="plus" @click="handleAdd">开处方</a-button>
+      </div> -->
       <s-table
         ref="table"
         size="middle"
-        :row-selection="rowSelection"
         @expand="expand"
         @expandedRowsChange="expand"
         :rowKey="(record) => record.id"
@@ -67,16 +79,27 @@
             </a-descriptions>
           </a-card>
           <a-card title="药品列表" size="small">
-            <a-table :columns="innerColumns" :rowKey="(record) => record.medicinalCode" :data-source="innerDataMap[text.id]" :pagination="false"> </a-table>
+            <a-table
+              :columns="innerColumns"
+              :rowKey="(record) => record.medicinalCode"
+              :data-source="innerDataMap[text.id]"
+              :pagination="false"
+            >
+            </a-table>
           </a-card>
         </div>
         <span class="main-color" slot="prescriptionNo" slot-scope="text">
           {{ text }}
         </span>
-        <!-- <div slot-scope="text,record" slot="action">
-          <a style="margin-right: 10px" @click="handleEdit(record)">编辑</a>
-          <a v-if="!record.hasSubmit" @click="submitRecipe(record.prescriptionNo)">提交</a>
-        </div> -->
+        <div slot-scope="text, record" slot="action" v-if="isDoctor">
+          <template v-if="!record.hasSubmit">
+            <a style="margin-right: 10px" @click="handleEdit(record)">编辑</a>
+            <a @click="submitRecipe(record.prescriptionNo)">提交</a>
+          </template>
+          <template v-else>
+            <span>已提交</span>
+          </template>
+        </div>
       </s-table>
     </a-card>
     <create-form
@@ -95,12 +118,13 @@ import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
 import { recipeInfoList, getRecipeMedicinalList, submitRecipeInfo } from '@/api/recepeInfo'
 import { mapGetters } from 'vuex'
+import { roleMixin } from '@/store/role-mixin'
 import CreateForm from './modules/CreateForm'
 const innerColumns = [
   { title: '序号', dataIndex: 'orderNum', key: 'orderNum' },
   { title: '药材名称', dataIndex: 'medicinalName', key: 'medicinalName' },
   { title: '剂量', dataIndex: 'dosage', key: 'dosage' },
-   { title: '单位', dataIndex: 'unit', key: 'unit' },
+  { title: '单位', dataIndex: 'unit', key: 'unit' },
   { title: '下药顺序', dataIndex: 'druggingOrder', key: 'druggingOrder' },
   { title: '是否毒性', dataIndex: 'toxic', key: 'toxic' },
   { title: '最大剂量', dataIndex: 'maxDosage', key: 'maxDosage' },
@@ -149,6 +173,7 @@ export default {
     Ellipsis,
     CreateForm
   },
+  mixins: [roleMixin],
   data () {
     this.columns = columns
     return {
@@ -178,6 +203,11 @@ export default {
   computed: {
     ...mapGetters(['recipeTypeAll', 'druggingOrders', 'recipeAllTypes'])
   },
+  mounted () {
+    if (!this.isDoctor) {
+      this.columns.pop()
+    }
+  },
   methods: {
     handleEdit (record) {
       console.log(record)
@@ -191,11 +221,8 @@ export default {
       this.visible = false
     },
     handleAdd () {
-      // this.mdl = null
-      // this.visible = true
-      this.$router.push({
-        name: 'create-recipe-template'
-      })
+      this.mdl = null
+      this.visible = true
     },
     handleSub (record) {
       if (record.status !== 0) {
@@ -230,18 +257,30 @@ export default {
       }
     },
     submitRecipe (prescriptionNo) {
-     const { $notification } = this
-      if (prescriptionNo) {
-        submitRecipeInfo({
-          prescriptionNo
-        }).then(res => {
-           $notification['success']({
-          message: res.message
-        })
-        }).catch(err => {
-          console.log(err)
-        })
-      }
+      const { $notification, $confirm } = this
+      $confirm({
+        title: '确定提交处方?',
+        content: '处方提交之后将无法更改',
+        onOk () {
+          return new Promise((resolve, reject) => {
+            submitRecipeInfo({
+              prescriptionNo: prescriptionNo
+            })
+              .then((res) => {
+                if (res.success) {
+                  $notification['success']({
+                    message: res.message
+                  })
+                }
+                return resolve(true)
+              })
+              .catch((e) => {
+                reject(e)
+              })
+          }).catch(() => console.log('Oops errors!'))
+        },
+        onCancel () {}
+      })
     }
   }
 }

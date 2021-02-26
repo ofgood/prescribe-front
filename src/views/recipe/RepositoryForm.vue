@@ -5,39 +5,42 @@
         <a-form-item label="患者姓名">
           <a-input-group compact>
             <a-select
+              :disabled="isEditor"
               show-search
-              label-in-value
               placeholder="请输入患者姓名或拼音"
-              style="width: 80%"
+              :style="isEditor?'width: 100%':'width: 80%'"
               :show-arrow="false"
               :filter-option="false"
               :not-found-content="fetching ? undefined : null"
               @search="fetchUser"
-              @change="(value,option) => handleChange(value,option)"
-              v-decorator="[
-                'patientId',
-                {rules: [{ required: true, message: '请输入患者姓名'}]}
-              ]"
+              @change="(value, option) => handleChange(value, option)"
+              v-decorator="['patientId', { rules: [{ required: true, message: '请输入患者姓名' }] }]"
             >
               <a-spin v-if="fetching" slot="notFoundContent" size="small" />
               <a-select-option v-for="d in data" :value="d.value" :key="d.value">
                 {{ d.label }}
               </a-select-option>
             </a-select>
-            <a-tooltip placement="top">
-              <template slot="title">
-                <span>添加新患者</span>
-              </template>
-              <a-button style="width: 20%" @click="showCreateModal"><a-icon type="plus" /></a-button>
-            </a-tooltip>
+            <template v-if="!isEditor">
+              <a-tooltip placement="top">
+                <template slot="title">
+                  <span>添加新患者</span>
+                </template>
+                <a-button style="width: 20%" @click="showCreateModal"><a-icon type="plus" /></a-button>
+              </a-tooltip>
+            </template>
           </a-input-group>
           <a href="javascript:;" v-if="hasHistory" @click="reviewHistory">查看该患者历史处方</a>
         </a-form-item>
       </a-col>
       <a-col :lg="5" :md="12" :sm="24">
-        <a-form-item
-          label="患者性别">
-          <a-select :show-arrow="true" placeholder="请选择患者性别" v-decorator="['sex', {rules: [{required: true, message: '请选择性别'}]}]">
+        <a-form-item label="患者性别">
+          <a-select
+            :disabled="isEditor"
+            :show-arrow="true"
+            placeholder="请选择患者性别"
+            v-decorator="['sex', { rules: [{ required: true, message: '请选择性别' }] }]"
+          >
             <a-select-option v-for="item in gender" :key="item.value">
               {{ item.label }}
             </a-select-option>
@@ -45,67 +48,61 @@
         </a-form-item>
       </a-col>
       <a-col :lg="5" :md="12" :sm="24">
-        <a-form-item
-          label="电话">
+        <a-form-item label="电话">
           <a-input
             placeholder="请输入电话"
-            v-decorator="[
-              'tel',
-              {rules: [{ required: true, message: '请输入电话', whitespace: true}]}
-            ]" />
+            v-decorator="['tel', { rules: [{ required: true, message: '请输入电话', whitespace: true }] }]"
+          />
         </a-form-item>
       </a-col>
       <a-col :lg="5" :md="12" :sm="24">
-        <a-form-item
-          label="出生年月">
-          <a-date-picker v-model="birthday" style="width:100%" placeholder="请选择出生日期" valueFormat="YYYY-MM-DD" />
+        <a-form-item label="出生年月">
+          <a-date-picker
+            v-decorator="['birthday']"
+            style="width: 100%"
+            placeholder="请选择出生日期"
+            valueFormat="YYYY-MM-DD"
+          />
         </a-form-item>
       </a-col>
-
     </a-row>
     <a-row class="form-row" :gutter="16">
       <a-col :lg="5" :md="12" :sm="24">
-        <a-form-item
-          label="过敏史">
+        <a-form-item label="过敏史">
           <a-textarea
             :maxLength="300"
-            style="resize:none"
+            style="resize: none"
             placeholder="请输入过敏史"
             v-decorator="[
               'hyperSusceptibility',
-              {rules: [{ required: false, message: '请输入过敏史', whitespace: true}]}
-            ]" />
+              { rules: [{ required: false, message: '请输入过敏史', whitespace: true }] },
+            ]"
+          />
         </a-form-item>
       </a-col>
       <a-col :lg="5" :md="12" :sm="24">
-        <a-form-item
-          label="家庭住址">
+        <a-form-item label="家庭住址">
           <a-textarea
             :maxLength="300"
-            style="resize:none"
+            style="resize: none"
             placeholder="请输入家庭住址"
-            v-decorator="[
-              'address',
-              {rules: [{ required: false, message: '请输入家庭住址', whitespace: true}]}
-            ]" />
+            v-decorator="['address', { rules: [{ required: false, message: '请输入家庭住址', whitespace: true }] }]"
+          />
         </a-form-item>
       </a-col>
       <a-col :lg="5" :md="12" :sm="24">
-        <a-form-item
-          label="配送地址">
+        <a-form-item label="配送地址">
           <a-textarea
             :maxLength="300"
-            style="resize:none"
+            style="resize: none"
             placeholder="请输入配送地址"
-            v-decorator="[
-              'shippingAddress',
-              {rules: [{ required: true, message: '请输入配送地址'}]}
-            ]" />
+            v-decorator="['shippingAddress', { rules: [{ required: true, message: '请输入配送地址' }] }]"
+          />
         </a-form-item>
       </a-col>
     </a-row>
     <a-form-item v-if="showSubmit">
-      <a-button htmlType="submit" >Submit</a-button>
+      <a-button htmlType="submit">Submit</a-button>
     </a-form-item>
     <create-form
       ref="createModal"
@@ -119,8 +116,16 @@
       title="患者历史处方"
       width="80%"
       :visible="historyVisible"
-      @ok="() => { $emit('ok') }"
-      @close="() => { historyVisible = false }"
+      @ok="
+        () => {
+          $emit('ok')
+        }
+      "
+      @close="
+        () => {
+          historyVisible = false
+        }
+      "
     >
       <a-table
         ref="table"
@@ -136,7 +141,14 @@
             <p>{{ text.disease }}</p>
           </a-card>
           <a-card title="药品" size="small">
-            <a-table size="middle" :columns="innerColumns" :rowKey="(record) => record.id" :data-source="formatMedicinalListVos(text.medicinalListVos)" :pagination="false"> </a-table>
+            <a-table
+              size="middle"
+              :columns="innerColumns"
+              :rowKey="(record) => record.id"
+              :data-source="formatMedicinalListVos(text.medicinalListVos)"
+              :pagination="false"
+            >
+            </a-table>
           </a-card>
         </div>
         <span class="main-color" slot="prescriptionNo" slot-scope="text">
@@ -218,6 +230,10 @@ export default {
     showSubmit: {
       type: Boolean,
       default: false
+    },
+    isEditor: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -248,11 +264,10 @@ export default {
       this.historyVisible = false
     },
     loadHistoryData () {
-      const { key: patientId } = this.form.getFieldValue('patientId')
-      console.log(patientId)
+      const patientId = this.form.getFieldValue('patientId')
       getPatientRecipeList({
         patientId
-      }).then(res => {
+      }).then((res) => {
         if (res.data.length) {
           this.historyData = res.data
         }
@@ -274,20 +289,22 @@ export default {
         }
       })
     },
-     fetchUser (value) {
+    fetchUser (value) {
       console.log('fetching user', value)
       this.lastFetchId += 1
       const fetchId = this.lastFetchId
       this.data = []
       this.fetching = true
-     findPatientSelect({
-       key: value
-     }).then(res => {
-          if (fetchId !== this.lastFetchId) {
-            // for fetch callback order
-            return
-          }
-          const data = res.data && res.data.map(user => ({
+      findPatientSelect({
+        key: value
+      }).then((res) => {
+        if (fetchId !== this.lastFetchId) {
+          // for fetch callback order
+          return
+        }
+        const data =
+          res.data &&
+          res.data.map((user) => ({
             label: user.patientName,
             value: user.id,
             birthday: user.birthday,
@@ -297,13 +314,15 @@ export default {
             sex: user.sex,
             shippingAddress: user.shippingAddress
           }))
-          this.data = data
-          this.fetching = false
-        })
+        this.data = data
+        this.fetching = false
+      })
     },
     handleChange (value, option) {
-      const { form: { setFieldsValue } } = this
-      const patientInfo = this.data.filter(item => item.value === value.key)
+      const {
+        form: { setFieldsValue }
+      } = this
+      const patientInfo = this.data.filter((item) => item.value === value)
       const { address, birthday, hyperSusceptibility, tel, sex, shippingAddress } = patientInfo[0]
       this.patientGender = sex
       this.birthday = birthday
@@ -311,20 +330,23 @@ export default {
         hyperSusceptibility,
         tel,
         sex,
+        birthday,
         address,
-        shippingAddress
+        shippingAddress,
+        patientId: value
       })
       // 判断有无历史记录
       getPatientRecipeList({
-        patientId: patientInfo[0].value
-      }).then(res => {
+        patientId: value
+      }).then((res) => {
         this.hasHistory = !!res.data.length
       })
       Object.assign(this, {
         fetching: false
       })
+      this.$emit('refresh')
     },
-     handleOk () {
+    handleOk () {
       const form = this.$refs.createModal.form
       this.confirmLoading = true
       form.validateFields((errors, values) => {
@@ -336,7 +358,7 @@ export default {
               setTimeout(() => {
                 resolve()
               }, 1000)
-            }).then(res => {
+            }).then((res) => {
               this.visible = false
               this.confirmLoading = false
               // 重置表单数据
@@ -348,14 +370,14 @@ export default {
             })
           } else {
             // 新增
-            saveOrUpdate({ ...values }).then(res => {
+            console.log(values)
+            saveOrUpdate({ ...values }).then((res) => {
               if (res.success) {
                 this.visible = false
                 this.confirmLoading = false
                 // 重置表单数据
                 form.resetFields()
-                // 刷新表格
-                // this.$refs.table.refresh()
+                this.initPatientInfo(res.data)
                 this.$message.info('新增成功')
               } else {
                 this.$message.info(res.message)
@@ -382,11 +404,34 @@ export default {
         item.orderNum = index + 1
       })
       return data
+    },
+    initPatientInfo (data) {
+      const {
+        form: { setFieldsValue }
+      } = this
+      // const patientInfo = this.data.filter(item => item.value === value.key)
+      const { address, birthday, hyperSusceptibility, tel, sex, shippingAddress, id, patientName } = data
+      this.patientGender = sex
+      this.birthday = birthday
+      this.data = [
+        {
+          value: id,
+          label: patientName
+        }
+      ]
+      setFieldsValue({
+        hyperSusceptibility,
+        tel,
+        birthday,
+        sex,
+        address,
+        shippingAddress,
+        patientId: id
+      })
     }
   }
 }
 </script>
 
 <style scoped>
-
 </style>
