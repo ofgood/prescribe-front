@@ -14,7 +14,7 @@
               type="text"
               placeholder="请输入帐号"
               v-decorator="[
-                'username',
+                'userName',
                 { rules: [{ required: true, message: '请输入帐号' }], validateTrigger: 'blur' },
               ]"
             >
@@ -50,7 +50,7 @@
                 @blur="changeUserName"
                 :style="{ width: 'calc(100% - 100px)' }"
                 v-decorator="[
-                  'username',
+                  'userName',
                   { rules: [{ required: true, message: '请输入帐号' }], validateTrigger: 'change' },
                 ]"
               >
@@ -148,7 +148,7 @@ export default {
       state.loginBtn = true
 
       const validateFieldsKey =
-        customActiveKey === 'tab1' ? ['username', 'password'] : ['username', 'password', 'clinic']
+        customActiveKey === 'tab1' ? ['userName', 'password'] : ['userName', 'password', 'clinic']
 
       validateFields(validateFieldsKey, { force: true }, (err, values) => {
         if (!err) {
