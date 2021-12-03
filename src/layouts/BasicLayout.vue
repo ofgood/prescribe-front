@@ -18,7 +18,7 @@
     <template v-slot:footerRender>
       <global-footer />
     </template>
-    <div style="padding-top: 20px">
+    <div>
       <router-view v-if="isRouterAlive" />
     </div>
   </pro-layout>

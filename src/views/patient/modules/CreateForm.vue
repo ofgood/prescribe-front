@@ -32,6 +32,9 @@
         <a-form-item label="配送地址">
           <a-input placeholder="请输入配送地址" v-decorator="['shippingAddress', {rules: [{required: true, message: '请输入配送地址'}]}]" />
         </a-form-item>
+        <a-form-item label="居住地址">
+          <a-input placeholder="请输入居住地址" v-decorator="['address', {rules: [{required: true, message: '请输入居住地址'}]}]" />
+        </a-form-item>
         <a-form-item label="过敏史">
           <a-input placeholder="请输入过敏史:没有填无" v-decorator="['hyperSusceptibility', {rules: [{required: false, message: '请输入过敏史:没有填无'}]}]" />
         </a-form-item>
@@ -40,9 +43,6 @@
         </a-form-item>
         <a-form-item label="身份证号">
           <a-input placeholder="请输入" v-decorator="['idCard', {rules: [{required: false, message: ''}]}]" />
-        </a-form-item>
-        <a-form-item label="居住地址">
-          <a-input placeholder="请输入居住地址" v-decorator="['address', {rules: [{required: false, message: '请输入居住地址'}]}]" />
         </a-form-item>
       </a-form>
     </a-spin>

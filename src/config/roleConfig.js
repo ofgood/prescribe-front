@@ -18,6 +18,7 @@ export const doctorRoles = [
     'DOCTOR_STAR'
 ]
 
+/** 角色对应的菜单 */
 const SUPER_USER_ROUTE = [
     'dashboard',
     'patient',
@@ -103,6 +104,8 @@ const DOCTOR_ROUTE = [
 const DOCTOR_STAR_ROUTE = [
     'recipeAdmin', 'recipe', 'recipeList', 'recipeTemplate', 'dashboard', 'createRecipeTemplate'
 ]
+
+/** 角色配置 */
 export const roleConfig = {
     SUPER_USER: SUPER_USER_ROUTE,
     COMPANY_MANAGER: COMPANY_MANAGER_ROUTE,
