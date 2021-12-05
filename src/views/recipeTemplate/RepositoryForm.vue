@@ -1,5 +1,12 @@
 <template>
   <a-form @submit="handleSubmit" :form="form" class="form">
+    <a-form-item v-show="false">
+      <a-input
+        placeholder="请输入模板名称"
+        v-decorator="[
+          'id'
+        ]" />
+    </a-form-item>
     <a-row class="form-row" :gutter="16">
       <a-col :lg="8" :md="12" :sm="24">
         <a-form-item label="模板名称">

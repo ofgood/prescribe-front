@@ -261,7 +261,7 @@ export default {
       this.$nextTick(() => {
       console.log(this.model)
       if (this.model && this.model.id) {
-        this.$refs.repository.form.setFieldsValue(pick(this.model, templateInfoFields))
+        this.$refs.repository.form.setFieldsValue(Object.assign(pick(this.model, templateInfoFields), { id: this.model.id }))
         this.data = JSON.parse(this.model.details)
       } else {
         this.$refs.repository.form.resetFields()
