@@ -259,7 +259,8 @@ export default {
     // 当 model 发生改变时，为表单设置值
     this.$watch('model', () => {
       this.$nextTick(() => {
-      if (this.model && this.model.id > 0) {
+      console.log(this.model)
+      if (this.model && this.model.id) {
         this.$refs.repository.form.setFieldsValue(pick(this.model, templateInfoFields))
         this.data = JSON.parse(this.model.details)
       } else {
@@ -410,12 +411,10 @@ export default {
 
     // 最终全页面提交
     validate () {
-      console.log(12312)
       const {
         $refs: { repository },
         $notification
       } = this
-      console.log(12312)
       const repositoryForm = new Promise((resolve, reject) => {
         repository.form.validateFields((err, values) => {
           console.log(values)

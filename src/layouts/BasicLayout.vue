@@ -19,7 +19,9 @@
       <global-footer />
     </template>
     <div>
-      <router-view v-if="isRouterAlive" />
+      <keep-alive>
+        <router-view v-if="isRouterAlive" />
+      </keep-alive>
     </div>
   </pro-layout>
 </template>
