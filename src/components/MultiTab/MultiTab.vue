@@ -156,11 +156,9 @@ export default {
             {this.renderTabPane(page.meta.customTitle || page.meta.title, page.fullPath)}
               <a-tooltip>
                 <template slot="title">
-                  刷新当前页签
+                  刷新
                 </template>
-                <span v-show={this.activeKey === page.fullPath} style={{ marginLeft: '4px' }}>
-                    <a-icon class={{ 'rotate360': showAnimate }} {...{ on: { click: reloadMenu, animationend: reset } }} type="reload" style={{ color: 'rgba(0, 0, 0, 0.65)' }}/>
-                </span>
+
               </a-tooltip>
           </span>
         </a-tab-pane>)
