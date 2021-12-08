@@ -32,10 +32,10 @@
           <a-input :maxLength="10" placeholder="请输入法人姓名" v-decorator="['legalPerson', {rules: [{required: true, message: '请输入法人姓名'}]}]" />
         </a-form-item>
         <a-form-item label="合作开始时间">
-          <a-date-picker style="width:100%" placeholder="请选择出生日期" valueFormat="YYYY-MM-DD" v-decorator="['cooperationStartTime', {rules: [{required: true, message: '请选择出生日期'}]}]" />
+          <a-date-picker style="width:100%" placeholder="请选择合作开始时间" valueFormat="YYYY-MM-DD" v-decorator="['cooperationStartTime', {rules: [{required: true, message: '请选择出生日期'}]}]" />
         </a-form-item>
         <a-form-item label="合作结束时间">
-          <a-date-picker style="width:100%" placeholder="请选择出生日期" valueFormat="YYYY-MM-DD" v-decorator="['cooperationEndTime', {rules: [{required: true, message: '请选择出生日期'}]}]" />
+          <a-date-picker style="width:100%" placeholder="请选择合作结束时间" valueFormat="YYYY-MM-DD" v-decorator="['cooperationEndTime', {rules: [{required: true, message: '请选择出生日期'}]}]" />
         </a-form-item>
         <a-form-item label="地址">
           <a-textarea :auto-size="{ minRows: 2, maxRows: 3 }" :maxLength="30" placeholder="请输入地址" v-decorator="['address', {rules: [{required: true, message: '请输入地址'}]}]" />
