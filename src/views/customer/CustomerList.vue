@@ -87,6 +87,10 @@ const columns = [
     scopedSlots: { customRender: 'customerName' }
   },
   {
+    title: '工号',
+    dataIndex: 'jobNum'
+  },
+  {
     title: '客户地址',
     dataIndex: 'address'
   },

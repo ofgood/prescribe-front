@@ -126,6 +126,10 @@ const columns = [
     title: '真实姓名',
     dataIndex: 'realName'
   },
+   {
+    title: '工号',
+    dataIndex: 'jobNum'
+  },
   {
     title: '用户类型',
     dataIndex: 'userTypeStr'
