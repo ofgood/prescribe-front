@@ -25,7 +25,7 @@
             placeholder="请选择用户类型"
             v-decorator="['userType', { rules: [{ required: true, message: '请选择用户类型' }] }]"
           >
-            <a-select-option v-for="item in userTypes" :key="item.value">
+            <a-select-option v-for="item in createUserTypes" :key="item.value">
               {{ item.label }}
             </a-select-option>
           </a-select>
@@ -97,6 +97,7 @@ import { mapGetters } from 'vuex'
 import { clinicSelect } from '@/api/clinic'
 import { getClinicListByUseName } from '@/api/user'
 import debounce from 'lodash/debounce'
+import { roleMixin } from '@/store/role-mixin'
 // 表单字段
 const fields = [
   'jobNum',
@@ -112,6 +113,7 @@ const fields = [
 ]
 export default {
   name: 'CreateUserForm',
+  mixins: [roleMixin],
   props: {
     visible: {
       type: Boolean,
@@ -163,6 +165,15 @@ export default {
     ...mapGetters(['userTypes']),
     isShowClinic () {
       return this.userType === 'DOCTOR' || this.userType === 'DOCTOR_STAR'
+    },
+    createUserTypes () {
+      if (this.isClinicManager) {
+         return this.userTypes.filter(item => {
+           return !['COMPANY_MANAGER', 'AREA_MANAGER'].includes(item.value)
+         })
+      } else {
+        return this.userTypes
+      }
     }
   },
   created () {

@@ -17,7 +17,7 @@ export const doctorRoles = [
     'DOCTOR',
     'DOCTOR_STAR'
 ]
-
+export const CLINIC_MANAGER = 'CLINIC_MANAGER'
 /** 角色对应的菜单 */
 const SUPER_USER_ROUTE = [
     'dashboard',

@@ -3,7 +3,7 @@ import { login, getInfo, logout, resetPasssord } from '@/api/user'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 import { DOCTOR_ID, CLINIC_ID } from '@/config/storageTypes'
 import { welcome } from '@/utils/util'
-import { roleConfig, managerRoles, doctorRoles } from '@/config/roleConfig'
+import { roleConfig, managerRoles, doctorRoles, CLINIC_MANAGER } from '@/config/roleConfig'
 
 const user = {
   state: {
@@ -15,7 +15,8 @@ const user = {
     role: '',
     info: {},
     isDoctor: '',
-    isManager: ''
+    isManager: '',
+    isClinicManager: false
   },
 
   mutations: {
@@ -43,6 +44,9 @@ const user = {
     },
     SET_IS_MANAGER: (state, isManager) => {
       state.isManager = isManager
+    },
+    SET_IS_CLINIC_MANAGER: (state, isClinicManager) => {
+      state.isClinicManager = isClinicManager
     }
   },
 
@@ -80,6 +84,8 @@ const user = {
             commit('SET_INFO', result)
             commit('SET_IS_DOCTOR', doctorRoles.includes(result.userType))
             commit('SET_IS_MANAGER', managerRoles.includes(result.userType))
+            console.log(userType === CLINIC_MANAGER)
+            commit('SET_IS_CLINIC_MANAGER', userType === CLINIC_MANAGER)
             storage.set(DOCTOR_ID, result.id)
           } else {
             reject(new Error('用户角色类型不能为空!'))
