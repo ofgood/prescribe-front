@@ -143,7 +143,7 @@ export default {
         console.log('loadData request parameters:', requestParameters)
         return recipeTemplateList(requestParameters)
           .then(res => {
-            return res.data
+            return res.data || { data: [] }
           })
       },
       selectedRowKeys: [],

@@ -168,7 +168,7 @@ export default {
         console.log('loadData request parameters:', requestParameters)
         return doctorList(requestParameters)
           .then(res => {
-            return res.data
+            return res.data || { data: [] }
           })
       },
       selectedRowKeys: [],

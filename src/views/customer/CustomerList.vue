@@ -88,7 +88,7 @@ const columns = [
   },
   {
     title: '工号',
-    dataIndex: 'jobNum'
+    dataIndex: 'jobNumber'
   },
   {
     title: '客户地址',
@@ -174,7 +174,7 @@ export default {
         console.log('loadData request parameters:', requestParameters)
         return customerList(requestParameters)
           .then(res => {
-            return res.data
+            return res.data || { data: [] }
           })
       },
       selectedRowKeys: [],

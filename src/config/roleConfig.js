@@ -88,7 +88,6 @@ const CLINIC_MANAGER_ROUTE = [
     'clinic',
     'recipe',
     'recipeTemplate',
-    'customer',
     'createRecipeTemplate',
     'result',
     'exception',

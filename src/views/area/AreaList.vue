@@ -170,7 +170,9 @@ export default {
         console.log('loadData request parameters:', requestParameters)
         return areaList(requestParameters)
           .then(res => {
-            return res.data
+            return res.data || {
+            data: []
+          }
           })
       },
       selectedRowKeys: [],

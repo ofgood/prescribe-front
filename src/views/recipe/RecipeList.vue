@@ -193,7 +193,7 @@ export default {
         const requestParameters = Object.assign({}, parameter, this.queryParam)
         console.log('loadData request parameters:', requestParameters)
         return recipeInfoList(requestParameters).then((res) => {
-          return res.data
+          return res.data || { data: [] }
         })
       },
       selectedRowKeys: [],
