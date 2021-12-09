@@ -13,10 +13,10 @@
             <a-input
               size="large"
               type="text"
-              placeholder="请输入帐号"
+              placeholder="请输入工号"
               v-decorator="[
                 'userName',
-                { rules: [{ required: true, message: '请输入帐号' }], validateTrigger: 'blur' },
+                { rules: [{ required: true, message: '请输入工号' }], validateTrigger: 'blur' },
               ]"
             >
               <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }" />
@@ -40,19 +40,15 @@
           <a-alert v-if="isLoginError" type="error" showIcon style="margin-bottom: 24px" :message="errMessage" />
           <a-form-item>
             <a-input-group style="display: inline-block; vertical-align: middle" :compact="true">
-              <!-- <a-select size="large" v-model="doctorType" style="width: 100px">
-                <a-select-option value="DOCTOR">医生</a-select-option>
-                <a-select-option value="DOCTOR_STAR">名医</a-select-option>
-              </a-select> -->
               <a-input
                 size="large"
                 type="text"
-                placeholder="请输入帐号"
+                placeholder="请输入工号"
                 @blur="changeUserName"
                 :style="{ width: '100%' }"
                 v-decorator="[
                   'userName',
-                  { rules: [{ required: true, message: '请输入帐号' }], validateTrigger: 'change' },
+                  { rules: [{ required: true, message: '请输入工号' }], validateTrigger: 'change' },
                 ]"
               >
                 <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }" />
