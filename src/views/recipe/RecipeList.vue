@@ -137,6 +137,10 @@ const columns = [
     scopedSlots: { customRender: 'prescriptionNo' }
   },
   {
+    title: '煎煮处方号',
+    dataIndex: 'decoctionRecipeno'
+  },
+  {
     title: '医生',
     dataIndex: 'doctorName',
     width: 100
