@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-card title="处方报表分析">
+    <a-card title="处方报表">
       <div slot="extra">
         <span class="time-type" :class="{active: type === item.value}" @click="selectTime(item.value)" v-for="item in timeTypeList" :key="item.value">
           {{ item.label }}
@@ -8,7 +8,27 @@
         <a-range-picker format="YYYY-MM-DD HH:mm:ss" @change="changeRange" v-model="rangeTime" show-time @ok="changePicker"> </a-range-picker>
       </div>
       <div>
-        <div id="myChart" :style="{width: '100%', height: '400px'}"></div>
+        <s-table
+          ref="table"
+          size="default"
+          :rowKey="record => record.id"
+          :columns="columns"
+          :data="loadData"
+          showPagination="auto"
+        >
+          <span class="main-color" slot="customerName" slot-scope="text">
+            {{ text }}
+          </span>
+          <span slot="customerStatus" slot-scope="text, record">
+            <span style="color: red" v-if="record.disableStatus">是</span>
+            <span style="color: green" v-else>否</span>
+          </span>
+          <span slot="action" slot-scope="text, record">
+            <template>
+              <a @click="handleEdit(record)">编辑</a>
+            </template>
+          </span>
+        </s-table>
       </div>
     </a-card>
   </div>
@@ -40,17 +60,30 @@ export default {
   name: 'RecipeChart',
   data () {
     return {
+       columns: [],
         timeTypeList,
         startTime: '',
         endTime: '',
         type: 'WEEK', // WEEK  MONTH YEAR
         xAxisData: [],
         seriesData: [],
-        rangeTime: []
+        rangeTime: [],
+        pageNum: 0,
+        pageSize: 10,
+        queryParam: {},
+         // 加载数据方法 必须为 Promise 对象
+      loadData: parameter => {
+        const requestParameters = Object.assign({}, parameter, this.queryParam)
+        console.log('loadData request parameters:', requestParameters)
+        return clinicRecipeReport(requestParameters)
+          .then(res => {
+            return res.data || { data: [] }
+          })
+      }
     }
   },
   created () {
-    this.getClinicRecipeReport()
+    // this.getClinicRecipeReport()
   },
   mounted () {
   },

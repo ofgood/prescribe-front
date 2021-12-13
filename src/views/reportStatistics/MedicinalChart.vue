@@ -1,23 +1,36 @@
 <template>
   <div>
-    <a-card title="药品报表分析">
+    <a-card title="药品报表">
       <div slot="extra">
-        <span class="time-type" :class="{active: type === item.value}" @click="selectTime(item.value)" v-for="item in timeTypeList" :key="item.value">
+        <span class="time-type" :class="{active: queryParam.type === item.value}" @click="selectTime(item.value)" v-for="item in timeTypeList" :key="item.value">
           {{ item.label }}
         </span>
         <a-range-picker format="YYYY-MM-DD HH:mm:ss" @change="changeRange" v-model="rangeTime" show-time @ok="changePicker"> </a-range-picker>
       </div>
+      <div class="table-operator" style="display:flex">
+        <a-button type="primary" @click="downloadReport" icon="export">导出</a-button>
+      </div>
       <div>
-        <div id="myChart" :style="{width: '100%', height: '400px'}"></div>
+        <s-table
+          ref="table"
+          size="default"
+          :rowKey="record => record.id"
+          :columns="columns"
+          :data="loadData"
+          showPagination="auto"
+        >
+        </s-table>
       </div>
     </a-card>
   </div>
 </template>
 
 <script>
-import { medicinalReport } from '@/api/report'
+import { medicinalReport, medicinalReportExport } from '@/api/report'
+import { STable } from '@/components'
 import isEmpty from 'lodash/isEmpty'
 import moment from 'moment'
+import { downloadFile } from '@/utils/util'
  const timeTypeList = [
       {
         index: 0,
@@ -38,83 +51,79 @@ import moment from 'moment'
 
 export default {
   name: 'MedicinalChart',
+  components: {
+    STable
+  },
   data () {
     return {
+        columns: [
+          {
+             title: '名称',
+             dataIndex: 'medicinalName'
+          },
+           {
+             title: '编号',
+             dataIndex: 'medicinalCode'
+          },
+           {
+             title: '用量',
+             dataIndex: 'medicinalUseTotal'
+          }
+        ],
         timeTypeList,
-        startTime: '',
-        endTime: '',
-        type: 'WEEK', // WEEK  MONTH YEAR
-        xAxisData: [],
-        seriesData: [],
         rangeTime: [],
-        pageNum: 0,
-        pageSize: 10
+        pageNum: 1,
+        pageSize: 10,
+        queryParam: {
+          type: 'YEAR', // WEEK  MONTH YEAR
+          startTime: null,
+          endTime: null,
+          pageNum: 1,
+          pageSize: 10
+        },
+      // 加载数据方法 必须为 Promise 对象
+      loadData: parameter => {
+        const requestParameters = Object.assign({}, parameter, this.queryParam)
+        console.log('loadData request parameters:', requestParameters)
+        return medicinalReport(requestParameters)
+          .then(res => {
+            return res.data || { data: [] }
+          })
+      }
     }
   },
   created () {
-    this.getMedicinalReport()
+    // this.getMedicinalReport()
   },
   mounted () {
   },
   methods: {
+    downloadReport () {
+      medicinalReportExport({
+        ...this.queryParam
+      }).then(res => {
+        console.log(res)
+        downloadFile(res)
+      })
+    },
     changePicker (dateTime) {
-      this.type = 'TIME'
+      this.queryParam.type = 'TIME'
       const start = dateTime[0]
       const end = dateTime[1]
-      this.startTime = moment(new Date(start)).format('YYYY-MM-DD HH:mm:ss')
-      this.endTime = moment(new Date(end)).format('YYYY-MM-DD HH:mm:ss')
-      this.getMedicinalReport()
+      this.queryParam.startTime = moment(new Date(start)).format('YYYY-MM-DD HH:mm:ss')
+      this.queryParam.endTime = moment(new Date(end)).format('YYYY-MM-DD HH:mm:ss')
     },
     changeRange (dateTime) {
       if (isEmpty(dateTime)) {
-         this.type = 'WEEK'
-         this.startTime = ''
-         this.endTime = ''
-         this.getMedicinalReport()
+         this.queryParam.type = 'WEEK'
+         this.queryParam.startTime = ''
+         this.queryParam.endTime = ''
       }
-    },
-    getMedicinalReport () {
-      medicinalReport({
-      startTime: this.startTime,
-      endTime: this.endTime,
-      type: this.type,
-      pageNum: this.pageNum,
-      pageSize: this.pageSize
-      }).then((res) => {
-        if (res.success) {
-          const clinicRecipeReportData = res.data || []
-          this.xAxisData = clinicRecipeReportData.map(item => item.medicinalName)
-          this.seriesData = clinicRecipeReportData.map(item => item.medicinalUseTotal)
-          this.drawLine(this.xAxisData, this.seriesData)
-        }
-      })
     },
     selectTime (type) {
       this.rangeTime = []
-      this.type = type
-      this.getMedicinalReport()
-    },
-     drawLine (xAxisData, seriesData) {
-        const myChart = this.$echarts.init(document.getElementById('myChart'))
-        myChart.setOption({
-            title: { text: '' },
-            tooltip: {},
-            xAxis: {
-                data: xAxisData
-            },
-            yAxis: {},
-            series: [{
-                name: '药品用量',
-                type: 'bar',
-                data: seriesData
-            }],
-            dataZoom: [{
-              type: 'slider',
-              show: true,
-              start: 0, // 数据窗口范围的起始百分比,表示30%
-              end: 100 // 数据窗口范围的结束百分比,表示70%
-            }]
-        })
+      this.queryParam.type = type
+      this.$refs.table.refresh(true)
     }
   }
 }
